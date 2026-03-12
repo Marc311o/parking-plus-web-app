@@ -27,8 +27,8 @@ This repository has **Repository Rulesets** enabled. Branches that do not follow
 | **Bugfix** | `bugfix/` | Standard bug fixes for develop | `bugfix/45-header-glitch` |
 | **Hotfix** | `hotfix/` | Critical production fixes | `hotfix/critical-security-patch` |
 | **Release** | `release/` | Preparing a new version | `release/v1.2.0` |
-| **documentation** | `docs/` | For filling up the documentation | `docs/xyz-module-documentation` |
-| **chore** | `chore/` | Tasks related to project (like setup) | `chore/pr-templates` |
+| **Documentation** | `docs/` | For filling up the documentation | `docs/xyz-module-documentation` |
+| **Chore** | `chore/` | Tasks related to project (like setup) | `chore/pr-templates` |
 
 *Guidelines: Use lowercase letters, numbers, and hyphens ([kebab-case](https://developer.mozilla.org/en-US/docs/Glossary/Kebab_case)). Avoid special characters.*
 
