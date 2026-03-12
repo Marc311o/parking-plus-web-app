@@ -33,13 +33,3 @@ This project follows the **Gitflow** branching model to ensure stability and cod
 * **Branching:** All features happen in `feature/*` and merge into `develop`. Production releases are tagged on `main`.
 * **Code Quality:** Every Pull Request requires a review.
 * **Documentation:** Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines.
-
----
-
-## 🚀 Getting Started
-
-1. **Clone the repo:**
-   ```bash
-   git clone [https://github.com/your-username/parking-plus.git](https://github.com/your-username/parking-plus.git)
-   ```
-   _To be filled if necessary_
