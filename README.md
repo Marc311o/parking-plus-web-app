@@ -24,7 +24,7 @@
 
 Parking+ is built as a modular monolith — a single deployable application internally divided into clearly separated business modules.
 
-#The backend follows a layered architecture consisting of:#
+The backend follows a layered architecture consisting of:
 
 * **Controllers** – REST API endpoints
 
@@ -38,7 +38,7 @@ Parking+ is built as a modular monolith — a single deployable application inte
 
 This structure ensures maintainability, testability, and makes it possible to extract modules into independent services if the system evolves.
 
-###Backend###
+### Backend
 
 The backend is implemented in **Kotlin** using **Spring Boot**, providing a robust and scalable REST API.
 
@@ -81,7 +81,7 @@ The application is organized into domain-based modules:
 
 Each module encapsulates its own logic while remaining part of the same deployable application.
 
-###Frontend###
+### Frontend
 
 The frontend is built with **Vue 3** using the **Nuxt** framework, enabling a modern, responsive user interface.
 
@@ -105,7 +105,7 @@ The interface is divided into three main areas:
 
 * **Public Payment View** – QR-based parking payment interface
 
-###Database###
+### Database
 
 The system uses **PostgreSQ**L as the primary relational database.
 
