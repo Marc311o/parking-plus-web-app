@@ -1,4 +1,4 @@
-package com.parkingplus.vehicles.enums
+package com.parkingplus.parkingspaces.enums
 
 enum class SpaceType {
     REGULAR_ABLEBODIED,
