@@ -1,6 +1,7 @@
 package com.parkingplus.parkingspaces
 
 import com.parkingplus.parkingspaces.enums.SpaceType
+import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -15,8 +16,9 @@ class ParkingSpaceEntity(
     @Column(name = "parking_space_id", nullable = false)
     val id: String,
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    var status: String,
+    var status: ParkingSpaceStatus,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "space_type", nullable = false)
