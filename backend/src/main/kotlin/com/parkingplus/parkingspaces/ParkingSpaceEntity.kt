@@ -23,5 +23,5 @@ class ParkingSpaceEntity(
     var spaceType: SpaceType,
 
     @Column(name = "level", nullable = false)
-    var level: Int = 0,
+    var level: Int = 0
 )
