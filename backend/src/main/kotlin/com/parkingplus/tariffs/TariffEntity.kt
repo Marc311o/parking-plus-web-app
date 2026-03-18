@@ -2,14 +2,12 @@ package com.parkingplus.tariffs
 
 @Entity
 @Table(name = "tariffs")
-data class TariffEntity(
+class TariffEntity(
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id", nullable = false)
-//    val id: Long = 0,
-// not sure if it shouldnt be there or sth
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    val id: Long = 0,
 
     @Column(name = "daily", nullable = false)
     val isDaily: Boolean,
@@ -20,7 +18,7 @@ data class TariffEntity(
     @Column(name = "start_hour")
     val startHour: Int,
 
-    @Column(name = "start_hour")
+    @Column(name = "end_hour")
     val endHour: Int,
 
     @Column(name = "is_first_hour")
