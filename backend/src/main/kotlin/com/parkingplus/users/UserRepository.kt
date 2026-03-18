@@ -9,7 +9,7 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     fun findByEmail(email: String): Optional<UserEntity>
     fun existsByEmail(email: String): Boolean
     fun findBySurnameContainingIgnoreCase(surname: String): List<UserEntity>
-    fun findAllOperators(): List<UserEntity>
-    fun findAllClients(): List<UserEntity>
+    fun findAllByIsOperatorTrue(): List<UserEntity>     // fetches operators
+    fun findAllByIsOperatorFalse(): List<UserEntity>    // fethces users
     fun findByNameAndSurname(name: String, surname: String): List<UserEntity>
 }
