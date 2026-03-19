@@ -44,4 +44,9 @@ class VehicleService(
         }
         vehicleRepository.deleteById(id)
     }
+
+    @Transactional(readOnly = true)
+    fun getAllVehicles(): List<VehicleDTO> {
+        return vehicleRepository.findAll().map { it.toDTO() }
+    }
 }
