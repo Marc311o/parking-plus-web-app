@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
     fun findAllByEndTimeIsNull(): List<ParkingHistoryEntity>
-    fun findAllByVehicleId(vehicleId: Int): List<ParkingHistoryEntity>
+    fun findAllByVehicleId(vehicleId: Long): List<ParkingHistoryEntity>
     fun findByVehicleLicensePlateAndEndTimeIsNull(licensePlate: String): ParkingHistoryEntity?
     fun existsByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): Boolean
 }
