@@ -1,5 +1,18 @@
 package com.parkingplus.vehicles
 
-class VehicleDTO {
-    //TODO: Define the data transfer object (DTO) for vehicles, which will be used to transfer vehicle data between the client and server. This may include fields such as license plate, owner ID, and car type, along with any necessary validation annotations.
-}
+import com.parkingplus.vehicles.enums.CarType
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
+
+data class VehicleDTO(
+    val id: Long? = null,
+
+    @field:NotBlank(message = "License plate number is required")
+    val licensePlate: String,
+
+    @field:NotNull(message = "Owner ID is required")
+    val ownerId: Long,
+
+    @field:NotNull(message = "Car type is required")
+    val carType: CarType
+)
