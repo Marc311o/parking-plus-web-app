@@ -1,6 +1,7 @@
 package com.parkingplus.transactions
 
 import com.parkingplus.transactions.enums.TransactionType
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -35,7 +36,7 @@ class TransactionController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createTransaction(@RequestBody dto: TransactionDTO): TransactionDTO =
+    fun createTransaction(@Valid @RequestBody dto: TransactionDTO): TransactionDTO =
         transactionService.createTransaction(dto)
 
     @DeleteMapping("/{id}")
