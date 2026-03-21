@@ -24,7 +24,7 @@ class ParkingHistoryEntity(
     @Column(name = "start", nullable = false)
     var startTime: LocalDateTime,
 
-    @Column(name = "end")
+    @Column(name = "end_time")
     var endTime: LocalDateTime? = null,
 
     @Column(name = "price", nullable = false)
