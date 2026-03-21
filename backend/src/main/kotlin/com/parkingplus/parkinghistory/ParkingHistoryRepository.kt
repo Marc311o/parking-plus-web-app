@@ -9,4 +9,5 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
     fun findAllByVehicleId(vehicleId: Long): List<ParkingHistoryEntity>
     fun findByVehicleLicensePlateAndEndTimeIsNull(licensePlate: String): ParkingHistoryEntity?
     fun existsByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): Boolean
+    fun findAllByParkingSpaceId(parkingSpaceId: String): List<ParkingHistoryEntity>
 }

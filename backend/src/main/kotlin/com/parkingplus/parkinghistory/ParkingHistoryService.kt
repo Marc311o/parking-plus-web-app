@@ -27,6 +27,11 @@ class ParkingHistoryService(
         return parkingHistoryRepository.findAllByVehicleId(vehicleId).map { it.toDTO() }
     }
 
+    @Transactional(readOnly = true)
+    fun getParkingHistoryByParkingSpace(parkingSpaceId: String): List<ParkingHistoryDTO> {
+        return parkingHistoryRepository.findAllByParkingSpaceId(parkingSpaceId).map { it.toDTO() }
+    }
+
     @Transactional
     fun createParkingHistory(dto: ParkingHistoryDTO): ParkingHistoryDTO {
         val vehicle = vehicleRepository.findById(dto.vehicleId)
