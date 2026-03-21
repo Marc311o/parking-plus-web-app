@@ -44,12 +44,11 @@ class ParkingSpaceController(
     fun createParkingSpace(@Valid @RequestBody dto: ParkingSpaceDTO): ParkingSpaceDTO =
         parkingSpaceService.createParkingSpace(dto)
 
-    @PutMapping("/{id}")
+    @PutMapping
     fun updateParkingSpace(
-        @PathVariable id: String,
         @Valid @RequestBody dto: ParkingSpaceDTO
     ): ParkingSpaceDTO =
-        parkingSpaceService.updateParkingSpace(id, dto)
+        parkingSpaceService.updateParkingSpace(dto.id, dto)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
