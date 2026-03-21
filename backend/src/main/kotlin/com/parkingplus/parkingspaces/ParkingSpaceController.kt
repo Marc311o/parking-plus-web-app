@@ -2,6 +2,7 @@ package com.parkingplus.parkingspaces
 
 import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -40,13 +41,13 @@ class ParkingSpaceController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createParkingSpace(@RequestBody dto: ParkingSpaceDTO): ParkingSpaceDTO =
+    fun createParkingSpace(@Valid @RequestBody dto: ParkingSpaceDTO): ParkingSpaceDTO =
         parkingSpaceService.createParkingSpace(dto)
 
     @PutMapping("/{id}")
     fun updateParkingSpace(
         @PathVariable id: String,
-        @RequestBody dto: ParkingSpaceDTO
+        @Valid @RequestBody dto: ParkingSpaceDTO
     ): ParkingSpaceDTO =
         parkingSpaceService.updateParkingSpace(id, dto)
 
