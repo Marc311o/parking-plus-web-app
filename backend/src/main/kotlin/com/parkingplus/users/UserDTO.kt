@@ -1,5 +1,21 @@
 package com.parkingplus.users
 
-class UserDTO {
-    //TODO: Define the data transfer object (DTO) for users, which will be used to transfer user data between the client and server. This may include fields such as name, surname, email, password, and any other relevant user information.
-}
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+
+data class UserDTO(
+    val id: Long? = null,
+
+    @field:NotBlank(message = "Imię nie może być puste")
+    val name: String,
+
+    @field:NotBlank(message = "Nazwisko nie może być puste")
+    val surname: String,
+
+    @field:Email(message = "To nie jest poprawny adres e-mail")
+    @field:NotBlank(message = "Email jest wymagany")
+    val email: String,
+
+    val isOperator: Boolean = false
+
+)

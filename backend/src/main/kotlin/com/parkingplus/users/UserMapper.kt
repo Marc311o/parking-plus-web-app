@@ -1,5 +1,17 @@
 package com.parkingplus.users
 
-class UserMapper {
-    // TODO: Implement mapping functions between UserEntity and UserDTO
-}
+fun UserEntity.toDTO() = UserDTO(
+    id = id,
+    name = name,
+    surname = surname,
+    email = email,
+    isOperator = isOperator
+)
+
+fun UserDTO.toEntity(password: String) = UserEntity(
+    name = name,
+    surname = surname,
+    email = email,
+    password = password,
+    isOperator = isOperator
+)
