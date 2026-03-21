@@ -32,6 +32,6 @@ class TariffEntity(
     val isFirstHour: Boolean,
 
     @Column(name = "price", nullable = false)
-    val price: Double
+    var price: Double
 
 )
