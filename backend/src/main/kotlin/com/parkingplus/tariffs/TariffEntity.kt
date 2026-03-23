@@ -20,7 +20,7 @@ class TariffEntity(
     val isDaily: Boolean,
 
     @Column(name = "day_of_week")
-    val dayOfWeek: String, // or int?
+    val dayOfWeek: Int?,
 
     @Column(name = "start_hour")
     val startHour: Int,

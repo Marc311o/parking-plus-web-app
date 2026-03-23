@@ -27,7 +27,7 @@ class TariffService(private val tariffRepository: TariffRepository) {
     @Transactional
     fun updateTariff(id: Long, dto: TariffDTO): TariffDTO {
         val existingTariff = tariffRepository.findById(id)
-            .orElseThrow { NoSuchElementException("Nie znaleziono taryfy o ID: $id") }
+            .orElseThrow { NoSuchElementException("Tariff with ID: $id not found.") }
 
         val otherTariffs = tariffRepository.findAll().filter { it.id != id }
 
@@ -38,7 +38,7 @@ class TariffService(private val tariffRepository: TariffRepository) {
         }
 
         if (overlaps) {
-            throw IllegalArgumentException("Nowe godziny nakładają się na inną istniejącą taryfę!")
+            throw IllegalArgumentException("Tariff hours overlap existing records!")
         }
 
         existingTariff.apply {
@@ -49,7 +49,7 @@ class TariffService(private val tariffRepository: TariffRepository) {
         val updatedEntity = TariffEntity(
             id = id,
             isDaily = dto.isDaily,
-            dayOfWeek = dto.dayOfWeek ?: "ALL",
+            dayOfWeek = dto.dayOfWeek,
             startHour = dto.startHour,
             endHour = dto.endHour,
             isFirstHour = dto.isFirstHour,

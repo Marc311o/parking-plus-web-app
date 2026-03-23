@@ -12,7 +12,7 @@ fun TariffEntity.toDTO() = TariffDTO(
 
 fun TariffDTO.toEntity() = TariffEntity(
     isDaily = isDaily,
-    dayOfWeek = dayOfWeek ?: "ALL",
+    dayOfWeek = dayOfWeek,
     startHour = startHour,
     endHour = endHour,
     isFirstHour = isFirstHour,
