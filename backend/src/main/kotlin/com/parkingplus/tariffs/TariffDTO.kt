@@ -3,6 +3,7 @@ package com.parkingplus.tariffs
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.PositiveOrZero
 import org.hibernate.validator.constraints.Range
 
 data class TariffDTO(
@@ -23,6 +24,7 @@ data class TariffDTO(
     var isFirstHour: Boolean,
 
     @field:NotNull(message = "Price cannot be null")
+    @field:PositiveOrZero(message = "Price must be a positive number")
     @field:Min(0)
     var price: Double
 )
