@@ -1,5 +1,7 @@
 package com.parkingplus.users
 
+import com.parkingplus.users.requests.CreateUserRequest
+
 fun UserEntity.toDTO() = UserDTO(
     id = id,
     name = name,
@@ -8,10 +10,13 @@ fun UserEntity.toDTO() = UserDTO(
     isOperator = isOperator
 )
 
-fun UserDTO.toEntity(password: String) = UserEntity(
+fun CreateUserRequest.toEntity() = UserEntity(
     name = name,
     surname = surname,
     email = email,
+
+    // TODO: tutaj bedzie pozniej hash
     password = password,
+
     isOperator = isOperator
 )

@@ -1,10 +1,9 @@
-package com.parkingplus.users
+package com.parkingplus.users.requests
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 
-data class UserDTO(
-    val id: Long? = null,
+data class CreateUserRequest(
 
     @field:NotBlank(message = "Imię nie może być puste")
     val name: String = "",
@@ -16,6 +15,8 @@ data class UserDTO(
     @field:NotBlank(message = "Email jest wymagany")
     val email: String = "",
 
-    val isOperator: Boolean = false
+    @field:NotBlank(message = "Hasło jest wymagane")
+    val password: String = "",
 
+    val isOperator: Boolean = false
 )

@@ -1,5 +1,6 @@
 package com.parkingplus.users
 
+import com.parkingplus.users.requests.CreateUserRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -12,12 +13,12 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun createUser(dto: UserDTO, password: String): UserDTO {
-        if (userRepository.existsByEmail(dto.email)) {
-            throw IllegalArgumentException("User with email ${dto.email} already exists.")
+    fun createUser(request: CreateUserRequest): UserDTO {
+        if (userRepository.existsByEmail(request.email)) {
+            throw IllegalArgumentException("User with email ${request.email} already exists.")
         }
 
-        val entity = dto.toEntity(password)
+        val entity = request.toEntity()
         return userRepository.save(entity).toDTO()
     }
 
