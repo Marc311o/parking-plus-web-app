@@ -5,8 +5,8 @@ import java.time.LocalDateTime
 
 data class TransactionDTO(
     val id: Long? = null,
-    val userId: Long,
-    val type: TransactionType,
-    val amount: Float,
-    val realisedAt: LocalDateTime
+    val userId: Long = 0L,
+    val type: TransactionType = TransactionType.DEPOSIT,
+    val amount: Float = 0f,
+    val realisedAt: LocalDateTime = LocalDateTime.now()
 )
