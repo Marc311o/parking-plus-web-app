@@ -9,13 +9,13 @@ data class ParkingHistoryDTO(
     val id: Long? = null,
 
     @field:NotNull(message = "Vehicle ID is required")
-    val vehicleId: Long,
+    val vehicleId: Long = 0L,
 
     @field:NotNull(message = "Parking space ID is required")
-    val parkingSpaceId: String,
+    val parkingSpaceId: String = "",
 
     @field:NotNull(message = "Start time is required")
-    val startTime: LocalDateTime,
+    val startTime: LocalDateTime = LocalDateTime.now(),
 
     val endTime: LocalDateTime? = null,
 
@@ -23,5 +23,5 @@ data class ParkingHistoryDTO(
     val price: Double = 0.0,
 
     @field:NotBlank(message = "Photo path is required")
-    val photoPath: String
+    val photoPath: String = ""
 )
