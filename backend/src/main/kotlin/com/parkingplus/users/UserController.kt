@@ -1,5 +1,6 @@
 package com.parkingplus.users
 
+import com.parkingplus.users.requests.CreateUserRequest
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,8 +15,8 @@ class UserController(private val userService: UserService) {
         ResponseEntity.ok(userService.getAllUsers())
 
     @PostMapping
-    fun create(@Valid @RequestBody dto: UserDTO, @RequestParam pass: String): ResponseEntity<UserDTO> {
-        return ResponseEntity(userService.createUser(dto, pass), HttpStatus.CREATED)
+    fun create(@Valid @RequestBody request: CreateUserRequest): ResponseEntity<UserDTO> {
+        return ResponseEntity(userService.createUser(request), HttpStatus.CREATED)
     }
 
     @GetMapping("/{id}")

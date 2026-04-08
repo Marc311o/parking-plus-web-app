@@ -10,21 +10,21 @@ data class TariffDTO(
     val id: Long? = null,
 
     @field:NotNull(message = "Daily flag cannot be null")
-    var isDaily: Boolean,
+    var isDaily: Boolean = true,
 
     @field:Range(min = 1, max = 7, message = "Day of week must be between 1 and 7")  // 1-7
-    var dayOfWeek: Int?,
+    var dayOfWeek: Int = 1,
 
     @field:Min(0) @field:Max(23)
-    var startHour: Int,
+    var startHour: Int = 0,
 
     @field:Min(0) @field:Max(23)
-    var endHour: Int,
+    var endHour: Int = 23,
 
-    var isFirstHour: Boolean,
+    var isFirstHour: Boolean = true,
 
     @field:NotNull(message = "Price cannot be null")
     @field:PositiveOrZero(message = "Price must be a positive number")
     @field:Min(0)
-    var price: Double
+    var price: Double = 0.0
 )

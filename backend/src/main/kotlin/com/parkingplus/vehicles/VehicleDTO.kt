@@ -8,11 +8,11 @@ data class VehicleDTO(
     val id: Long? = null,
 
     @field:NotBlank(message = "License plate number is required")
-    val licensePlate: String,
+    val licensePlate: String = "",
 
     @field:NotNull(message = "Owner ID is required")
-    val ownerId: Long,
+    val ownerId: Long = 0L,
 
     @field:NotNull(message = "Car type is required")
-    val carType: CarType
+    val carType: CarType = CarType.REGULAR_ABLEBODIED
 )
