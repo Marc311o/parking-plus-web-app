@@ -29,3 +29,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/parking_db
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
