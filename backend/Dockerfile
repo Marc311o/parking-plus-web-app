@@ -4,7 +4,7 @@ WORKDIR /app
 COPY pom.xml ./pom.xml
 COPY backend/pom.xml ./backend/pom.xml
 COPY backend/src ./backend/src
-RUN mvn clean install -DskipTests
+RUN mvn -pl backend -am clean package -DskipTests
 FROM eclipse-temurin:21-jdk-alpine
 WORKDIR /app
 COPY --from=builder /app/backend/target/*.jar app.jar
