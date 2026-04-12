@@ -1,5 +1,20 @@
 package com.parkingplus.tariffs
 
-class TariffMapper {
-    // TODO: Implement mapping logic between Tariff and TariffDTO
-}
+fun TariffEntity.toDTO() = TariffDTO(
+    id = id,
+    isDaily = isDaily,
+    dayOfWeek = dayOfWeek,
+    startHour = startHour,
+    endHour = endHour,
+    isFirstHour = isFirstHour,
+    price = price
+)
+
+fun TariffDTO.toEntity() = TariffEntity(
+    isDaily = isDaily,
+    dayOfWeek = dayOfWeek,
+    startHour = startHour,
+    endHour = endHour,
+    isFirstHour = isFirstHour,
+    price = price
+)
