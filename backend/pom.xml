@@ -81,7 +81,7 @@
                 </executions>
 
                 <configuration>
-                    <jvmTarget>17</jvmTarget>
+                    <jvmTarget>21</jvmTarget>
 
                     <compilerPlugins>
                         <plugin>spring</plugin>
