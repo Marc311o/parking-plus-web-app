@@ -9,7 +9,8 @@
       "dashboard": "Dashboard",
       "statistics": "Statistics",
       "clients": "Clients",
-      "events": "Events"
+      "events": "Events",
+      "prices": "Prices"
     },
     "other": {
       "settings": "Settings",

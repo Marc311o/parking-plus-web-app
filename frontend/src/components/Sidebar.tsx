@@ -14,6 +14,7 @@ import PeopleIconOutlined from '@mui/icons-material/PeopleOutlined';
 import EventIcon from '@mui/icons-material/Event';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import {useIntl} from 'react-intl';
 import {useLocation, useNavigate} from 'react-router-dom';
 import logo from '@assets/logo.png';
@@ -58,6 +59,12 @@ const Sidebar = () => {
             icon: <EventIcon/>,
             path: '/events',
             active: location.pathname.startsWith('/events'),
+        },
+        {
+            text: formatMessage({id: 'sidebar.menu.prices'}),
+            icon: <LocalAtmIcon/>,
+            path: '/pricing',
+            active: location.pathname.startsWith('/pricing'),
         },
     ];
 
