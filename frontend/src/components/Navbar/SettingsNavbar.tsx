@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import ClockCard from './ClockCard';
-import UserCard from './UserCard';
+import ClockCard from '../NavbarCard/ClockCard.tsx';
+import UserCard from '../NavbarCard/UserCard.tsx';
 
-const PricingNavbar = () => {
+const SettingsNavbar = () => {
     return (
         <Box
             sx={{
@@ -19,4 +19,4 @@ const PricingNavbar = () => {
     );
 };
 
-export default PricingNavbar;
+export default SettingsNavbar;

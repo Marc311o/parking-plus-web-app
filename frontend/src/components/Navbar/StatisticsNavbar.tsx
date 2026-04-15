@@ -1,24 +1,25 @@
 import {Box} from '@mui/material';
-import ClientsFilterCard from './ClientsFilterCard';
-import ClockCard from './ClockCard';
-import UserCard from './UserCard';
+import StatisticsCards from '../NavbarCard/StatisticsCards.tsx';
+import ClockCard from '../NavbarCard/ClockCard.tsx';
+import UserCard from '../NavbarCard/UserCard.tsx';
 
-const ClientsNavbar = () => {
+const StatisticsNavbar = () => {
     return (
         <Box
             sx={{
                 display: 'grid',
                 gridTemplateColumns: '2fr 1fr 1fr',
                 gap: 2,
-                px: 3,
+                flexShrink: 0,
                 alignItems: 'center',
+                px: 3,
             }}
         >
-            <ClientsFilterCard/>
+            <StatisticsCards/>
             <ClockCard/>
             <UserCard/>
         </Box>
     );
 };
 
-export default ClientsNavbar;
+export default StatisticsNavbar;

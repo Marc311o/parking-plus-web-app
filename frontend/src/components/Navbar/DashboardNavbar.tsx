@@ -1,8 +1,8 @@
 import {Box} from '@mui/material';
-import OccupancyCard from './OccupancyCard';
-import RevenueCard from './RevenueCard';
-import ClockCard from './ClockCard';
-import UserCard from './UserCard';
+import OccupancyCard from '../NavbarCard/OccupancyCard.tsx';
+import RevenueCard from '../NavbarCard/RevenueCard.tsx';
+import ClockCard from '../NavbarCard/ClockCard.tsx';
+import UserCard from '../NavbarCard/UserCard.tsx';
 
 const DashboardNavbar = () => {
     return (

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
-import EventsFilterCard from './EventsFilterCard';
-import ClockCard from './ClockCard';
-import UserCard from './UserCard';
+import EventsFilterCard from '../NavbarCard/EventsFilterCard.tsx';
+import ClockCard from '../NavbarCard/ClockCard.tsx';
+import UserCard from '../NavbarCard/UserCard.tsx';
 
 const EventsNavbar = () => {
     return (

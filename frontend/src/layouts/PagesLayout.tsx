@@ -1,13 +1,13 @@
 import {Box, Paper} from '@mui/material';
 import {Outlet, useLocation} from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
-import StatisticsNavbar from '../components/StatisticsNavbar';
-import DashboardNavbar from '../components/DashboardNavbar';
-import ClientsNavbar from '../components/ClientsNavbar';
-import DefaultNavbar from '../components/DefaultNavbar';
-import EventsNavbar from '../components/EventsNavbar';
-import PricingNavbar from '../components/PricingNavbar';
-import SettingsNavbar from '../components/PricingNavbar';
+import Sidebar from '../components/Sidebar/Sidebar.tsx';
+import StatisticsNavbar from '../components/Navbar/StatisticsNavbar.tsx';
+import DashboardNavbar from '../components/Navbar/DashboardNavbar.tsx';
+import ClientsNavbar from '../components/Navbar/ClientsNavbar.tsx';
+import DefaultNavbar from '../components/Navbar/DefaultNavbar.tsx';
+import EventsNavbar from '../components/Navbar/EventsNavbar.tsx';
+import PricingNavbar from '../components/Navbar/PricingNavbar.tsx';
+import SettingsNavbar from '../components/Navbar/PricingNavbar.tsx';
 
 const PagesLayout = () => {
     const location = useLocation();
