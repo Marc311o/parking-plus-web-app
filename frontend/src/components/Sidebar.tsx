@@ -15,6 +15,7 @@ import EventIcon from '@mui/icons-material/Event';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {useIntl} from 'react-intl';
+import {useLocation, useNavigate} from 'react-router-dom';
 import logo from '@assets/logo.png';
 
 const SidebarContainer = styled(Box)(({theme}) => ({
@@ -30,24 +31,33 @@ const SidebarContainer = styled(Box)(({theme}) => ({
 
 const Sidebar = () => {
     const {formatMessage} = useIntl();
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const menuItems = [
         {
             text: formatMessage({id: 'sidebar.menu.dashboard'}),
             icon: <DashboardIcon/>,
+            path: '/',
+            active: location.pathname === '/',
         },
         {
             text: formatMessage({id: 'sidebar.menu.statistics'}),
             icon: <BarChartIcon/>,
-            active: true,
+            path: '/statistics',
+            active: location.pathname.startsWith('/statistics'),
         },
         {
             text: formatMessage({id: 'sidebar.menu.clients'}),
             icon: <PeopleIconOutlined/>,
+            path: '/clients',
+            active: location.pathname.startsWith('/clients'),
         },
         {
             text: formatMessage({id: 'sidebar.menu.events'}),
             icon: <EventIcon/>,
+            path: '/events',
+            active: location.pathname.startsWith('/events'),
         },
     ];
 
@@ -55,10 +65,14 @@ const Sidebar = () => {
         {
             text: formatMessage({id: 'sidebar.other.settings'}),
             icon: <SettingsIcon/>,
+            path: '/settings',
+            active: location.pathname.startsWith('/settings'),
         },
         {
             text: formatMessage({id: 'sidebar.other.logout'}),
             icon: <LogoutIcon/>,
+            path: '/logout',
+            active: false,
         },
     ];
 
@@ -101,8 +115,9 @@ const Sidebar = () => {
 
             <List sx={{p: 0}}>
                 {menuItems.map((item) => (
-                    <ListItem key={item.text} disablePadding sx={{mb: 0.5}}>
+                    <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
                         <ListItemButton
+                            onClick={() => navigate(item.path)}
                             sx={{
                                 minHeight: 44,
                                 borderRadius: 2.5,
@@ -143,18 +158,19 @@ const Sidebar = () => {
 
             <List sx={{p: 0}}>
                 {secondaryItems.map((item) => (
-                    <ListItem key={item.text} disablePadding sx={{mb: 0.5}}>
+                    <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
                         <ListItemButton
+                            onClick={() => navigate(item.path)}
                             sx={{
                                 minHeight: 44,
                                 borderRadius: 2.5,
-                                color: 'text.secondary',
+                                color: item.active ? 'primary.main' : 'text.secondary',
                                 '& .MuiListItemIcon-root': {
                                     minWidth: 34,
-                                    color: 'text.secondary',
+                                    color: item.active ? 'primary.main' : 'text.secondary',
                                 },
                                 '& .MuiTypography-root': {
-                                    fontWeight: 500,
+                                    fontWeight: item.active ? 700 : 500,
                                 },
                                 '&:hover': {
                                     bgcolor: 'rgba(94, 7, 110, 0.05)',
