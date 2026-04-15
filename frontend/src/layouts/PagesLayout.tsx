@@ -1,8 +1,9 @@
 import {Box, Paper} from '@mui/material';
 import {Outlet, useLocation} from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import StatisticsNavbar from '../components/StatisticsNavbar.tsx';
-import DashboardNavbar from '../components/DashboardNavbar.tsx';
+import StatisticsNavbar from '../components/StatisticsNavbar';
+import DashboardNavbar from '../components/DashboardNavbar';
+import ClientsNavbar from '../components/ClientsNavbar';
 import DefaultNavbar from '../components/DefaultNavbar';
 
 const PagesLayout = () => {
@@ -12,6 +13,10 @@ const PagesLayout = () => {
         {
             prefix: '/statistics',
             navbar: <StatisticsNavbar/>,
+        },
+        {
+            prefix: '/clients',
+            navbar: <ClientsNavbar/>,
         },
         {
             prefix: '/dashboard',

@@ -9,6 +9,7 @@ import PricesPage from '@pages/PricesPage';
 import SettingsPage from '@pages/SettingsPage';
 
 const AppRoutes = () => {
+    //TODO: Implement separate pages and layouts depending on user role (admin, client)
     return (
         <Routes>
             <Route path="/" element={<PagesLayout/>}>

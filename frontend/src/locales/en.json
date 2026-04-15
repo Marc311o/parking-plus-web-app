@@ -27,6 +27,20 @@
     "revenue": {
       "value": "{value} PLN",
       "label": "Today's revenue"
+    },
+    "clients": {
+      "filters": {
+        "searchPlaceholder": "Search client",
+        "searchButton": "Search",
+        "sortLabel": "Sort by",
+        "sortButton": "Sort",
+        "options": {
+          "nameAsc": "Name A-Z",
+          "nameDesc": "Name Z-A",
+          "dateNewest": "Newest",
+          "dateOldest": "Oldest"
+        }
+      }
     }
   }
 }

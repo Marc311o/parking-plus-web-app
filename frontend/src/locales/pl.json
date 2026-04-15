@@ -26,6 +26,20 @@
     "revenue": {
       "value": "{value} PLN",
       "label": "Przychód dzisiaj"
+    },
+    "clients": {
+      "filters": {
+        "searchPlaceholder": "Wyszukaj klienta",
+        "searchButton": "Wyszukaj",
+        "sortLabel": "Sortuj po",
+        "sortButton": "Sortuj",
+        "options": {
+          "nameAsc": "Nazwa A-Z",
+          "nameDesc": "Nazwa Z-A",
+          "dateNewest": "Najnowsze",
+          "dateOldest": "Najstarsze"
+        }
+      }
     }
   }
 }
