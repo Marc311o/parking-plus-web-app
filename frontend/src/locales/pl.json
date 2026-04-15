@@ -40,6 +40,16 @@
           "dateOldest": "Najstarsze"
         }
       }
+    },
+    "events": {
+      "filters": {
+        "searchPlaceholder": "Wyszukaj zdarzenie",
+        "searchButton": "Wyszukaj",
+        "checkboxes": {
+          "entries": "wjazdy",
+          "exits": "wyjazdy"
+        }
+      }
     }
   }
 }

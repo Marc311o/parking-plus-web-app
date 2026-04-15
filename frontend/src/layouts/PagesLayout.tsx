@@ -5,6 +5,7 @@ import StatisticsNavbar from '../components/StatisticsNavbar';
 import DashboardNavbar from '../components/DashboardNavbar';
 import ClientsNavbar from '../components/ClientsNavbar';
 import DefaultNavbar from '../components/DefaultNavbar';
+import EventsNavbar from '../components/EventsNavbar';
 
 const PagesLayout = () => {
     const location = useLocation();
@@ -17,6 +18,10 @@ const PagesLayout = () => {
         {
             prefix: '/clients',
             navbar: <ClientsNavbar/>,
+        },
+        {
+            prefix: '/events',
+            navbar: <EventsNavbar/>,
         },
         {
             prefix: '/dashboard',

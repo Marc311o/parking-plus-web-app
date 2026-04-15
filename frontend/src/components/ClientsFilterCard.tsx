@@ -15,13 +15,15 @@ const ClientsFilterCard = () => {
         <Paper
             elevation={0}
             sx={{
-                minHeight: 110,
-                borderRadius: 2,
+                height: 130,
+                borderRadius: 1,
                 bgcolor: 'background.paper',
                 px: 4,
-                py: 2.5,
+                py: 1.5,
                 display: 'flex',
                 alignItems: 'center',
+                boxSizing: 'border-box',
+                overflow: 'hidden',
             }}
         >
             <Box
@@ -30,7 +32,7 @@ const ClientsFilterCard = () => {
                     display: 'grid',
                     gridTemplateColumns: '1fr auto',
                     columnGap: 1.5,
-                    rowGap: 1.5,
+                    rowGap: 1,
                     alignItems: 'center',
                 }}
             >

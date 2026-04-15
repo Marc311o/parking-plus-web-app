@@ -41,6 +41,16 @@
           "dateOldest": "Oldest"
         }
       }
+    },
+    "events": {
+      "filters": {
+        "searchPlaceholder": "Search event",
+        "searchButton": "Search",
+        "checkboxes": {
+          "entries": "entries",
+          "exits": "exits"
+        }
+      }
     }
   }
 }
