@@ -1,4 +1,57 @@
 {
-  "welcome_message": "Welcome to the app!",
-  "description_text": "This is our website."
+  "sidebar": {
+    "test": "test",
+    "sections": {
+      "menu": "Menu",
+      "other": "Other"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "statistics": "Statistics",
+      "clients": "Clients",
+      "events": "Events",
+      "prices": "Prices"
+    },
+    "other": {
+      "settings": "Settings",
+      "logout": "Log out"
+    }
+  },
+  "navbar": {
+    "statisticsCards": {
+      "parking": "Parking\nStatistics",
+      "places": "Space\nStatistics"
+    },
+    "occupancy": {
+      "label": "Occupied spaces"
+    },
+    "revenue": {
+      "value": "{value} PLN",
+      "label": "Today's revenue"
+    },
+    "clients": {
+      "filters": {
+        "searchPlaceholder": "Search client",
+        "searchButton": "Search",
+        "sortLabel": "Sort by",
+        "sortButton": "Sort",
+        "options": {
+          "nameAsc": "Name A-Z",
+          "nameDesc": "Name Z-A",
+          "dateNewest": "Newest",
+          "dateOldest": "Oldest"
+        }
+      }
+    },
+    "events": {
+      "filters": {
+        "searchPlaceholder": "Search event",
+        "searchButton": "Search",
+        "checkboxes": {
+          "entries": "entries",
+          "exits": "exits"
+        }
+      }
+    }
+  }
 }
