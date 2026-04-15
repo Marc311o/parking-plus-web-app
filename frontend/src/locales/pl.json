@@ -1,4 +1,56 @@
 {
-  "welcome_message": "Witaj w aplikacji!",
-  "description_text": "To jest nasza strona."
+  "sidebar": {
+    "sections": {
+      "menu": "Menu",
+      "other": "Inne"
+    },
+    "menu": {
+      "dashboard": "Kokpit",
+      "statistics": "Statystyki",
+      "clients": "Klienci",
+      "events": "Zdarzenia",
+      "prices": "Cennik"
+    },
+    "other": {
+      "settings": "Ustawienia",
+      "logout": "Wyloguj się"
+    }
+  },
+  "navbar": {
+    "statisticsCards": {
+      "parking": "Statystyki\nParkingu",
+      "places": "Statystyki\nMiejsc"
+    },
+    "occupancy": {
+      "label": "Zajętych miejsc"
+    },
+    "revenue": {
+      "value": "{value} PLN",
+      "label": "Przychód dzisiaj"
+    },
+    "clients": {
+      "filters": {
+        "searchPlaceholder": "Wyszukaj klienta",
+        "searchButton": "Wyszukaj",
+        "sortLabel": "Sortuj po",
+        "sortButton": "Sortuj",
+        "options": {
+          "nameAsc": "Nazwa A-Z",
+          "nameDesc": "Nazwa Z-A",
+          "dateNewest": "Najnowsze",
+          "dateOldest": "Najstarsze"
+        }
+      }
+    },
+    "events": {
+      "filters": {
+        "searchPlaceholder": "Wyszukaj zdarzenie",
+        "searchButton": "Wyszukaj",
+        "checkboxes": {
+          "entries": "wjazdy",
+          "exits": "wyjazdy"
+        }
+      }
+    }
+  }
 }

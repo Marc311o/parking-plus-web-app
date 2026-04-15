@@ -1,38 +1,51 @@
-import { useState } from 'react';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import {BrowserRouter} from 'react-router-dom';
+import {IntlProvider} from 'react-intl';
+import {CssBaseline, ThemeProvider} from '@mui/material';
+import AppRoutes from './AppRoutes';
+import theme from './theme';
 
 import enMessages from '@locales/en.json';
 import plMessages from '@locales/pl.json';
 
-const messages = {
-  en: enMessages,
-  pl: plMessages,
+type Messages = Record<string, string | Messages>;
+
+const flattenMessages = (
+    messages: Messages,
+    prefix = ''
+): Record<string, string> => {
+    return Object.keys(messages).reduce<Record<string, string>>((acc, key) => {
+        const value = messages[key];
+        const prefixedKey = prefix ? `${prefix}.${key}` : key;
+
+        if (typeof value === 'string') {
+            acc[prefixedKey] = value;
+        } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+            Object.assign(acc, flattenMessages(value, prefixedKey));
+        }
+
+        return acc;
+    }, {});
 };
 
+const rawMessages = {en: enMessages, pl: plMessages};
+
 function App() {
-  const [locale, setLocale] = useState('pl');
+    const locale = 'pl';
 
-  return (
-      <IntlProvider locale={locale} messages={messages[locale as keyof typeof messages]}>
-        <div className="App">
-          <h1>
-            <FormattedMessage id="welcome_message" defaultMessage="Witaj!" />
-          </h1>
+    const messages = flattenMessages(
+        rawMessages[locale as keyof typeof rawMessages] as Messages
+    );
 
-          <select value={locale} onChange={(e) => setLocale(e.target.value)}>
-            <option value="pl">Polskissss</option>
-            <option value="en">English</option>
-          </select>
-
-          <p>
-            <FormattedMessage
-                id="description_text"
-                defaultMessage="To jest przykładowy tekst."
-            />
-          </p>
-        </div>
-      </IntlProvider>
-  );
+    return (
+        <IntlProvider locale={locale} messages={messages}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline/>
+                <BrowserRouter>
+                    <AppRoutes/>
+                </BrowserRouter>
+            </ThemeProvider>
+        </IntlProvider>
+    );
 }
 
 export default App;
