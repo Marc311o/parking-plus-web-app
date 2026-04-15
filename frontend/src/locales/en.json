@@ -1,4 +1,25 @@
 {
-  "welcome_message": "Welcome to the app!",
-  "description_text": "This is our website."
+  "sidebar": {
+    "test": "test",
+    "sections": {
+      "menu": "Menu",
+      "other": "Other"
+    },
+    "menu": {
+      "dashboard": "Dashboard",
+      "statistics": "Statistics",
+      "clients": "Clients",
+      "events": "Events"
+    },
+    "other": {
+      "settings": "Settings",
+      "logout": "Log out"
+    }
+  },
+  "navbar": {
+    "statisticsCards": {
+      "parking": "Parking\nStatistics",
+      "places": "Space\nStatistics"
+    }
+  }
 }

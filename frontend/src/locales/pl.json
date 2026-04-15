@@ -1,4 +1,24 @@
 {
-  "welcome_message": "Witaj w aplikacji!",
-  "description_text": "To jest nasza strona."
+  "sidebar": {
+    "sections": {
+      "menu": "Menu",
+      "other": "Inne"
+    },
+    "menu": {
+      "dashboard": "Kokpit",
+      "statistics": "Statystyki",
+      "clients": "Klienci",
+      "events": "Zdarzenia"
+    },
+    "other": {
+      "settings": "Ustawienia",
+      "logout": "Wyloguj się"
+    }
+  },
+  "navbar": {
+    "statisticsCards": {
+      "parking": "Statystyki\nParkingu",
+      "places": "Statystyki\nMiejsc"
+    }
+  }
 }
