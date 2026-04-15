@@ -1,13 +1,34 @@
 import {Box, Paper} from '@mui/material';
 import {Outlet, useLocation} from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import Navbar from '../components/Navbar';
+import StatisticsNavbar from '../components/StatisticsNavbar.tsx';
+import DashboardNavbar from '../components/DashboardNavbar.tsx';
 import DefaultNavbar from '../components/DefaultNavbar';
 
-const DashboardLayout = () => {
+const PagesLayout = () => {
     const location = useLocation();
 
-    const isStatisticsPage = location.pathname.startsWith('/statistics');
+    const navbarByRoutePrefix = [
+        {
+            prefix: '/statistics',
+            navbar: <StatisticsNavbar/>,
+        },
+        {
+            prefix: '/dashboard',
+            navbar: <DashboardNavbar/>,
+        },
+        {
+            prefix: '/',
+            navbar: <DashboardNavbar/>,
+        },
+    ];
+
+    const currentNavbar =
+        navbarByRoutePrefix.find(({prefix}) =>
+            prefix === '/'
+                ? location.pathname === '/'
+                : location.pathname.startsWith(prefix)
+        )?.navbar ?? <DefaultNavbar/>;
 
     return (
         <Box
@@ -40,7 +61,7 @@ const DashboardLayout = () => {
                         overflow: 'hidden',
                     }}
                 >
-                    {isStatisticsPage ? <Navbar/> : <DefaultNavbar/>}
+                    {currentNavbar}
 
                     <Paper
                         elevation={0}
@@ -81,4 +102,4 @@ const DashboardLayout = () => {
     );
 };
 
-export default DashboardLayout;
+export default PagesLayout;

@@ -19,6 +19,13 @@
     "statisticsCards": {
       "parking": "Statystyki\nParkingu",
       "places": "Statystyki\nMiejsc"
+    },
+    "occupancy": {
+      "label": "Zajętych miejsc"
+    },
+    "revenue": {
+      "value": "{value} PLN",
+      "label": "Przychód dzisiaj"
     }
   }
 }

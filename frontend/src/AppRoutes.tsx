@@ -1,5 +1,5 @@
 import {Routes, Route, Navigate} from 'react-router-dom';
-import DashboardLayout from './layouts/DashboardLayout';
+import PagesLayout from './layouts/PagesLayout.tsx';
 import DashboardPage from '@pages/DashboardPage';
 import StatisticsParkingPage from '@pages/Statistics/ParkingStatisticsPage';
 import StatisticsPlacesPage from '@pages/Statistics/ParkingSpacesStatisticsPage';
@@ -11,7 +11,7 @@ import SettingsPage from '@pages/SettingsPage';
 const AppRoutes = () => {
     return (
         <Routes>
-            <Route path="/" element={<DashboardLayout/>}>
+            <Route path="/" element={<PagesLayout/>}>
                 <Route path="statistics">
                     <Route index element={<Navigate to="parking" replace/>}/>
                     <Route path="parking" element={<StatisticsParkingPage/>}/>

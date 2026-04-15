@@ -20,6 +20,13 @@
     "statisticsCards": {
       "parking": "Parking\nStatistics",
       "places": "Space\nStatistics"
+    },
+    "occupancy": {
+      "label": "Occupied spaces"
+    },
+    "revenue": {
+      "value": "{value} PLN",
+      "label": "Today's revenue"
     }
   }
 }
