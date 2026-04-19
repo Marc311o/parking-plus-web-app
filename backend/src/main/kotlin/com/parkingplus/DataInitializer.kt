@@ -2,6 +2,7 @@ package com.parkingplus
 
 import com.parkingplus.users.UserEntity
 import com.parkingplus.users.UserRepository
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
@@ -9,20 +10,28 @@ import org.springframework.stereotype.Component
 @Component
 class DataInitializer(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    @Value("\${app.admin.email:admin@parking.pl}") private val adminEmail: String,
+    @Value("\${app.admin.password:#{null}}") private val adminPassword: String?
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         if (userRepository.findAllByIsOperatorTrue().isEmpty()) {
+            val password = adminPassword
+                ?: throw IllegalStateException(
+                    "app.admin.password is not configured. " +
+                    "Set the APP_ADMIN_PASSWORD environment variable or provide app.admin.password in your properties."
+                )
+
             val admin = UserEntity(
                 name = "Admin",
                 surname = "Systemowy",
-                email = "admin@parking.pl",
-                password = passwordEncoder.encode("admin123"),
+                email = adminEmail,
+                password = passwordEncoder.encode(password),
                 isOperator = true
             )
             userRepository.save(admin)
-            println(">>> Utworzono konto administratora: admin@parking.pl / admin123")
+            println(">>> Utworzono konto administratora: $adminEmail")
         }
     }
 }

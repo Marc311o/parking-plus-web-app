@@ -28,6 +28,8 @@ class SecurityConfig(
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
 
@@ -39,12 +41,5 @@ class SecurityConfig(
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
-    }
-
-    @Bean
-    fun userDetailsService(): org.springframework.security.core.userdetails.UserDetailsService {
-        return org.springframework.security.core.userdetails.UserDetailsService { _ ->
-            throw org.springframework.security.core.userdetails.UsernameNotFoundException("Not used")
-        }
     }
 }

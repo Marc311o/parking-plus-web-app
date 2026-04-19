@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -25,8 +26,13 @@ class UserController(private val userService: UserService) {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<UserDTO> =
-        ResponseEntity.ok(userService.getUserById(id))
+    fun getById(@PathVariable id: Long, authentication: Authentication): ResponseEntity<UserDTO> {
+        val authUserId = authentication.details as? Long
+        if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } && authUserId != id) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }
+        return ResponseEntity.ok(userService.getUserById(id))
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
@@ -41,20 +47,22 @@ class UserController(private val userService: UserService) {
         return ResponseEntity(userService.createOperator(request), HttpStatus.CREATED)
     }
 
-
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping("/{id}/mfa-setup")
-    fun setupMfa(@PathVariable id: Long): ResponseEntity<MfaSetupResponse> {
+    fun setupMfa(@PathVariable id: Long, authentication: Authentication): ResponseEntity<MfaSetupResponse> {
+        val authUserId = authentication.details as? Long
+        if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } && authUserId != id) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }
         return ResponseEntity.ok(userService.generateMfaSetup(id))
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping("/{id}/mfa-confirm")
-    fun confirmMfa(@PathVariable id: Long, @RequestBody request: com.parkingplus.auth.MfaVerificationRequest): ResponseEntity<String> {
-        val user = userService.getUserById(id)
-        if (user.email != request.email) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Adres e-mail nie odpowiada użytkownikowi wskazanemu w ścieżce żądania")
+    fun confirmMfa(@PathVariable id: Long, @RequestBody request: com.parkingplus.auth.MfaConfirmRequest, authentication: Authentication): ResponseEntity<String> {
+        val authUserId = authentication.details as? Long
+        if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } && authUserId != id) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         }
         val success = userService.confirmMfaSetup(id, request.code)
         return if (success) {

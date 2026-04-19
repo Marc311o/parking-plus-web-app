@@ -30,12 +30,14 @@ class JwtAuthenticationFilter(
 
         if (jwtService.isTokenValid(jwt) && SecurityContextHolder.getContext().authentication == null) {
             val userEmail = jwtService.extractUsername(jwt)
+            val userId = jwtService.extractUserId(jwt)
             val isOperator = jwtService.isOperator(jwt)
 
             val role = if (isOperator) "ROLE_ADMIN" else "ROLE_CLIENT"
             val authorities = listOf(SimpleGrantedAuthority(role))
 
             val authToken = UsernamePasswordAuthenticationToken(userEmail, null, authorities)
+            authToken.details = userId
             SecurityContextHolder.getContext().authentication = authToken
         }
 

@@ -1,15 +1,18 @@
 package com.parkingplus.parkinghistory
 
+import com.parkingplus.vehicles.VehicleService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/parking-history")
 class ParkingHistoryController(
-    private val parkingHistoryService: ParkingHistoryService
+    private val parkingHistoryService: ParkingHistoryService,
+    private val vehicleService: VehicleService
 ) {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
@@ -32,7 +35,15 @@ class ParkingHistoryController(
 
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/vehicle/{vehicleId}")
-    fun getParkingHistoryByVehicle(@PathVariable vehicleId: Long): ResponseEntity<List<ParkingHistoryDTO>> {
+    fun getParkingHistoryByVehicle(@PathVariable vehicleId: Long, authentication: Authentication): ResponseEntity<List<ParkingHistoryDTO>> {
+        val authUserId = authentication.details as? Long
+        if (authentication.authorities.none { it.authority == "ROLE_ADMIN" }) {
+            val vehicle = vehicleService.getVehicleById(vehicleId)
+                ?: return ResponseEntity.notFound().build()
+            if (vehicle.ownerId != authUserId) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            }
+        }
         return ResponseEntity.ok(parkingHistoryService.getParkingHistoryByVehicle(vehicleId))
     }
 

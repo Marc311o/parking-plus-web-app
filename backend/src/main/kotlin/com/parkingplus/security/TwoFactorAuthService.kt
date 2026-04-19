@@ -6,6 +6,8 @@ import dev.samstevens.totp.code.HashingAlgorithm
 import dev.samstevens.totp.secret.DefaultSecretGenerator
 import dev.samstevens.totp.time.SystemTimeProvider
 import org.springframework.stereotype.Service
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Service
 class TwoFactorAuthService {
@@ -22,6 +24,7 @@ class TwoFactorAuthService {
     }
 
     fun getQrCodeUri(secret: String, email: String): String {
-        return "otpauth://totp/ParkingPlus:$email?secret=$secret&issuer=ParkingPlus"
+        val encodedEmail = URLEncoder.encode(email, StandardCharsets.UTF_8)
+        return "otpauth://totp/ParkingPlus:$encodedEmail?secret=$secret&issuer=ParkingPlus"
     }
 }

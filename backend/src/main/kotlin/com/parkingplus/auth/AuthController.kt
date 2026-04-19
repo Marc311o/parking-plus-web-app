@@ -18,19 +18,23 @@ class AuthController(
     private val passwordResetService: PasswordResetService
 ) {
 
+    companion object {
+        private const val INVALID_CREDENTIALS_MSG = "Nieprawidłowy email lub hasło"
+    }
+
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Any> {
         val user = userRepository.findByEmail(request.email).orElse(null)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nieprawidłowy email lub hasło")
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(INVALID_CREDENTIALS_MSG)
 
         if (!passwordEncoder.matches(request.password, user.password)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nieprawidłowy email lub hasło")
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(INVALID_CREDENTIALS_MSG)
         }
 
         if (user.isMfaEnabled) {
             return ResponseEntity.ok(LoginResponse(
                 mfaRequired = true,
-                email = user.email
+                preAuthToken = jwtService.generatePreAuthToken(user)
             ))
         }
 
@@ -40,11 +44,14 @@ class AuthController(
 
     @PostMapping("/verify-mfa")
     fun verifyMfa(@RequestBody request: MfaVerificationRequest): ResponseEntity<Any> {
-        val user = userRepository.findByEmail(request.email).orElse(null)
-            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Użytkownik nie istnieje")
+        val email = jwtService.validatePreAuthToken(request.preAuthToken)
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(INVALID_CREDENTIALS_MSG)
+
+        val user = userRepository.findByEmail(email).orElse(null)
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(INVALID_CREDENTIALS_MSG)
 
         val secret = user.mfaSecret
-            ?: return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("2FA nie jest skonfigurowane")
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(INVALID_CREDENTIALS_MSG)
 
         if (!tfaService.isCodeValid(secret, request.code)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Niepoprawny kod 2FA")

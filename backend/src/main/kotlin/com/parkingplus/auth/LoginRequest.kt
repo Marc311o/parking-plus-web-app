@@ -10,12 +10,12 @@ data class LoginRequest(
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class LoginResponse(
     val token: String? = null,
-    val mfaRequired: Boolean? = false,
-    val email: String? = null
+    val mfaRequired: Boolean? = null,
+    val preAuthToken: String? = null
 )
 
 data class MfaVerificationRequest(
-    val email: String = "",
+    val preAuthToken: String = "",
     val code: String = ""
 )
 
@@ -31,4 +31,8 @@ data class ForgotPasswordRequest(
 data class ResetPasswordRequest(
     val token: String = "",
     val newPassword: String = ""
+)
+
+data class MfaConfirmRequest(
+    val code: String = ""
 )
