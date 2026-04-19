@@ -1,5 +1,7 @@
 package com.parkingplus.users
 
+import com.parkingplus.auth.MfaSetupResponse
+import com.parkingplus.security.TwoFactorAuthService
 import com.parkingplus.users.requests.CreateUserRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -8,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val tfaService: TwoFactorAuthService
 ) {
 
     @Transactional(readOnly = true)
@@ -55,5 +58,32 @@ class UserService(
             throw NoSuchElementException("User with id: $id not found.")
         }
         userRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun generateMfaSetup(userId: Long): MfaSetupResponse {
+        val user = userRepository.findById(userId).orElseThrow()
+
+        val secret = tfaService.generateNewSecret()
+        user.mfaSecret = secret
+        userRepository.save(user)
+
+        return MfaSetupResponse(
+            secret = secret,
+            qrCodeUri = tfaService.getQrCodeUri(secret, user.email)
+        )
+    }
+
+    @Transactional
+    fun confirmMfaSetup(userId: Long, code: String): Boolean {
+        val user = userRepository.findById(userId).orElseThrow()
+        val secret = user.mfaSecret ?: return false
+
+        if (tfaService.isCodeValid(secret, code)) {
+            user.isMfaEnabled = true
+            userRepository.save(user)
+            return true
+        }
+        return false
     }
 }

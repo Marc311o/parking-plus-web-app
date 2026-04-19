@@ -35,6 +35,11 @@ class UserEntity(
     val createdAt: Instant? = null,
 
     @Column(name = "is_operator", nullable = false)
-    var isOperator: Boolean = false
+    var isOperator: Boolean = false,
 
+    @Column(name = "mfa_secret")
+    var mfaSecret: String? = null,
+
+    @Column(name = "is_mfa_enabled", nullable = false)
+    var isMfaEnabled: Boolean = false
 )
