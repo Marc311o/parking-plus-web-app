@@ -51,6 +51,11 @@ class UserController(private val userService: UserService) {
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping("/{id}/mfa-confirm")
     fun confirmMfa(@PathVariable id: Long, @RequestBody request: com.parkingplus.auth.MfaVerificationRequest): ResponseEntity<String> {
+        val user = userService.getUserById(id)
+        if (user.email != request.email) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Adres e-mail nie odpowiada użytkownikowi wskazanemu w ścieżce żądania")
+        }
         val success = userService.confirmMfaSetup(id, request.code)
         return if (success) {
             ResponseEntity.ok("2FA aktywowane pomyślnie")
