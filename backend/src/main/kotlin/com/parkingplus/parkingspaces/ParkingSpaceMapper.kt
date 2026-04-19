@@ -1,5 +1,8 @@
 package com.parkingplus.parkingspaces
 
-class ParkingSpaceMapper {
-    // TODO:
-}
+fun ParkingSpaceEntity.toDTO() = ParkingSpaceDTO(
+    id = id,
+    status = status,
+    spaceType = spaceType,
+    level = level
+)
