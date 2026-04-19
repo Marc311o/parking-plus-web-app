@@ -14,7 +14,8 @@ class AuthController(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
     private val jwtService: JwtService,
-    private val tfaService: TwoFactorAuthService
+    private val tfaService: TwoFactorAuthService,
+    private val passwordResetService: PasswordResetService
 ) {
 
     @PostMapping("/login")
@@ -51,5 +52,21 @@ class AuthController(
 
         val token = jwtService.generateToken(user)
         return ResponseEntity.ok(LoginResponse(token = token))
+    }
+
+    @PostMapping("/forgot-password")
+    fun forgotPassword(@RequestBody request: ForgotPasswordRequest): ResponseEntity<String> {
+        passwordResetService.createTokenAndSendEmail(request.email)
+        return ResponseEntity.ok("Jeśli e-mail istnieje w bazie, wysłano na niego link do resetu hasła.")
+    }
+
+    @PostMapping("/reset-password")
+    fun resetPassword(@RequestBody request: ResetPasswordRequest): ResponseEntity<String> {
+        val success = passwordResetService.resetPassword(request)
+        return if (success) {
+            ResponseEntity.ok("Hasło zostało pomyślnie zmienione.")
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nieprawidłowy lub wygasły token.")
+        }
     }
 }
