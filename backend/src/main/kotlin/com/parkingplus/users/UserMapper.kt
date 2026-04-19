@@ -10,10 +10,11 @@ fun UserEntity.toDTO() = UserDTO(
     isOperator = isOperator
 )
 
+
 fun CreateUserRequest.toEntity(hashedPassword: String) = UserEntity(
     name = name,
     surname = surname,
     email = email,
     password = hashedPassword,
-    isOperator = isOperator
+    isOperator = false
 )

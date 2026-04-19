@@ -19,11 +19,25 @@ class UserService(
     @Transactional
     fun createUser(request: CreateUserRequest): UserDTO {
         if (userRepository.existsByEmail(request.email)) {
-            throw IllegalArgumentException("User with email ${request.email} already exists.")
+            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
         }
 
         val hashedPassword = passwordEncoder.encode(request.password)
         val entity = request.toEntity(hashedPassword)
+
+        return userRepository.save(entity).toDTO()
+    }
+
+    @Transactional
+    fun createOperator(request: CreateUserRequest): UserDTO {
+        if (userRepository.existsByEmail(request.email)) {
+            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
+        }
+
+        val hashedPassword = passwordEncoder.encode(request.password)
+        val entity = request.toEntity(hashedPassword).apply {
+            isOperator = true
+        }
 
         return userRepository.save(entity).toDTO()
     }
