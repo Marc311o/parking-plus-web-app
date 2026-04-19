@@ -1,11 +1,15 @@
 package com.parkingplus.users
 
 import com.parkingplus.users.requests.CreateUserRequest
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class UserService(private val userRepository: UserRepository) {
+class UserService(
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder
+) {
 
     @Transactional(readOnly = true)
     fun getAllUsers(): List<UserDTO> {
@@ -18,7 +22,9 @@ class UserService(private val userRepository: UserRepository) {
             throw IllegalArgumentException("User with email ${request.email} already exists.")
         }
 
-        val entity = request.toEntity()
+        val hashedPassword = passwordEncoder.encode(request.password)
+        val entity = request.toEntity(hashedPassword)
+
         return userRepository.save(entity).toDTO()
     }
 
