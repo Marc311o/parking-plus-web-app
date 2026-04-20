@@ -16,13 +16,34 @@
     box-sizing: border-box;
 }
 
+h1 {
+    color: #5E076E;
+    font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
 .inputs {
     display: flex;
     flex-direction: column;
     margin-top: 55px;
     align-items: flex-start;
+    width: 350px;
     /*gap: 25px;*/
     /*background-color: red;*/
+}
+
+.inputs h3 {
+    white-space: normal;
+    word-wrap: break-word;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: justify;
+
 }
 
 .input {
@@ -87,8 +108,8 @@ button {
     align-items: center;
     gap: 10px;
 
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 
 }
 

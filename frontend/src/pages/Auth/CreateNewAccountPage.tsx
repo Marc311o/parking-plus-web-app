@@ -29,7 +29,7 @@ const CreateNewAccountPage = () => {
             <div className='container'>
 
 
-                <h1>ZAŁÓŹ KONTO</h1>
+                <h1>ZAŁÓŻ KONTO</h1>
 
                 <Box
                     component="img"

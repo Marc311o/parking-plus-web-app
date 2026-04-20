@@ -28,6 +28,8 @@ const Login = () => {
 
             <div className='container'>
 
+                <h1>ZALOGUJ SIĘ</h1>
+
                 <Box
                     component="img"
                     src={PersonFill}
