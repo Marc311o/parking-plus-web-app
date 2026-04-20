@@ -5,16 +5,16 @@ import {useNavigate} from "react-router-dom";
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box} from "@mui/material";
 
-const Login = () => {
+const CreateNewAccountPage = () => {
 
     const navigate = useNavigate();
 
-    const handleLogin = () => {
-        navigate("/");
+    const handleBack = () => {
+        navigate("/login");
     };
 
     const handleCreateAccount = () => {
-        navigate("/createnewaccount");
+        // todo
     };
 
     return (
@@ -22,11 +22,14 @@ const Login = () => {
         <Box
             sx={{
                 width: '100%',
-                minHeight: '100%',
+                minHeight: '100vh',
             }}
         >
 
             <div className='container'>
+
+
+                <h1>ZAŁÓŹ KONTO</h1>
 
                 <Box
                     component="img"
@@ -40,7 +43,19 @@ const Login = () => {
 
 
                 <div className='inputs'>
-                    {/*login*/}
+                    {/*name*/}
+                    <label className='inputTitle'>Imię</label>
+                    <div className='input'>
+                        <input type="text" placeholder="Imię"></input>
+                    </div>
+
+                    {/*surname*/}
+                    <label className='inputTitle'>Nazwisko</label>
+                    <div className='input'>
+                        <input type="text" placeholder="Nazwisko"></input>
+                    </div>
+
+                    {/*mail*/}
                     <label className='inputTitle'>Login</label>
                     <div className='input'>
                         <input type="text" placeholder="E-mail"></input>
@@ -51,20 +66,23 @@ const Login = () => {
                     <div className='input'>
                         <input type="password" placeholder="Hasło"></input>
                     </div>
-                    <a href="/forgotpassword" className="forgotPasswordText">
-                        Nie pamiętam hasła
-                    </a>
+
+                    {/*password repeat*/}
+                    <label className='inputTitle'>Powtórz hasło</label>
+                    <div className='input'>
+                        <input type="password" placeholder="Powtórz hasło"></input>
+                    </div>
 
 
                 </div>
 
                 <div className='buttons'>
-                    <button onClick={handleLogin} className='loginBtn'>Zaloguj się</button>
                     <button onClick={handleCreateAccount} className='signupBtn'>Utwórz konto</button>
+                    <button onClick={handleBack} className='signupBtn'>Wróć</button>
                 </div>
             </div>
         </Box>
     );
 };
 
-export default Login;
+export default CreateNewAccountPage;
