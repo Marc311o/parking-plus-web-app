@@ -139,3 +139,25 @@ button {
     background: #c22bdd;
     border: 3px solid #8b1f9e;
 }
+
+
+.passwordBox {
+    position: relative;
+    width: 100%;
+}
+
+.passwordBox input {
+    width: 100%;
+    padding-right: 40px;
+    box-sizing: border-box;
+}
+
+.toggleIcon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #5E076E;
+    user-select: none;
+}

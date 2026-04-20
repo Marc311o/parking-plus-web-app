@@ -1,11 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import "./Login.css";
 import {useNavigate} from "react-router-dom";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box} from "@mui/material";
+import EyeOn from '@assets/eyeOn.svg';
+import EyeOff from '@assets/eyeOff.svg';
 
 const CreateNewAccountPage = () => {
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -16,6 +22,11 @@ const CreateNewAccountPage = () => {
     const handleCreateAccount = () => {
         // todo
     };
+
+    const renderIcon = (icon: string | undefined) => {
+        return <img src={icon} alt="icon" style={{width: 20, height: 20}}/>;
+    };
+
 
     return (
 
@@ -61,16 +72,38 @@ const CreateNewAccountPage = () => {
                         <input type="text" placeholder="E-mail"></input>
                     </div>
 
-                    {/*password*/}
+                    {/* password */}
                     <label className='inputTitle'>Hasło</label>
-                    <div className='input'>
-                        <input type="password" placeholder="Hasło"></input>
+
+                    <div className='input passwordBox'>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Hasło"
+                        />
+
+                        <span
+                            className="toggleIcon"
+                            onClick={() => setShowPassword(prev => !prev)}
+                        >
+        {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
+    </span>
                     </div>
 
-                    {/*password repeat*/}
+                    {/* password repeat */}
                     <label className='inputTitle'>Powtórz hasło</label>
-                    <div className='input'>
-                        <input type="password" placeholder="Powtórz hasło"></input>
+
+                    <div className='input passwordBox'>
+                        <input
+                            type={showRepeatPassword ? "text" : "password"}
+                            placeholder="Powtórz hasło"
+                        />
+
+                        <span
+                            className="toggleIcon"
+                            onClick={() => setShowRepeatPassword(prev => !prev)}
+                        >
+        {showRepeatPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
+    </span>
                     </div>
 
 

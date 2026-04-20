@@ -1,11 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import "./Login.css";
 import {useNavigate} from "react-router-dom";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box} from "@mui/material";
+import EyeOn from '@assets/eyeOn.svg';
+import EyeOff from '@assets/eyeOff.svg';
 
 const Login = () => {
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate();
 
@@ -15,6 +19,10 @@ const Login = () => {
 
     const handleCreateAccount = () => {
         navigate("/createnewaccount");
+    };
+
+    const renderIcon = (icon: string | undefined) => {
+        return <img src={icon} alt="icon" style={{width: 20, height: 20}}/>;
     };
 
     return (
@@ -50,8 +58,19 @@ const Login = () => {
 
                     {/*password*/}
                     <label className='inputTitle'>Hasło</label>
-                    <div className='input'>
-                        <input type="password" placeholder="Hasło"></input>
+                    <div className='input passwordBox'>
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Hasło"
+                            />
+
+                            <span
+                                className="toggleIcon"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
+                            </span>
+
                     </div>
                     <a href="/forgotpassword" className="forgotPasswordText">
                         Nie pamiętam hasła
