@@ -5,6 +5,8 @@ import QuestionMark from '@assets/questionMark.svg';
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import {Box} from "@mui/material";
+import renderIcon from "../../utils/RenderIcon";
+
 
 
 const ForgotPasswordPage = () => {
@@ -21,10 +23,6 @@ const ForgotPasswordPage = () => {
         // todo
     };
 
-
-    const renderIcon = (icon: string | undefined) => {
-        return <img src={icon} alt="icon" style={{width: 20, height: 20}}/>;
-    };
 
     return (
         <div className='container'>

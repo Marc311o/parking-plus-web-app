@@ -6,6 +6,8 @@ import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
+import renderIcon from "../../utils/RenderIcon";
+
 
 const Login = () => {
 
@@ -19,10 +21,6 @@ const Login = () => {
 
     const handleCreateAccount = () => {
         navigate("/createnewaccount");
-    };
-
-    const renderIcon = (icon: string | undefined) => {
-        return <img src={icon} alt="icon" style={{width: 20, height: 20}}/>;
     };
 
     return (

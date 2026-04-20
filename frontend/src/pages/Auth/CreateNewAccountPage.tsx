@@ -1,11 +1,14 @@
 import React, {useState} from "react";
 import "./Login.css";
 import {useNavigate} from "react-router-dom";
+import renderIcon from "../../utils/RenderIcon";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
+
+
 
 const CreateNewAccountPage = () => {
 
@@ -23,9 +26,6 @@ const CreateNewAccountPage = () => {
         // todo
     };
 
-    const renderIcon = (icon: string | undefined) => {
-        return <img src={icon} alt="icon" style={{width: 20, height: 20}}/>;
-    };
 
 
     return (
