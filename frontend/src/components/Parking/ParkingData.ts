@@ -22,21 +22,21 @@ const createLevelLayout = (level: ParkingLevel): ParkingSpotLayout[] => {
     const topMiddleRow: ParkingSpotLayout[] = Array.from({length: 7}, (_, index) => ({
         id: `${level}${index + 15}`,
         x: middleStartX + index * middleGap,
-        y: 120,
+        y: 100,
         orientation: 'middleTop',
     }));
 
     const lowerMiddleRow: ParkingSpotLayout[] = Array.from({length: 7}, (_, index) => ({
         id: `${level}${index + 22}`,
         x: middleStartX + index * middleGap,
-        y: 252,
+        y: 232,
         orientation: 'middleBottom',
     }));
 
     const bottomRow: ParkingSpotLayout[] = Array.from({length: 11}, (_, index) => ({
         id: `${level}${String(index + 1).padStart(2, '0')}`,
         x: 58 + index * 82,
-        y: 500,
+        y: 480,
         orientation: 'bottom',
     }));
 

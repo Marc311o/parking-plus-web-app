@@ -73,7 +73,7 @@ const PagesLayout = () => {
                                 overflowY: 'auto',
                                 overflowX: 'hidden',
                                 px: 3,
-                                pb: 0,
+                                pb: 2,
                             }}
                         >
                             <Box

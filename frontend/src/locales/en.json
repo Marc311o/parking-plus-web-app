@@ -53,5 +53,36 @@
         }
       }
     }
+  },
+  "parking": {
+    "details": {
+      "spotCardTitle": "ID #{id}",
+      "ownerCardTitle": "ID {id}",
+      "labels": {
+        "type": "Type",
+        "status": "Status",
+        "level": "Level",
+        "ownerData": "Owner",
+        "email": "Email",
+        "phone": "Phone",
+        "entry": "Entry",
+        "plate": "Plate",
+        "parkingTime": "Parking time",
+        "amountDue": "Amount due"
+      },
+      "statuses": {
+        "FREE": "Free",
+        "OCCUPIED": "Occupied",
+        "RESERVED": "Reserved"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Regular",
+        "REGULAR_HANDICAPED": "Handicapped",
+        "EV_ABLEBODIED": "Electric",
+        "EV_HANDICAPED": "Electric + handicapped",
+        "REGULAR_BOTH": "Regular + both",
+        "EV_BOTH": "Electric + both"
+      }
+    }
   }
 }

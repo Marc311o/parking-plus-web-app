@@ -1,18 +1,24 @@
 import {useMemo, useState} from 'react';
 import {Box} from '@mui/material';
-import type {ParkingLevel} from '@api/types.ts';
+import type {ParkingLevel, ParkingSpotDetails} from '@api/types';
 import ParkingSpot from './ParkingSpot';
 import ParkingLevelSwitch from './ParkingLevelSwitch';
+import ParkingSpotDetailsPanel from './ParkingSpotDetailsPanel';
 import {
     mockParkingSpotsByLevel,
     parkingLayoutByLevel,
 } from './ParkingData';
+import {mockParkingSpotDetailsById} from '../../mocks/mockParkingSpotDetails'
 
 const ParkingMap = () => {
     const [activeLevel, setActiveLevel] = useState<ParkingLevel>('A');
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
 
     const spotsFromBackend = mockParkingSpotsByLevel[activeLevel];
+
+    const selectedSpotDetails: ParkingSpotDetails | null = selectedSpotId
+        ? mockParkingSpotDetailsById[selectedSpotId] ?? null
+        : null;
 
     const mappedSpots = useMemo(() => {
         const layout = parkingLayoutByLevel[activeLevel];
@@ -34,10 +40,16 @@ const ParkingMap = () => {
         <Box
             sx={{
                 width: '100%',
-                height: '100%',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+            }}
+        > <Box
+            sx={{
+                width: '100%',
                 minHeight: 620,
                 display: 'flex',
-                overflow: 'hidden',
                 borderRadius: 2,
             }}
         >
@@ -53,7 +65,6 @@ const ParkingMap = () => {
                     overflow: 'hidden',
                 }}
             >
-                {/* lewy blok */}
                 <Box
                     sx={{
                         position: 'absolute',
@@ -65,14 +76,13 @@ const ParkingMap = () => {
                     }}
                 />
 
-                {/* prawy blok */}
                 <Box
                     sx={{
                         position: 'absolute',
-                        right: 28,
-                        top: 50,
-                        width: 110,
-                        height: 340,
+                        right: 20,
+                        top: 54,
+                        width: 96,
+                        height: 320,
                         bgcolor: '#2C2C33',
                     }}
                 />
@@ -99,6 +109,9 @@ const ParkingMap = () => {
                     setSelectedSpotId(null);
                 }}
             />
+        </Box>
+
+            <ParkingSpotDetailsPanel details={selectedSpotDetails}/>
         </Box>
     );
 };

@@ -1,6 +1,6 @@
 export type ParkingLevel = 'A' | 'B';
 
-export type ParkingSpotStatus = 'available' | 'occupied' | 'reserved';
+export type ParkingSpaceStatus = 'FREE' | 'OCCUPIED' | 'RESERVED';
 
 export type SpaceType =
     | 'REGULAR_ABLEBODIED'
@@ -10,9 +10,29 @@ export type SpaceType =
     | 'REGULAR_BOTH'
     | 'EV_BOTH';
 
-export interface ParkingSpot {
+export interface ParkingSpaceDto {
     id: string;
-    label: string;
-    status?: ParkingSpotStatus;
-    spaceType?: SpaceType;
+    status: ParkingSpaceStatus;
+    spaceType: SpaceType;
+    level: number;
+}
+
+export interface ParkingSpotOccupantDetails {
+    ownerId: string;
+    ownerName: string;
+    ownerEmail: string;
+    ownerPhone: string;
+    vehiclePlate: string;
+    entryTime: string;
+    parkingDuration: string;
+    amountDue: string;
+    imageUrl?: string;
+}
+
+export interface ParkingSpotDetails {
+    id: string;
+    type: SpaceType;
+    status: ParkingSpaceStatus;
+    level: number;
+    occupant?: ParkingSpotOccupantDetails;
 }
