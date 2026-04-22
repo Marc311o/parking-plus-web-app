@@ -52,5 +52,36 @@
         }
       }
     }
+  },
+  "parking": {
+    "details": {
+      "spotCardTitle": "ID #{id}",
+      "ownerCardTitle": "ID {id}",
+      "labels": {
+        "type": "Typ",
+        "status": "Status",
+        "level": "Piętro",
+        "ownerData": "Dane",
+        "email": "Email",
+        "phone": "Nr tel.",
+        "entry": "Wjazd",
+        "plate": "Tablica",
+        "parkingTime": "Czas postoju",
+        "amountDue": "Należność"
+      },
+      "statuses": {
+        "FREE": "Wolne",
+        "OCCUPIED": "Zajęte",
+        "RESERVED": "Zarezerwowane"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Standardowe",
+        "REGULAR_HANDICAPED": "Niepełnosprawni",
+        "EV_ABLEBODIED": "Elektryczne",
+        "EV_HANDICAPED": "Elektryczne + niepełnosprawni",
+        "REGULAR_BOTH": "Standardowe + oba",
+        "EV_BOTH": "Elektryczne + oba"
+      }
+    }
   }
 }
