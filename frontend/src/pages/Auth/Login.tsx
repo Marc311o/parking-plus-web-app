@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./Login.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
-import { Box, Alert, CircularProgress } from "@mui/material";
+import {Box, Alert, CircularProgress} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import renderIcon from "../../utils/RenderIcon";
@@ -15,11 +15,10 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [step, setStep] = useState<'login' | '2fa'>('login');
+    const [step, setStep] = useState<'login' | '2fa'>('2fa');
 
     const [preToken, setPreToken] = useState('');
     const [totpCode, setTotpCode] = useState('');
-
 
 
     const [error, setError] = useState("");
@@ -102,7 +101,7 @@ const Login = () => {
                 "Content-Type": "application/json"
             },
             credentials: "include",
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({email, password})
         });
 
         const data = await response.json();
@@ -119,31 +118,33 @@ const Login = () => {
         }
 
         localStorage.setItem("token", data.token);
-        return { mfa: false };
+        return {mfa: false};
     }
 
 
     if (step === '2fa') {
         return (
-            <Box sx={{ width: '100%', minHeight: '100%' }}>
+            <Box sx={{width: '100%', minHeight: '100%'}}>
                 <div className='container'>
 
                     <h1>WERYFIKACJA 2FA</h1>
 
                     <p>Wpisz kod z aplikacji Authenticator</p>
 
-                    <form onSubmit={handle2FASubmit}>
+                    {/*<form onSubmit={handle2FASubmit}>*/}
 
                         {verifyError && <Alert severity="error">{verifyError}</Alert>}
 
-                        <div className='input'>
-                            <input
-                                type="text"
-                                placeholder="6-cyfrowy kod"
-                                value={totpCode}
-                                onChange={(e) => setTotpCode(e.target.value)}
-                                maxLength={6}
-                            />
+                        <div className='inputs'>
+                            <div className='input'>
+                                <input
+                                    type="text"
+                                    placeholder="6-cyfrowy kod"
+                                    value={totpCode}
+                                    onChange={(e) => setTotpCode(e.target.value)}
+                                    maxLength={6}
+                                />
+                            </div>
                         </div>
 
                         <div className='buttons'>
@@ -152,7 +153,7 @@ const Login = () => {
                                 className='loginBtn'
                                 disabled={verifyLoading || totpCode.length !== 6}
                             >
-                                {verifyLoading ? <CircularProgress size={20} /> : "Weryfikuj"}
+                                {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
                             </button>
 
                             <button
@@ -165,7 +166,7 @@ const Login = () => {
                             </button>
                         </div>
 
-                    </form>
+                    {/*</form>*/}
 
                 </div>
             </Box>
@@ -174,7 +175,7 @@ const Login = () => {
 
 
     return (
-        <Box sx={{ width: '100%', minHeight: '100%' }}>
+        <Box sx={{width: '100%', minHeight: '100%'}}>
             <div className='container'>
 
                 <h1>ZALOGUJ SIĘ</h1>
@@ -183,7 +184,7 @@ const Login = () => {
                     component="img"
                     src={PersonFill}
                     alt="Person Fill"
-                    sx={{ width: '100%', maxWidth: 150 }}
+                    sx={{width: '100%', maxWidth: 150}}
                 />
 
                 <div className='inputs'>
