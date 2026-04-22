@@ -7,16 +7,15 @@ fun UserEntity.toDTO() = UserDTO(
     name = name,
     surname = surname,
     email = email,
-    isOperator = isOperator
+    isOperator = isOperator,
+    isMfaEnabled = isMfaEnabled
 )
 
-fun CreateUserRequest.toEntity() = UserEntity(
+
+fun CreateUserRequest.toEntity(hashedPassword: String) = UserEntity(
     name = name,
     surname = surname,
     email = email,
-
-    // TODO: tutaj bedzie pozniej hash
-    password = password,
-
-    isOperator = isOperator
+    password = hashedPassword,
+    isOperator = false
 )

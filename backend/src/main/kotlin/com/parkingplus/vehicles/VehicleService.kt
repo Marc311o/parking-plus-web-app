@@ -19,6 +19,11 @@ class VehicleService(
         return vehicleRepository.findByLicensePlate(plate)?.toDTO()
     }
 
+    @Transactional(readOnly = true)
+    fun getVehicleById(id: Long): VehicleDTO? {
+        return vehicleRepository.findById(id).map { it.toDTO() }.orElse(null)
+    }
+
     @Transactional
     fun createVehicle(dto: VehicleDTO): VehicleDTO {
         if (vehicleRepository.existsByLicensePlate(dto.licensePlate)) {

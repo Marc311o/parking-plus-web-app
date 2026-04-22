@@ -16,6 +16,7 @@ data class UserDTO(
     @field:NotBlank(message = "Email jest wymagany")
     val email: String = "",
 
-    val isOperator: Boolean = false
+    val isOperator: Boolean = false,
 
+    val isMfaEnabled: Boolean = false
 )

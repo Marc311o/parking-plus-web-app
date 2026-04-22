@@ -6,7 +6,7 @@ import java.util.*
 
 interface UserRepository : JpaRepository<UserEntity, Long> {
 
-    fun findByEmail(email: String): Optional<UserEntity>
+    fun findByEmail(email: String): java.util.Optional<UserEntity>
     fun existsByEmail(email: String): Boolean
     fun findBySurnameContainingIgnoreCase(surname: String): List<UserEntity>
     fun findAllByIsOperatorTrue(): List<UserEntity>     // fetches operators
