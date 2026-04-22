@@ -1,11 +1,18 @@
 package com.parkingplus.users
 
+import com.parkingplus.auth.MfaSetupResponse
+import com.parkingplus.security.TwoFactorAuthService
 import com.parkingplus.users.requests.CreateUserRequest
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class UserService(private val userRepository: UserRepository) {
+class UserService(
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder,
+    private val tfaService: TwoFactorAuthService
+) {
 
     @Transactional(readOnly = true)
     fun getAllUsers(): List<UserDTO> {
@@ -15,10 +22,26 @@ class UserService(private val userRepository: UserRepository) {
     @Transactional
     fun createUser(request: CreateUserRequest): UserDTO {
         if (userRepository.existsByEmail(request.email)) {
-            throw IllegalArgumentException("User with email ${request.email} already exists.")
+            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
         }
 
-        val entity = request.toEntity()
+        val hashedPassword = passwordEncoder.encode(request.password)
+        val entity = request.toEntity(hashedPassword)
+
+        return userRepository.save(entity).toDTO()
+    }
+
+    @Transactional
+    fun createOperator(request: CreateUserRequest): UserDTO {
+        if (userRepository.existsByEmail(request.email)) {
+            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
+        }
+
+        val hashedPassword = passwordEncoder.encode(request.password)
+        val entity = request.toEntity(hashedPassword).apply {
+            isOperator = true
+        }
+
         return userRepository.save(entity).toDTO()
     }
 
@@ -35,5 +58,32 @@ class UserService(private val userRepository: UserRepository) {
             throw NoSuchElementException("User with id: $id not found.")
         }
         userRepository.deleteById(id)
+    }
+
+    @Transactional
+    fun generateMfaSetup(userId: Long): MfaSetupResponse {
+        val user = userRepository.findById(userId).orElseThrow()
+
+        val secret = tfaService.generateNewSecret()
+        user.mfaSecret = secret
+        userRepository.save(user)
+
+        return MfaSetupResponse(
+            secret = secret,
+            qrCodeUri = tfaService.getQrCodeUri(secret, user.email)
+        )
+    }
+
+    @Transactional
+    fun confirmMfaSetup(userId: Long, code: String): Boolean {
+        val user = userRepository.findById(userId).orElseThrow()
+        val secret = user.mfaSecret ?: return false
+
+        if (tfaService.isCodeValid(secret, code)) {
+            user.isMfaEnabled = true
+            userRepository.save(user)
+            return true
+        }
+        return false
     }
 }
