@@ -40,7 +40,7 @@ const Sidebar = () => {
             text: formatMessage({id: 'sidebar.menu.dashboard'}),
             icon: <DashboardIcon/>,
             path: '/',
-            active: location.pathname === '/',
+            active: location.pathname === '/dashboard',
         },
         {
             text: formatMessage({id: 'sidebar.menu.statistics'}),

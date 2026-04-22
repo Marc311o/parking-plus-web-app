@@ -1,0 +1,67 @@
+import type {ParkingSpotDetails} from '@api/types';
+
+export const mockParkingSpotDetailsById: Record<string, ParkingSpotDetails> = {
+    A01: {
+        id: 'A01',
+        type: 'REGULAR_HANDICAPED',
+        status: 'OCCUPIED',
+        level: 0,
+        occupant: {
+            ownerId: '#01',
+            ownerName: 'Jan Kowalski',
+            ownerEmail: 'jan.kowalski@gmail.com',
+            ownerPhone: '+48 123456789',
+            vehiclePlate: 'EL 456AB',
+            entryTime: '12:04:21',
+            parkingDuration: '1:04:21',
+            amountDue: '6,00 zł',
+            imageUrl: '/images/mock-car-1.png',
+        },
+    },
+    A04: {
+        id: 'A04',
+        type: 'REGULAR_ABLEBODIED',
+        status: 'OCCUPIED',
+        level: 0,
+        occupant: {
+            ownerId: '#04',
+            ownerName: 'Jan Kowalski',
+            ownerEmail: 'jan.kowalski@gmail.com',
+            ownerPhone: '+48 123456789',
+            vehiclePlate: 'EL 456AB',
+            entryTime: '12:04:21',
+            parkingDuration: '1:04:21',
+            amountDue: '6,00 zł',
+            imageUrl: '/images/mock-car-1.png',
+        },
+    },
+    A05: {
+        id: 'A05',
+        type: 'REGULAR_ABLEBODIED',
+        status: 'RESERVED',
+        level: 0,
+    },
+    A08: {
+        id: 'A08',
+        type: 'EV_ABLEBODIED',
+        status: 'FREE',
+        level: 0,
+    },
+    B13: {
+        id: 'B13',
+        type: 'REGULAR_HANDICAPED',
+        status: 'OCCUPIED',
+        level: 1,
+        occupant: {
+            ownerId: '#13',
+            ownerName: 'Anna Nowak',
+            ownerEmail: 'anna.nowak@gmail.com',
+            ownerPhone: '+48 987654321',
+            vehiclePlate: 'WA 123XY',
+            entryTime: '09:14:02',
+            parkingDuration: '2:31:18',
+            amountDue: '12,00 zł',
+            imageUrl: '/images/mock-car-2.png',
+        },
+    },
+};
