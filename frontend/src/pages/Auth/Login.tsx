@@ -15,7 +15,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [step, setStep] = useState<'login' | '2fa'>('2fa');
+    const [step, setStep] = useState<'login' | '2fa'>('login');
 
     const [preToken, setPreToken] = useState('');
     const [totpCode, setTotpCode] = useState('');
