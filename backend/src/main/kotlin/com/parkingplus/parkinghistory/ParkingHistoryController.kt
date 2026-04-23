@@ -2,11 +2,13 @@ package com.parkingplus.parkinghistory
 
 import com.parkingplus.vehicles.VehicleService
 import jakarta.validation.Valid
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/parking-history")
@@ -73,5 +75,14 @@ class ParkingHistoryController(
     @GetMapping("/parking-space/{parkingSpaceId}")
     fun getParkingHistoryByParkingSpace(@PathVariable parkingSpaceId: String): ResponseEntity<List<ParkingHistoryDTO>> {
         return ResponseEntity.ok(parkingHistoryService.getParkingHistoryByParkingSpace(parkingSpaceId))
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/daily-revenue")
+    fun getDailyRevenue(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate
+    ): ResponseEntity<Double> {
+        val revenue = parkingHistoryService.getDailyRevenue(date)
+        return ResponseEntity.ok(revenue)
     }
 }
