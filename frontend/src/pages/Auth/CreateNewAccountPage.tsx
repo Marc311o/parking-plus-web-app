@@ -43,6 +43,38 @@ const CreateNewAccountPage = () => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        // ustawianie wartości
+        switch (name) {
+            case "name":
+                setName(value);
+                if (value.trim()) setNameEmptyError(false);
+                break;
+
+            case "surname":
+                setSurname(value);
+                if (value.trim()) setSurnameEmptyError(false);
+                break;
+
+            case "email":
+                setEmail(value);
+                if (value.trim()) setEmailEmptyError(false);
+                break;
+
+            case "password":
+                setPassword(value);
+                if (value.trim()) setPasswordEmptyError(false);
+                break;
+
+            case "passwordRepeat":
+                setPasswordRepeat(value);
+                if (value.trim()) setPasswordRepeatEmptyError(false);
+                break;
+        }
+    };
+
     const resetEmptyFieldErrors = () => {
         setNameEmptyError(false);
         setSurnameEmptyError(false);
@@ -175,10 +207,11 @@ const CreateNewAccountPage = () => {
                     <label className='inputTitle'>Imię</label>
                     <div className='input'>
                         <input
+                            name="name"
                             type="text"
                             placeholder="Imię"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={handleInputChange}
                             className={nameEmptyError ? "errorInput" : ""}
                         ></input>
                     </div>
@@ -187,10 +220,11 @@ const CreateNewAccountPage = () => {
                     <label className='inputTitle'>Nazwisko</label>
                     <div className='input'>
                         <input
+                            name="surname"
                             type="text"
                             placeholder="Nazwisko"
                             value={surname}
-                            onChange={(e) => setSurname(e.target.value)}
+                            onChange={handleInputChange}
                             className={surnameEmptyError ? "errorInput" : ""}>
                         </input>
                     </div>
@@ -199,10 +233,11 @@ const CreateNewAccountPage = () => {
                     <label className='inputTitle'>Login</label>
                     <div className='input'>
                         <input
+                            name="email"
                             type="text"
                             placeholder="E-mail"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleInputChange}
                             className={emailEmptyError ? "errorInput" : ""}
                         ></input>
                     </div>
@@ -212,10 +247,11 @@ const CreateNewAccountPage = () => {
 
                     <div className='input passwordBox'>
                         <input
+                            name="password"
                             type={showPassword ? "text" : "password"}
                             placeholder="Hasło"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handleInputChange}
                             className={passwordEmptyError ? "errorInput" : ""}
                         />
 
@@ -232,10 +268,11 @@ const CreateNewAccountPage = () => {
 
                     <div className='input passwordBox'>
                         <input
+                            name="passwordRepeat"
                             type={showRepeatPassword ? "text" : "password"}
                             placeholder="Powtórz hasło"
                             value={passwordRepeat}
-                            onChange={(e) => setPasswordRepeat(e.target.value)}
+                            onChange={handleInputChange}
                             className={passwordRepeatEmptyError ? "errorInput" : ""}
                         />
 
