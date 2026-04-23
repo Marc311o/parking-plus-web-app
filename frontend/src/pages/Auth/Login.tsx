@@ -143,6 +143,7 @@ const Login = () => {
                                     value={totpCode}
                                     onChange={(e) => setTotpCode(e.target.value)}
                                     maxLength={6}
+                                    onClick={handle2FASubmit}
                                 />
                             </div>
                         </div>
