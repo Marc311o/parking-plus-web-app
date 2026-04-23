@@ -26,6 +26,51 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [verifyLoading, setVerifyLoading] = useState(false);
 
+    const [emailEmptyError, setEmailEmptyError] = useState(false);
+    const [passwordEmptyError, setPasswordEmptyError] = useState(false);
+
+
+
+    const resetEmptyFieldErrors = () => {
+        setEmailEmptyError(false);
+        setPasswordEmptyError(false);
+    }
+
+    const areEmptyFields = () => {
+        let hasError = false;
+
+        if (!email.trim()) {
+            setEmailEmptyError(true);
+            hasError = true;
+        }
+
+        if (!password.trim()) {
+            setPasswordEmptyError(true);
+            hasError = true;
+        }
+
+        return hasError;
+    };
+
+    // input control
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        switch (name) {
+            case "email":
+                setEmail(value);
+                if (value.trim()) setEmailEmptyError(false);
+                break;
+
+            case "password":
+                setPassword(value);
+                if (value.trim()) setPasswordEmptyError(false);
+                break;
+        }
+    };
+
+
     const navigate = useNavigate();
 
 
@@ -34,6 +79,12 @@ const Login = () => {
 
         setLoading(true);
         setError("");
+
+        if (areEmptyFields()){
+            setError("Wszystkie pola muszą być wypełnione")
+            setLoading(false)
+            return
+        }
 
         try {
             const result = await login(email, password);
@@ -46,7 +97,7 @@ const Login = () => {
             }
 
         } catch (err) {
-            setError(err.message);
+            setError("Nieprawidłowy e-mail lub hasło");
         } finally {
             setLoading(false);
         }
@@ -74,7 +125,7 @@ const Login = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Błąd logowania");
+                throw new Error("Błąd logowania");
             }
 
             localStorage.setItem("token", data.token);
@@ -107,7 +158,7 @@ const Login = () => {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || "Błąd logowania");
+            throw new Error("Niepoprawny e-mail lub hasło");
         }
 
         if (data.mfaRequired) {
@@ -195,20 +246,24 @@ const Login = () => {
                     <label className='inputTitle'>Login</label>
                     <div className='input'>
                         <input
+                            name="email"
                             type="text"
                             placeholder="E-mail"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleInputChange}
+                            className={emailEmptyError ? "errorInput" : ""}
                         />
                     </div>
 
                     <label className='inputTitle'>Hasło</label>
                     <div className='input passwordBox'>
                         <input
+                            name="password"
                             type={showPassword ? "text" : "password"}
                             placeholder="Hasło"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handleInputChange}
+                            className={passwordEmptyError ? "errorInput" : ""}
                         />
 
                         <span
