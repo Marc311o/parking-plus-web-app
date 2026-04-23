@@ -72,4 +72,14 @@ class ParkingSpaceService(
         }
         parkingSpaceRepository.deleteById(id)
     }
+
+    @Transactional(readOnly = true)
+    fun getDetailedStats(): ParkingSpaceStatsDTO {
+        val free = parkingSpaceRepository.countByStatus(ParkingSpaceStatus.FREE)
+        val occupied = parkingSpaceRepository.countByStatus(ParkingSpaceStatus.OCCUPIED)
+        val reserved = parkingSpaceRepository.countByStatus(ParkingSpaceStatus.RESERVED)
+        val total = parkingSpaceRepository.count()
+
+        return ParkingSpaceStatsDTO(free, occupied, reserved, total)
+    }
 }

@@ -10,4 +10,5 @@ interface ParkingSpaceRepository : JpaRepository<ParkingSpaceEntity, String> {
     fun findAllBySpaceType(spaceType: SpaceType): List<ParkingSpaceEntity>
     fun findAllByStatus(status: ParkingSpaceStatus): List<ParkingSpaceEntity>
     fun findAllByLevelAndSpaceType(level: Int, spaceType: SpaceType): List<ParkingSpaceEntity>
+    fun countByStatus(status: ParkingSpaceStatus): Long
 }
