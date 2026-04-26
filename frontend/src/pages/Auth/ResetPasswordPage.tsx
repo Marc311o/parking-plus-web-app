@@ -81,7 +81,11 @@ const ResetPasswordPage = () => {
             navigate("/login");
 
         } catch (err) {
-            setError(err.message);
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Wystąpił nieznany błąd");
+            }
         } finally {
             setLoading(false);
         }

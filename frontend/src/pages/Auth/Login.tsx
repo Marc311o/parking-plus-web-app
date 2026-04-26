@@ -31,11 +31,6 @@ const Login = () => {
 
 
 
-    const resetEmptyFieldErrors = () => {
-        setEmailEmptyError(false);
-        setPasswordEmptyError(false);
-    }
-
     const areEmptyFields = () => {
         let hasError = false;
 

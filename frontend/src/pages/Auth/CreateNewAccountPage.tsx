@@ -15,10 +15,7 @@ const CreateNewAccountPage = () => {
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
     const [error, setError] = useState("");
-    const [verifyError, setVerifyError] = useState("");
     const [loading, setLoading] = useState(false);
-    const [verifyLoading, setVerifyLoading] = useState(false);
-
 
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
@@ -142,12 +139,17 @@ const CreateNewAccountPage = () => {
                 throw new Error("Hasła nie są identyczne!")
             }
 
-            const result = await createNewAcc(name, surname, email, password);
+            // const result =
+            await createNewAcc(name, surname, email, password);
 
             navigate("/login");
 
         } catch (err) {
-            setError(err.message);
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Wystąpił nieznany błąd");
+            }
         } finally {
             setLoading(false);
         }
@@ -167,7 +169,8 @@ const CreateNewAccountPage = () => {
             throw new Error("Na podany e-mail jest już założone inne konto!");
         }
 
-        const data = await response.json();
+        //const data =
+        await response.json();
 
         if (!response.ok) {
             throw new Error("Nie można założyć konta!");
