@@ -19,6 +19,11 @@ const PagesLayoutAuth = () => {
             prefix: '/forgotpassword',
             navbar: <LogoNavbar/>,
         },
+
+        {
+            prefix: '/reset-password',
+            navbar: <LogoNavbar/>,
+        },
     ];
 
     const currentNavbar =
