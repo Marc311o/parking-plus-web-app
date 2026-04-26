@@ -11,6 +11,7 @@ import SettingsPage from '@pages/SettingsPage';
 import Login from '@pages/Auth/Login';
 import CreateNewAccount from '@pages/Auth/CreateNewAccountPage';
 import ForgotPassword from '@pages/Auth/ForgotPasswordPage';
+import ResetPassword from '@pages/Auth/ResetPasswordPage';
 
 
 const AppRoutes = () => {
@@ -22,6 +23,7 @@ const AppRoutes = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/createnewaccount" element={<CreateNewAccount />} />
                 <Route path="/forgotpassword" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
             </Route>
 
 
