@@ -111,7 +111,9 @@
       "totalLabel": "Łącznie",
       "totalDescription": "wjazdów w tygodniu",
       "averageLabel": "Średnio",
-      "averageDescription": "wjazdów dziennie"
+      "averageDescription": "wjazdów dziennie",
+      "tileTitle": "Wjazdy na parking",
+      "tileDescription": "Liczba wjazdów w wybranym tygodniu"
     }
   }
 }

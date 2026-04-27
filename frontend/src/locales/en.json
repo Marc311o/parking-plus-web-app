@@ -112,7 +112,9 @@
       "totalLabel": "Total",
       "totalDescription": "entries this week",
       "averageLabel": "Average",
-      "averageDescription": "entries per day"
+      "averageDescription": "entries per day",
+      "tileTitle": "Parking entries",
+      "tileDescription": "Number of entries in the selected week"
     }
   }
 }

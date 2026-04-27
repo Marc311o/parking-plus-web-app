@@ -1,6 +1,10 @@
 import {useEffect, useState} from 'react';
 import {Box} from '@mui/material';
-import {ParkingEntriesChart} from '@components/Statistics';
+import {useIntl} from 'react-intl';
+import {
+    ParkingEntriesChart,
+    StatisticsAccordionTile,
+} from '@components/Statistics';
 import {type EntriesResponse} from '@api/Statistics';
 
 const toIsoDate = (date: Date) => {
@@ -57,6 +61,8 @@ const createMockEntriesForWeek = (weekStart: Date): EntriesResponse => {
 };
 
 const ParkingStatisticsPage = () => {
+    const {formatMessage} = useIntl();
+
     const [selectedWeekStart, setSelectedWeekStart] = useState(getStartOfCurrentWeek());
     const [entriesData, setEntriesData] = useState<EntriesResponse>(
         createMockEntriesForWeek(getStartOfCurrentWeek())
@@ -65,11 +71,12 @@ const ParkingStatisticsPage = () => {
     useEffect(() => {
         const from = toIsoDate(selectedWeekStart);
 
-        // Docelowo tutaj będzie pobieranie danych z backendu:
+        // Docelowo backend:
         //
         // const fetchEntries = async () => {
         //     try {
-        //         const data = await fetchNieWiemJakSieBacieNazywam(from);
+        //         const data = await fetchEntriesStatistics(from);
+
         //         setEntriesData(data);
         //     } catch (error) {
         //         console.error(error);
@@ -79,7 +86,7 @@ const ParkingStatisticsPage = () => {
         //
         // fetchEntries();
 
-        setEntriesData(createMockEntriesForWeek(selectedWeekStart)); //TODO WYWAL
+        setEntriesData(createMockEntriesForWeek(selectedWeekStart));
     }, [selectedWeekStart]);
 
     const handlePreviousWeek = () => {
@@ -105,16 +112,32 @@ const ParkingStatisticsPage = () => {
                 minHeight: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 3,
+                gap: 2.5,
             }}
         >
-            <ParkingEntriesChart
-                data={entriesData}
-                onPreviousWeek={handlePreviousWeek}
-                onNextWeek={handleNextWeek}
-                onCurrentWeek={handleCurrentWeek}
-                onWeekSelect={handleWeekSelect}
-            />
+            <StatisticsAccordionTile
+                title={formatMessage({id: 'statistics.entries.tileTitle'})}
+                description={formatMessage({id: 'statistics.entries.tileDescription'})}
+            >
+                <ParkingEntriesChart
+                    data={entriesData}
+                    onPreviousWeek={handlePreviousWeek}
+                    onNextWeek={handleNextWeek}
+                    onCurrentWeek={handleCurrentWeek}
+                    onWeekSelect={handleWeekSelect}
+                />
+            </StatisticsAccordionTile>
+
+            {/* Później dodasz kolejne wykresy tak:
+
+            <StatisticsAccordionTile
+                title="Przychody"
+                description="Przychody parkingu w wybranym okresie"
+            >
+                <RevenueChart />
+            </StatisticsAccordionTile>
+
+            */}
         </Box>
     );
 };

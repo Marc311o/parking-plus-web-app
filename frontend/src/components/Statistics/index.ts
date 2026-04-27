@@ -1,1 +1,2 @@
-export * from './ParkingEntriesChart.tsx';
+export * from './ParkingEntriesChart';
+export * from './StatisticsAccordionTile'
