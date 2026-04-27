@@ -84,5 +84,35 @@
         "EV_BOTH": "Electric + both"
       }
     }
+  },
+  "statistics": {
+    "week": {
+      "previous": "Previous week",
+      "next": "Next week"
+    },
+    "month": {
+      "previous": "Previous month",
+      "next": "Next month"
+    },
+    "weekPicker": {
+      "helper": "Click any day to select the whole week from Monday to Sunday."
+    },
+    "weekday": {
+      "mondayShort": "MON",
+      "tuesdayShort": "TUE",
+      "wednesdayShort": "WED",
+      "thursdayShort": "THU",
+      "fridayShort": "FRI",
+      "saturdayShort": "SAT",
+      "sundayShort": "SUN"
+    },
+    "entries": {
+      "title": "Parking entries",
+      "description": "Number of entries split by days of the selected week",
+      "totalLabel": "Total",
+      "totalDescription": "entries this week",
+      "averageLabel": "Average",
+      "averageDescription": "entries per day"
+    }
   }
 }

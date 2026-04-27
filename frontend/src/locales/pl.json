@@ -83,5 +83,35 @@
         "EV_BOTH": "Elektryczne + oba"
       }
     }
+  },
+  "statistics": {
+    "week": {
+      "previous": "Poprzedni tydzień",
+      "next": "Następny tydzień"
+    },
+    "month": {
+      "previous": "Poprzedni miesiąc",
+      "next": "Następny miesiąc"
+    },
+    "weekPicker": {
+      "helper": "Kliknij dowolny dzień, aby wybrać cały tydzień od poniedziałku do niedzieli."
+    },
+    "weekday": {
+      "mondayShort": "PN",
+      "tuesdayShort": "WT",
+      "wednesdayShort": "ŚR",
+      "thursdayShort": "CZ",
+      "fridayShort": "PT",
+      "saturdayShort": "SB",
+      "sundayShort": "ND"
+    },
+    "entries": {
+      "title": "Wjazdy na parking",
+      "description": "Liczba wjazdów rozbita na dni wybranego tygodnia",
+      "totalLabel": "Łącznie",
+      "totalDescription": "wjazdów w tygodniu",
+      "averageLabel": "Średnio",
+      "averageDescription": "wjazdów dziennie"
+    }
   }
 }
