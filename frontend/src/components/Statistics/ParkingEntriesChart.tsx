@@ -6,21 +6,15 @@ import {
 } from '@mui/material';
 import {useIntl} from 'react-intl';
 import {type EntriesResponse} from '@api/Statistics';
-import {WeekDatePicker} from './WeekDatePicker';
+import {StatisticsDatePicker} from './StatisticsDatePicker';
 
 type ParkingEntriesChartProps = {
     data: EntriesResponse;
-    onPreviousWeek: () => void;
-    onNextWeek: () => void;
-    onCurrentWeek: () => void;
     onWeekSelect: (weekStart: string) => void;
 };
 
 export const ParkingEntriesChart = ({
                                         data,
-                                        onPreviousWeek,
-                                        onNextWeek,
-                                        onCurrentWeek,
                                         onWeekSelect,
                                     }: ParkingEntriesChartProps) => {
     const {formatMessage, locale} = useIntl();
@@ -137,13 +131,10 @@ export const ParkingEntriesChart = ({
                         },
                     }}
                 >
-                    <WeekDatePicker
-                        from={data.from}
-                        to={data.to}
-                        onPreviousWeek={onPreviousWeek}
-                        onNextWeek={onNextWeek}
-                        onCurrentWeek={onCurrentWeek}
-                        onWeekSelect={onWeekSelect}
+                    <StatisticsDatePicker
+                        mode="week"
+                        value={data.from}
+                        onChange={onWeekSelect}
                     />
                 </Box>
             </Box>

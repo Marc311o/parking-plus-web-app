@@ -114,6 +114,19 @@
       "averageDescription": "wjazdów dziennie",
       "tileTitle": "Wjazdy na parking",
       "tileDescription": "Liczba wjazdów w wybranym tygodniu"
+    },
+    "revenue": {
+      "title": "Przychody",
+      "description": "Przychody parkingu w wybranym okresie",
+      "totalLabel": "Przychód",
+      "totalDescription": "łącznie w okresie",
+      "changeLabel": "Zmiana",
+      "changeDescription": "do poprzedniego okresu",
+      "periods": {
+        "daily": "Dziennie",
+        "weekly": "Tygodniowo",
+        "yearly": "Rocznie"
+      }
     }
   }
 }

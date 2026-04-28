@@ -115,6 +115,21 @@
       "averageDescription": "entries per day",
       "tileTitle": "Parking entries",
       "tileDescription": "Number of entries in the selected week"
+    },
+    "revenue": {
+      "tileTitle": "Revenue",
+      "tileDescription": "Parking revenue in the selected period",
+      "title": "Revenue",
+      "description": "Parking revenue in the selected period",
+      "totalLabel": "Revenue",
+      "totalDescription": "total for period",
+      "changeLabel": "Change",
+      "changeDescription": "vs previous period",
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "yearly": "Yearly"
+      }
     }
   }
 }
