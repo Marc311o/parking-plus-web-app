@@ -8,6 +8,7 @@ import {Alert, Box} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateNewAccountPage = () => {
 
@@ -16,6 +17,7 @@ const CreateNewAccountPage = () => {
 
     const [error, setError] = useState("");
 
+    const [loading, setLoading] = useState(false);
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
     const [email, setEmail] = useState("");
@@ -156,7 +158,7 @@ const CreateNewAccountPage = () => {
     };
 
     async function createNewAcc(name: string, surname: string, email: string, password: string) {
-        const response = await fetch("http://localhost:8080/api/users", {
+        const response = await fetch(`${API_URL}/api/users`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

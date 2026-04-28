@@ -9,7 +9,10 @@ import EyeOff from '@assets/eyeOff.svg';
 import renderIcon from "../../utils/RenderIcon";
 import { useAuthStore } from "../../store/useAuthStore";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+
 const Login = () => {
+
 
     const setToken = useAuthStore((state) => state.setToken);
 
@@ -110,7 +113,7 @@ const Login = () => {
         setVerifyError("");
 
         try {
-            const response = await fetch("http://localhost:8080/api/auth/verify-mfa", {
+            const response = await fetch(`${API_URL}/api/auth/verify-mfa`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -143,7 +146,7 @@ const Login = () => {
 
 
     async function login(email: string, password: string) {
-        const response = await fetch("http://localhost:8080/api/auth/login", {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

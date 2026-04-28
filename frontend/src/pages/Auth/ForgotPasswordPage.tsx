@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
 import {Alert, Box} from "@mui/material";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const ForgotPasswordPage = () => {
 
     const [error, setError] = useState("");
@@ -29,7 +31,7 @@ const ForgotPasswordPage = () => {
         try {
             setLoading(true);
 
-            const res = await fetch("http://localhost:8080/api/auth/forgot-password", {
+            const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
