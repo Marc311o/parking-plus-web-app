@@ -1,21 +1,31 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {
     Box,
     Paper,
     Typography,
 } from '@mui/material';
 import {useIntl} from 'react-intl';
-import {type EntriesResponse} from '@api/Statistics';
-import {StatisticsDatePicker} from './StatisticsDatePicker';
+import {
+    type EntriesPeriod,
+    type EntriesResponse,
+} from '@api/Statistics';
+import {StatisticsPeriodDatePicker} from './StatisticsPeriodDatePicker';
 
 type ParkingEntriesChartProps = {
     data: EntriesResponse;
-    onWeekSelect: (weekStart: string) => void;
+    selectedPeriod: EntriesPeriod;
+    selectedDate: string;
+    onPeriodChange: (period: EntriesPeriod) => void;
+    onDateChange: (date: string) => void;
 };
+
 
 export const ParkingEntriesChart = ({
                                         data,
-                                        onWeekSelect,
+                                        selectedPeriod,
+                                        selectedDate,
+                                        onPeriodChange,
+                                        onDateChange,
                                     }: ParkingEntriesChartProps) => {
     const {formatMessage, locale} = useIntl();
 
@@ -32,6 +42,37 @@ export const ParkingEntriesChart = ({
     );
 
     const [selectedBarIndex, setSelectedBarIndex] = useState(defaultHighlightedIndex);
+
+    const periods = [
+        {
+            value: 'DAILY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.daily'}),
+        },
+        {
+            value: 'WEEKLY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.weekly'}),
+        },
+        {
+            value: 'YEARLY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.yearly'}),
+        },
+    ];
+
+    const getEntriesDatePickerMode = (period: EntriesPeriod) => {
+        if (period === 'YEARLY') {
+            return 'year';
+        }
+
+        if (period === 'WEEKLY') {
+            return 'week';
+        }
+
+        return 'day';
+    };
+
+    useEffect(() => {
+        setSelectedBarIndex(defaultHighlightedIndex);
+    }, [defaultHighlightedIndex, data.points]);
 
     const highlightedIndex =
         selectedBarIndex >= 0 && selectedBarIndex < data.points.length
@@ -81,7 +122,6 @@ export const ParkingEntriesChart = ({
                         'radial-gradient(circle, rgba(143,44,255,0.15) 0%, rgba(143,44,255,0) 70%)',
                 }}
             />
-
             <Box
                 sx={{
                     position: 'relative',
@@ -119,25 +159,24 @@ export const ParkingEntriesChart = ({
                             fontWeight: 600,
                         }}
                     >
-                        {formatMessage({id: 'statistics.entries.description'})}
+                        {selectedPeriod === 'DAILY'
+                            ? formatMessage({id: 'statistics.entries.descriptionDaily'})
+                            : selectedPeriod === 'WEEKLY'
+                                ? formatMessage({id: 'statistics.entries.descriptionWeekly'})
+                                : formatMessage({id: 'statistics.entries.descriptionYearly'})}
                     </Typography>
                 </Box>
 
-                <Box
-                    sx={{
-                        mt: {
-                            xs: 0,
-                            lg: -0.8,
-                        },
-                    }}
-                >
-                    <StatisticsDatePicker
-                        mode="week"
-                        value={data.from}
-                        onChange={onWeekSelect}
-                    />
-                </Box>
+                <StatisticsPeriodDatePicker
+                    periods={periods}
+                    selectedPeriod={selectedPeriod}
+                    selectedDate={selectedDate}
+                    getMode={getEntriesDatePickerMode}
+                    onPeriodChange={onPeriodChange}
+                    onDateChange={onDateChange}
+                />
             </Box>
+
 
             <Box
                 sx={{
@@ -200,7 +239,11 @@ export const ParkingEntriesChart = ({
                                     color: 'rgba(255,255,255,0.78)',
                                 }}
                             >
-                                {formatMessage({id: 'statistics.entries.totalDescription'})}
+                                {selectedPeriod === 'DAILY'
+                                    ? formatMessage({id: 'statistics.entries.totalDescriptionDaily'})
+                                    : selectedPeriod === 'WEEKLY'
+                                        ? formatMessage({id: 'statistics.entries.totalDescriptionWeekly'})
+                                        : formatMessage({id: 'statistics.entries.totalDescriptionYearly'})}
                             </Typography>
                         </Box>
                     </Box>
@@ -246,7 +289,11 @@ export const ParkingEntriesChart = ({
                                 fontWeight: 700,
                             }}
                         >
-                            {formatMessage({id: 'statistics.entries.averageDescription'})}
+                            {selectedPeriod === 'DAILY'
+                                ? formatMessage({id: 'statistics.entries.averageDescriptionDaily'})
+                                : selectedPeriod === 'WEEKLY'
+                                    ? formatMessage({id: 'statistics.entries.averageDescriptionWeekly'})
+                                    : formatMessage({id: 'statistics.entries.averageDescriptionYearly'})}
                         </Typography>
                     </Box>
                 </Box>
@@ -326,10 +373,10 @@ export const ParkingEntriesChart = ({
                             bottom: 30,
                             height: chartHeight + 42,
                             display: 'grid',
-                            gridTemplateColumns: `repeat(${data.points.length}, minmax(52px, 1fr))`,
+                            gridTemplateColumns: `repeat(${data.points.length}, minmax(42px, 1fr))`,
                             gap: {
-                                xs: 1.5,
-                                md: 2.8,
+                                xs: 1,
+                                md: selectedPeriod === 'DAILY' ? 1.4 : 2.8,
                             },
                             alignItems: 'end',
                             zIndex: 2,
@@ -407,8 +454,8 @@ export const ParkingEntriesChart = ({
                                         <Box
                                             sx={{
                                                 width: {
-                                                    xs: 34,
-                                                    md: 42,
+                                                    xs: selectedPeriod === 'DAILY' ? 24 : 34,
+                                                    md: selectedPeriod === 'DAILY' ? 30 : 42,
                                                 },
                                                 height: barHeight,
                                                 borderRadius: '14px 14px 5px 5px',
@@ -437,7 +484,7 @@ export const ParkingEntriesChart = ({
                                             color: isHighlighted
                                                 ? '#1F1A3D'
                                                 : '#777196',
-                                            fontSize: 12,
+                                            fontSize: selectedPeriod === 'DAILY' ? 10 : 12,
                                             fontWeight: 900,
                                             letterSpacing: 0.4,
                                         }}

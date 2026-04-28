@@ -109,12 +109,26 @@
     "entries": {
       "title": "Parking entries",
       "description": "Number of entries split by days of the selected week",
+      "descriptionDaily": "Number of entries grouped hourly for the selected day",
+      "descriptionWeekly": "Number of entries split by days of the selected week",
+      "descriptionYearly": "Number of entries split by months of the selected year",
       "totalLabel": "Total",
       "totalDescription": "entries this week",
+      "totalDescriptionDaily": "entries on selected day",
+      "totalDescriptionWeekly": "entries this week",
+      "totalDescriptionYearly": "entries this year",
       "averageLabel": "Average",
       "averageDescription": "entries per day",
+      "averageDescriptionDaily": "entries per interval",
+      "averageDescriptionWeekly": "entries per day",
+      "averageDescriptionYearly": "entries per month",
       "tileTitle": "Parking entries",
-      "tileDescription": "Number of entries in the selected week"
+      "tileDescription": "Number of entries in the selected period",
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "yearly": "Yearly"
+      }
     },
     "revenue": {
       "tileTitle": "Revenue",

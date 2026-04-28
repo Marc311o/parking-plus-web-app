@@ -9,7 +9,7 @@ import {
     type RevenuePeriod,
     type RevenueResponse,
 } from '@api/Statistics';
-import {StatisticsDatePicker} from './StatisticsDatePicker';
+import {StatisticsPeriodDatePicker} from './StatisticsPeriodDatePicker';
 
 type ParkingRevenueChartProps = {
     data: RevenueResponse;
@@ -32,23 +32,6 @@ const paddingRight = 48;
 const paddingTop = 30;
 const paddingBottom = 42;
 
-const periods: Array<{
-    value: RevenuePeriod;
-    translationId: string;
-}> = [
-    {
-        value: 'DAILY',
-        translationId: 'statistics.revenue.periods.daily',
-    },
-    {
-        value: 'WEEKLY',
-        translationId: 'statistics.revenue.periods.weekly',
-    },
-    {
-        value: 'YEARLY',
-        translationId: 'statistics.revenue.periods.yearly',
-    },
-];
 
 const getRoundedMax = (value: number) => {
     if (value <= 1000) {
@@ -109,6 +92,33 @@ export const ParkingRevenueChart = ({
     useEffect(() => {
         setSelectedPointIndex(Math.max(data.points.length - 4, 0));
     }, [data.points]);
+
+    const periods = [
+        {
+            value: 'DAILY' as RevenuePeriod,
+            label: formatMessage({id: 'statistics.revenue.periods.daily'}),
+        },
+        {
+            value: 'WEEKLY' as RevenuePeriod,
+            label: formatMessage({id: 'statistics.revenue.periods.weekly'}),
+        },
+        {
+            value: 'YEARLY' as RevenuePeriod,
+            label: formatMessage({id: 'statistics.revenue.periods.yearly'}),
+        },
+    ];
+
+    const getRevenueDatePickerMode = (period: RevenuePeriod) => {
+        if (period === 'YEARLY') {
+            return 'year';
+        }
+
+        if (period === 'WEEKLY') {
+            return 'week';
+        }
+
+        return 'day';
+    };
 
     const formatMoney = (value: number) => {
         return new Intl.NumberFormat(locale, {
@@ -230,71 +240,15 @@ export const ParkingRevenueChart = ({
                     </Typography>
                 </Box>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 1.2,
-                        flexWrap: 'wrap',
-                        justifyContent: 'flex-end',
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            bgcolor: '#F7F5FD',
-                            borderRadius: '18px',
-                            p: 0.6,
-                            gap: 0.4,
-                            border: '1px solid #EEEAF8',
-                        }}
-                    >
-                        {periods.map((period) => {
-                            const isSelected = period.value === selectedPeriod;
-
-                            return (
-                                <Box
-                                    key={period.value}
-                                    onClick={() => onPeriodChange(period.value)}
-                                    sx={{
-                                        px: 2,
-                                        height: 36,
-                                        borderRadius: '13px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        cursor: 'pointer',
-                                        bgcolor: isSelected ? '#211C43' : 'transparent',
-                                        color: isSelected ? '#FFFFFF' : '#9B96B7',
-                                        fontSize: 12,
-                                        fontWeight: 900,
-                                        transition: '0.2s ease',
-                                        '&:hover': {
-                                            bgcolor: isSelected ? '#211C43' : '#FFFFFF',
-                                            color: isSelected ? '#FFFFFF' : '#7A2DFF',
-                                        },
-                                    }}
-                                >
-                                    {formatMessage({id: period.translationId})}
-                                </Box>
-                            );
-                        })}
-                    </Box>
-
-                    <StatisticsDatePicker
-                        mode={
-                            selectedPeriod === 'YEARLY'
-                                ? 'year'
-                                : selectedPeriod === 'WEEKLY'
-                                    ? 'week'
-                                    : 'day'
-                        }
-                        value={selectedDate}
-                        onChange={onDateChange}
-                    />
-                </Box>
+                <StatisticsPeriodDatePicker
+                    periods={periods}
+                    selectedPeriod={selectedPeriod}
+                    selectedDate={selectedDate}
+                    getMode={getRevenueDatePickerMode}
+                    onPeriodChange={onPeriodChange}
+                    onDateChange={onDateChange}
+                />
             </Box>
-
             <Box
                 sx={{
                     display: 'grid',

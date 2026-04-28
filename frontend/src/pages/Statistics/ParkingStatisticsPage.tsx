@@ -7,6 +7,7 @@ import {
     StatisticsAccordionTile,
 } from '@components/Statistics';
 import {
+    type EntriesPeriod,
     type EntriesResponse,
     type RevenuePeriod,
     type RevenueResponse,
@@ -52,11 +53,69 @@ const getStartOfCurrentYear = () => {
     return new Date(today.getFullYear(), 0, 1, 12, 0, 0, 0);
 };
 
-const createMockEntriesForWeek = (weekStart: Date): EntriesResponse => {
-    const weekEnd = addDays(weekStart, 6);
+const getStartOfCurrentMonth = () => {
+    const today = new Date();
+
+    return new Date(today.getFullYear(), today.getMonth(), 1, 12, 0, 0, 0);
+};
+
+const createMockEntries = (
+    period: EntriesPeriod,
+    fromDate: Date
+): EntriesResponse => {
+    if (period === 'DAILY') {
+        return {
+            period: 'DAILY',
+            from: toIsoDate(fromDate),
+            to: toIsoDate(fromDate),
+            total: 84,
+            points: [
+                {label: '00:00', value: 2},
+                {label: '02:00', value: 1},
+                {label: '04:00', value: 0},
+                {label: '06:00', value: 5},
+                {label: '08:00', value: 14},
+                {label: '10:00', value: 11},
+                {label: '12:00', value: 9},
+                {label: '14:00', value: 12},
+                {label: '16:00', value: 13},
+                {label: '18:00', value: 10},
+                {label: '20:00', value: 5},
+                {label: '22:00', value: 2},
+            ],
+        };
+    }
+
+    if (period === 'YEARLY') {
+        const year = fromDate.getFullYear();
+
+        return {
+            period: 'YEARLY',
+            from: `${year}-01-01`,
+            to: `${year}-12-31`,
+            total: 2304,
+            points: [
+                {label: 'JAN', value: 180},
+                {label: 'FEB', value: 210},
+                {label: 'MAR', value: 195},
+                {label: 'APR', value: 220},
+                {label: 'MAY', value: 240},
+                {label: 'JUN', value: 205},
+                {label: 'JUL', value: 190},
+                {label: 'AUG', value: 215},
+                {label: 'SEP', value: 175},
+                {label: 'OCT', value: 185},
+                {label: 'NOV', value: 160},
+                {label: 'DEC', value: 129},
+            ],
+        };
+    }
+
+    const weekEnd = addDays(fromDate, 6);
 
     return {
-        from: toIsoDate(weekStart),
+        period: 'WEEKLY',
+        from: toIsoDate(fromDate),
         to: toIsoDate(weekEnd),
         total: 193,
         points: [
@@ -126,22 +185,24 @@ const createMockRevenue = (
 
     return {
         period: 'DAILY',
-        from: `${year}-${String(fromDate.getMonth() + 1).padStart(2, '0')}-01`,
-        to: `${year}-${String(fromDate.getMonth() + 1).padStart(2, '0')}-30`,
-        total: 18450,
+        from: toIsoDate(fromDate),
+        to: toIsoDate(fromDate),
+        total: 1840,
         previousPeriodChangePercent: 4.8,
         currency: 'PLN',
         points: [
-            {label: '01', date: `${year}-03-01`, value: 410},
-            {label: '02', date: `${year}-03-02`, value: 520},
-            {label: '03', date: `${year}-03-03`, value: 460},
-            {label: '04', date: `${year}-03-04`, value: 610},
-            {label: '05', date: `${year}-03-05`, value: 700},
-            {label: '06', date: `${year}-03-06`, value: 850},
-            {label: '07', date: `${year}-03-07`, value: 760},
-            {label: '08', date: `${year}-03-08`, value: 690},
-            {label: '09', date: `${year}-03-09`, value: 720},
-            {label: '10', date: `${year}-03-10`, value: 640},
+            {label: '00:00', date: `${toIsoDate(fromDate)}T00:00:00`, value: 0},
+            {label: '02:00', date: `${toIsoDate(fromDate)}T02:00:00`, value: 80},
+            {label: '04:00', date: `${toIsoDate(fromDate)}T04:00:00`, value: 120},
+            {label: '06:00', date: `${toIsoDate(fromDate)}T06:00:00`, value: 230},
+            {label: '08:00', date: `${toIsoDate(fromDate)}T08:00:00`, value: 410},
+            {label: '10:00', date: `${toIsoDate(fromDate)}T10:00:00`, value: 520},
+            {label: '12:00', date: `${toIsoDate(fromDate)}T12:00:00`, value: 690},
+            {label: '14:00', date: `${toIsoDate(fromDate)}T14:00:00`, value: 760},
+            {label: '16:00', date: `${toIsoDate(fromDate)}T16:00:00`, value: 910},
+            {label: '18:00', date: `${toIsoDate(fromDate)}T18:00:00`, value: 1030},
+            {label: '20:00', date: `${toIsoDate(fromDate)}T20:00:00`, value: 1280},
+            {label: '22:00', date: `${toIsoDate(fromDate)}T22:00:00`, value: 1840},
         ],
     };
 };
@@ -149,10 +210,15 @@ const createMockRevenue = (
 const ParkingStatisticsPage = () => {
     const {formatMessage} = useIntl();
 
-    const [selectedWeekStart, setSelectedWeekStart] = useState(getStartOfCurrentWeek());
+    const [selectedEntriesPeriod, setSelectedEntriesPeriod] =
+        useState<EntriesPeriod>('WEEKLY');
+
+    const [selectedEntriesDate, setSelectedEntriesDate] = useState(
+        toIsoDate(getStartOfCurrentWeek())
+    );
 
     const [entriesData, setEntriesData] = useState<EntriesResponse>(
-        createMockEntriesForWeek(getStartOfCurrentWeek())
+        createMockEntries('WEEKLY', getStartOfCurrentWeek())
     );
 
     const [selectedRevenuePeriod, setSelectedRevenuePeriod] =
@@ -165,13 +231,13 @@ const ParkingStatisticsPage = () => {
     );
 
     useEffect(() => {
-        const from = toIsoDate(selectedWeekStart);
-
         // Docelowo backend:
         //
         // const fetchEntries = async () => {
         //     try {
-        //         const response = await fetch(`/api/statistics/parking/entries?from=${from}`);
+        //         const response = await fetch(
+        //             `/api/statistics/parking/entries?period=${selectedEntriesPeriod}&from=${selectedEntriesDate}`
+        //         );
         //
         //         if (!response.ok) {
         //             throw new Error('Failed to fetch parking entries statistics');
@@ -182,14 +248,16 @@ const ParkingStatisticsPage = () => {
         //         setEntriesData(data);
         //     } catch (error) {
         //         console.error(error);
-        //         setEntriesData(createMockEntriesForWeek(selectedWeekStart));
+        //         setEntriesData(createMockEntries(selectedEntriesPeriod, getDateFromIso(selectedEntriesDate)));
         //     }
         // };
         //
         // fetchEntries();
 
-        setEntriesData(createMockEntriesForWeek(selectedWeekStart));
-    }, [selectedWeekStart]);
+        setEntriesData(
+            createMockEntries(selectedEntriesPeriod, getDateFromIso(selectedEntriesDate))
+        );
+    }, [selectedEntriesPeriod, selectedEntriesDate]);
 
     useEffect(() => {
         const from = toIsoDate(selectedRevenueFrom);
@@ -220,20 +288,20 @@ const ParkingStatisticsPage = () => {
         setRevenueData(createMockRevenue(selectedRevenuePeriod, selectedRevenueFrom));
     }, [selectedRevenuePeriod, selectedRevenueFrom]);
 
-    const handlePreviousWeek = () => {
-        setSelectedWeekStart((current) => addDays(current, -7));
-    };
+    const handleEntriesPeriodChange = (period: EntriesPeriod) => {
+        setSelectedEntriesPeriod(period);
 
-    const handleNextWeek = () => {
-        setSelectedWeekStart((current) => addDays(current, 7));
-    };
+        if (period === 'YEARLY') {
+            setSelectedEntriesDate(toIsoDate(getStartOfCurrentYear()));
+            return;
+        }
 
-    const handleCurrentWeek = () => {
-        setSelectedWeekStart(getStartOfCurrentWeek());
-    };
+        if (period === 'WEEKLY') {
+            setSelectedEntriesDate(toIsoDate(getStartOfCurrentWeek()));
+            return;
+        }
 
-    const handleWeekSelect = (weekStart: string) => {
-        setSelectedWeekStart(getDateFromIso(weekStart));
+        setSelectedEntriesDate(toIsoDate(new Date()));
     };
 
     const handleRevenuePeriodChange = (period: RevenuePeriod) => {
@@ -241,16 +309,15 @@ const ParkingStatisticsPage = () => {
 
         if (period === 'YEARLY') {
             setSelectedRevenueFrom(getStartOfCurrentYear());
+            return;
         }
 
         if (period === 'WEEKLY') {
             setSelectedRevenueFrom(getStartOfCurrentWeek());
+            return;
         }
 
-        if (period === 'DAILY') {
-            const today = new Date();
-            setSelectedRevenueFrom(new Date(today.getFullYear(), today.getMonth(), 1, 12));
-        }
+        setSelectedRevenueFrom(getStartOfCurrentMonth());
     };
 
     return (
@@ -269,7 +336,10 @@ const ParkingStatisticsPage = () => {
             >
                 <ParkingEntriesChart
                     data={entriesData}
-                    onWeekSelect={handleWeekSelect}
+                    selectedPeriod={selectedEntriesPeriod}
+                    selectedDate={selectedEntriesDate}
+                    onPeriodChange={handleEntriesPeriodChange}
+                    onDateChange={setSelectedEntriesDate}
                 />
             </StatisticsAccordionTile>
 

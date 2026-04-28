@@ -108,12 +108,26 @@
     "entries": {
       "title": "Wjazdy na parking",
       "description": "Liczba wjazdów rozbita na dni wybranego tygodnia",
+      "descriptionDaily": "Liczba wjazdów rozbita godzinowo dla wybranego dnia",
+      "descriptionWeekly": "Liczba wjazdów rozbita na dni wybranego tygodnia",
+      "descriptionYearly": "Liczba wjazdów rozbita na miesiące wybranego roku",
       "totalLabel": "Łącznie",
       "totalDescription": "wjazdów w tygodniu",
+      "totalDescriptionDaily": "wjazdów w wybranym dniu",
+      "totalDescriptionWeekly": "wjazdów w tygodniu",
+      "totalDescriptionYearly": "wjazdów w roku",
       "averageLabel": "Średnio",
       "averageDescription": "wjazdów dziennie",
+      "averageDescriptionDaily": "wjazdów na przedział",
+      "averageDescriptionWeekly": "wjazdów dziennie",
+      "averageDescriptionYearly": "wjazdów miesięcznie",
       "tileTitle": "Wjazdy na parking",
-      "tileDescription": "Liczba wjazdów w wybranym tygodniu"
+      "tileDescription": "Liczba wjazdów w wybranym okresie",
+      "periods": {
+        "daily": "Dziennie",
+        "weekly": "Tygodniowo",
+        "yearly": "Rocznie"
+      }
     },
     "revenue": {
       "title": "Przychody",

@@ -259,10 +259,7 @@ export const StatisticsDatePicker = ({
                 <Box
                     onClick={handleOpen}
                     sx={{
-                        minWidth: {
-                            xs: 210,
-                            md: mode === 'year' ? 160 : 285,
-                        },
+                        width: '100%',
                         height: 44,
                         px: 1.8,
                         display: 'flex',
