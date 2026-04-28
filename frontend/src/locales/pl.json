@@ -141,6 +141,25 @@
         "weekly": "Tygodniowo",
         "yearly": "Rocznie"
       }
+    },
+    "averageStay": {
+      "tileTitle": "Średni czas postoju",
+      "tileDescription": "Średni czas postoju w wybranym okresie",
+      "title": "Średni czas postoju",
+      "description": "Średni czas postoju z podziałem na typ miejsca",
+      "periods": {
+        "daily": "Dziennie",
+        "weekly": "Tygodniowo",
+        "yearly": "Rocznie"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Zwykłe miejsce parkingowe",
+        "REGULAR_HANDICAPED": "Miejsce dla niepełnosprawnych",
+        "EV_ABLEBODIED": "Miejsce z ładowarką EV",
+        "EV_HANDICAPED": "Miejsce EV dla niepełnosprawnych",
+        "REGULAR_BOTH": "Zwykłe miejsce z udogodnieniami",
+        "EV_BOTH": "Miejsce EV z udogodnieniami"
+      }
     }
   }
 }

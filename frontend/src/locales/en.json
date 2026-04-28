@@ -144,6 +144,25 @@
         "weekly": "Weekly",
         "yearly": "Yearly"
       }
+    },
+    "averageStay": {
+      "tileTitle": "Average stay time",
+      "tileDescription": "Average parking stay time in the selected period",
+      "title": "Average stay time",
+      "description": "Average stay time by parking space type",
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "yearly": "Yearly"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Regular parking space",
+        "REGULAR_HANDICAPED": "Disabled parking space",
+        "EV_ABLEBODIED": "EV parking space",
+        "EV_HANDICAPED": "Disabled EV parking space",
+        "REGULAR_BOTH": "Regular space with facilities",
+        "EV_BOTH": "EV space with facilities"
+      }
     }
   }
 }

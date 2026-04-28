@@ -2,11 +2,14 @@ import {useEffect, useState} from 'react';
 import {Box} from '@mui/material';
 import {useIntl} from 'react-intl';
 import {
+    ParkingAverageStayChart,
     ParkingEntriesChart,
     ParkingRevenueChart,
     StatisticsAccordionTile,
 } from '@components/Statistics';
 import {
+    type AverageStayPeriod,
+    type AverageStayResponse,
     type EntriesPeriod,
     type EntriesResponse,
     type RevenuePeriod,
@@ -207,6 +210,64 @@ const createMockRevenue = (
     };
 };
 
+const createMockAverageStay = (
+    period: AverageStayPeriod,
+    fromDate: Date
+): AverageStayResponse => {
+    const year = fromDate.getFullYear();
+
+    if (period === 'YEARLY') {
+        return {
+            period: 'YEARLY',
+            from: `${year}-01-01`,
+            to: `${year}-12-31`,
+            overallAverageMinutes: 142,
+            categories: [
+                {spaceType: 'REGULAR_ABLEBODIED', averageMinutes: 156},
+                {spaceType: 'REGULAR_HANDICAPED', averageMinutes: 118},
+                {spaceType: 'EV_ABLEBODIED', averageMinutes: 132},
+                {spaceType: 'EV_HANDICAPED', averageMinutes: 96},
+                {spaceType: 'REGULAR_BOTH', averageMinutes: 144},
+                {spaceType: 'EV_BOTH', averageMinutes: 105},
+            ],
+        };
+    }
+
+    if (period === 'WEEKLY') {
+        const weekEnd = addDays(fromDate, 6);
+
+        return {
+            period: 'WEEKLY',
+            from: toIsoDate(fromDate),
+            to: toIsoDate(weekEnd),
+            overallAverageMinutes: 151,
+            categories: [
+                {spaceType: 'REGULAR_ABLEBODIED', averageMinutes: 164},
+                {spaceType: 'REGULAR_HANDICAPED', averageMinutes: 126},
+                {spaceType: 'EV_ABLEBODIED', averageMinutes: 138},
+                {spaceType: 'EV_HANDICAPED', averageMinutes: 101},
+                {spaceType: 'REGULAR_BOTH', averageMinutes: 150},
+                {spaceType: 'EV_BOTH', averageMinutes: 112},
+            ],
+        };
+    }
+
+    return {
+        period: 'DAILY',
+        from: toIsoDate(fromDate),
+        to: toIsoDate(fromDate),
+        overallAverageMinutes: 156,
+        categories: [
+            {spaceType: 'REGULAR_ABLEBODIED', averageMinutes: 156},
+            {spaceType: 'REGULAR_HANDICAPED', averageMinutes: 112},
+            {spaceType: 'EV_ABLEBODIED', averageMinutes: 128},
+            {spaceType: 'EV_HANDICAPED', averageMinutes: 84},
+            {spaceType: 'REGULAR_BOTH', averageMinutes: 139},
+            {spaceType: 'EV_BOTH', averageMinutes: 64},
+        ],
+    };
+};
+
 const ParkingStatisticsPage = () => {
     const {formatMessage} = useIntl();
 
@@ -228,6 +289,17 @@ const ParkingStatisticsPage = () => {
 
     const [revenueData, setRevenueData] = useState<RevenueResponse>(
         createMockRevenue('YEARLY', getStartOfCurrentYear())
+    );
+
+    const [selectedAverageStayPeriod, setSelectedAverageStayPeriod] =
+        useState<AverageStayPeriod>('DAILY');
+
+    const [selectedAverageStayDate, setSelectedAverageStayDate] = useState(
+        toIsoDate(new Date())
+    );
+
+    const [averageStayData, setAverageStayData] = useState<AverageStayResponse>(
+        createMockAverageStay('DAILY', new Date())
     );
 
     useEffect(() => {
@@ -288,6 +360,43 @@ const ParkingStatisticsPage = () => {
         setRevenueData(createMockRevenue(selectedRevenuePeriod, selectedRevenueFrom));
     }, [selectedRevenuePeriod, selectedRevenueFrom]);
 
+    useEffect(() => {
+        // Docelowo backend:
+        //
+        // const fetchAverageStay = async () => {
+        //     try {
+        //         const response = await fetch(
+        //             `/api/statistics/parking/average-stay?period=${selectedAverageStayPeriod}&from=${selectedAverageStayDate}`
+        //         );
+        //
+        //         if (!response.ok) {
+        //             throw new Error('Failed to fetch average stay statistics');
+        //         }
+        //
+        //         const data: AverageStayResponse = await response.json();
+        //
+        //         setAverageStayData(data);
+        //     } catch (error) {
+        //         console.error(error);
+        //         setAverageStayData(
+        //             createMockAverageStay(
+        //                 selectedAverageStayPeriod,
+        //                 getDateFromIso(selectedAverageStayDate)
+        //             )
+        //         );
+        //     }
+        // };
+        //
+        // fetchAverageStay();
+
+        setAverageStayData(
+            createMockAverageStay(
+                selectedAverageStayPeriod,
+                getDateFromIso(selectedAverageStayDate)
+            )
+        );
+    }, [selectedAverageStayPeriod, selectedAverageStayDate]);
+
     const handleEntriesPeriodChange = (period: EntriesPeriod) => {
         setSelectedEntriesPeriod(period);
 
@@ -318,6 +427,22 @@ const ParkingStatisticsPage = () => {
         }
 
         setSelectedRevenueFrom(getStartOfCurrentMonth());
+    };
+
+    const handleAverageStayPeriodChange = (period: AverageStayPeriod) => {
+        setSelectedAverageStayPeriod(period);
+
+        if (period === 'YEARLY') {
+            setSelectedAverageStayDate(toIsoDate(getStartOfCurrentYear()));
+            return;
+        }
+
+        if (period === 'WEEKLY') {
+            setSelectedAverageStayDate(toIsoDate(getStartOfCurrentWeek()));
+            return;
+        }
+
+        setSelectedAverageStayDate(toIsoDate(new Date()));
     };
 
     return (
@@ -353,6 +478,19 @@ const ParkingStatisticsPage = () => {
                     selectedDate={toIsoDate(selectedRevenueFrom)}
                     onPeriodChange={handleRevenuePeriodChange}
                     onDateChange={(date) => setSelectedRevenueFrom(getDateFromIso(date))}
+                />
+            </StatisticsAccordionTile>
+
+            <StatisticsAccordionTile
+                title={formatMessage({id: 'statistics.averageStay.tileTitle'})}
+                description={formatMessage({id: 'statistics.averageStay.tileDescription'})}
+            >
+                <ParkingAverageStayChart
+                    data={averageStayData}
+                    selectedPeriod={selectedAverageStayPeriod}
+                    selectedDate={selectedAverageStayDate}
+                    onPeriodChange={handleAverageStayPeriodChange}
+                    onDateChange={setSelectedAverageStayDate}
                 />
             </StatisticsAccordionTile>
         </Box>
