@@ -15,7 +15,6 @@ const CreateNewAccountPage = () => {
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
     const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
 
     const [name, setName] = useState("");
     const [surname, setSurname] = useState("");
