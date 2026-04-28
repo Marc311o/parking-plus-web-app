@@ -13,11 +13,18 @@ import {
     type AverageStayResponse,
     type EntriesPeriod,
     type EntriesResponse,
-    type RevenuePeriod,
-    type RevenueResponse,
     type ParkingFloor,
     type ParkingSpaceRankingResponse,
+    type RevenuePeriod,
+    type RevenueResponse,
 } from '@api/Statistics';
+
+type ExpandedStatistic =
+    | 'entries'
+    | 'revenue'
+    | 'averageStay'
+    | 'spaceRanking'
+    | null;
 
 const toIsoDate = (date: Date) => {
     const year = date.getFullYear();
@@ -298,6 +305,9 @@ const createMockSpaceRanking = (
 const ParkingStatisticsPage = () => {
     const {formatMessage} = useIntl();
 
+    const [expandedStatistic, setExpandedStatistic] =
+        useState<ExpandedStatistic>(null);
+
     const [selectedEntriesPeriod, setSelectedEntriesPeriod] =
         useState<EntriesPeriod>('WEEKLY');
 
@@ -305,18 +315,15 @@ const ParkingStatisticsPage = () => {
         toIsoDate(getStartOfCurrentWeek())
     );
 
-    const [entriesData, setEntriesData] = useState<EntriesResponse>(
-        createMockEntries('WEEKLY', getStartOfCurrentWeek())
-    );
+    const [entriesData, setEntriesData] = useState<EntriesResponse | null>(null);
 
     const [selectedRevenuePeriod, setSelectedRevenuePeriod] =
         useState<RevenuePeriod>('YEARLY');
 
-    const [selectedRevenueFrom, setSelectedRevenueFrom] = useState(getStartOfCurrentYear());
+    const [selectedRevenueFrom, setSelectedRevenueFrom] =
+        useState(getStartOfCurrentYear());
 
-    const [revenueData, setRevenueData] = useState<RevenueResponse>(
-        createMockRevenue('YEARLY', getStartOfCurrentYear())
-    );
+    const [revenueData, setRevenueData] = useState<RevenueResponse | null>(null);
 
     const [selectedAverageStayPeriod, setSelectedAverageStayPeriod] =
         useState<AverageStayPeriod>('DAILY');
@@ -325,9 +332,8 @@ const ParkingStatisticsPage = () => {
         toIsoDate(new Date())
     );
 
-    const [averageStayData, setAverageStayData] = useState<AverageStayResponse>(
-        createMockAverageStay('DAILY', new Date())
-    );
+    const [averageStayData, setAverageStayData] =
+        useState<AverageStayResponse | null>(null);
 
     const [selectedSpaceRankingDate, setSelectedSpaceRankingDate] = useState(
         toIsoDate(new Date())
@@ -336,11 +342,18 @@ const ParkingStatisticsPage = () => {
     const [selectedSpaceRankingFloor, setSelectedSpaceRankingFloor] =
         useState<ParkingFloor>('A');
 
-    const [spaceRankingData, setSpaceRankingData] = useState<ParkingSpaceRankingResponse>(
-        createMockSpaceRanking(toIsoDate(new Date()), 'A')
-    );
+    const [spaceRankingData, setSpaceRankingData] =
+        useState<ParkingSpaceRankingResponse | null>(null);
+
+    const handleAccordionChange = (statistic: ExpandedStatistic) => {
+        setExpandedStatistic((current) => (current === statistic ? null : statistic));
+    };
 
     useEffect(() => {
+        if (expandedStatistic !== 'entries') {
+            return;
+        }
+
         // Docelowo backend:
         //
         // const fetchEntries = async () => {
@@ -358,7 +371,12 @@ const ParkingStatisticsPage = () => {
         //         setEntriesData(data);
         //     } catch (error) {
         //         console.error(error);
-        //         setEntriesData(createMockEntries(selectedEntriesPeriod, getDateFromIso(selectedEntriesDate)));
+        //         setEntriesData(
+        //             createMockEntries(
+        //                 selectedEntriesPeriod,
+        //                 getDateFromIso(selectedEntriesDate)
+        //             )
+        //         );
         //     }
         // };
         //
@@ -367,9 +385,13 @@ const ParkingStatisticsPage = () => {
         setEntriesData(
             createMockEntries(selectedEntriesPeriod, getDateFromIso(selectedEntriesDate))
         );
-    }, [selectedEntriesPeriod, selectedEntriesDate]);
+    }, [expandedStatistic, selectedEntriesPeriod, selectedEntriesDate]);
 
     useEffect(() => {
+        if (expandedStatistic !== 'revenue') {
+            return;
+        }
+
         const from = toIsoDate(selectedRevenueFrom);
 
         // Docelowo backend:
@@ -389,16 +411,22 @@ const ParkingStatisticsPage = () => {
         //         setRevenueData(data);
         //     } catch (error) {
         //         console.error(error);
-        //         setRevenueData(createMockRevenue(selectedRevenuePeriod, selectedRevenueFrom));
+        //         setRevenueData(
+        //             createMockRevenue(selectedRevenuePeriod, selectedRevenueFrom)
+        //         );
         //     }
         // };
         //
         // fetchRevenue();
 
         setRevenueData(createMockRevenue(selectedRevenuePeriod, selectedRevenueFrom));
-    }, [selectedRevenuePeriod, selectedRevenueFrom]);
+    }, [expandedStatistic, selectedRevenuePeriod, selectedRevenueFrom]);
 
     useEffect(() => {
+        if (expandedStatistic !== 'averageStay') {
+            return;
+        }
+
         // Docelowo backend:
         //
         // const fetchAverageStay = async () => {
@@ -433,9 +461,13 @@ const ParkingStatisticsPage = () => {
                 getDateFromIso(selectedAverageStayDate)
             )
         );
-    }, [selectedAverageStayPeriod, selectedAverageStayDate]);
+    }, [expandedStatistic, selectedAverageStayPeriod, selectedAverageStayDate]);
 
     useEffect(() => {
+        if (expandedStatistic !== 'spaceRanking') {
+            return;
+        }
+
         // Docelowo backend:
         //
         // const fetchSpaceRanking = async () => {
@@ -454,7 +486,10 @@ const ParkingStatisticsPage = () => {
         //     } catch (error) {
         //         console.error(error);
         //         setSpaceRankingData(
-        //             createMockSpaceRanking(selectedSpaceRankingDate, selectedSpaceRankingFloor)
+        //             createMockSpaceRanking(
+        //                 selectedSpaceRankingDate,
+        //                 selectedSpaceRankingFloor
+        //             )
         //         );
         //     }
         // };
@@ -464,7 +499,8 @@ const ParkingStatisticsPage = () => {
         setSpaceRankingData(
             createMockSpaceRanking(selectedSpaceRankingDate, selectedSpaceRankingFloor)
         );
-    }, [selectedSpaceRankingDate, selectedSpaceRankingFloor]);
+    }, [expandedStatistic, selectedSpaceRankingDate, selectedSpaceRankingFloor]);
+
     const handleEntriesPeriodChange = (period: EntriesPeriod) => {
         setSelectedEntriesPeriod(period);
 
@@ -526,54 +562,72 @@ const ParkingStatisticsPage = () => {
             <StatisticsAccordionTile
                 title={formatMessage({id: 'statistics.entries.tileTitle'})}
                 description={formatMessage({id: 'statistics.entries.tileDescription'})}
+                expanded={expandedStatistic === 'entries'}
+                onChange={() => handleAccordionChange('entries')}
             >
-                <ParkingEntriesChart
-                    data={entriesData}
-                    selectedPeriod={selectedEntriesPeriod}
-                    selectedDate={selectedEntriesDate}
-                    onPeriodChange={handleEntriesPeriodChange}
-                    onDateChange={setSelectedEntriesDate}
-                />
+                {entriesData && (
+                    <ParkingEntriesChart
+                        data={entriesData}
+                        selectedPeriod={selectedEntriesPeriod}
+                        selectedDate={selectedEntriesDate}
+                        onPeriodChange={handleEntriesPeriodChange}
+                        onDateChange={setSelectedEntriesDate}
+                    />
+                )}
             </StatisticsAccordionTile>
 
             <StatisticsAccordionTile
                 title={formatMessage({id: 'statistics.revenue.tileTitle'})}
                 description={formatMessage({id: 'statistics.revenue.tileDescription'})}
+                expanded={expandedStatistic === 'revenue'}
+                onChange={() => handleAccordionChange('revenue')}
             >
-                <ParkingRevenueChart
-                    data={revenueData}
-                    selectedPeriod={selectedRevenuePeriod}
-                    selectedDate={toIsoDate(selectedRevenueFrom)}
-                    onPeriodChange={handleRevenuePeriodChange}
-                    onDateChange={(date) => setSelectedRevenueFrom(getDateFromIso(date))}
-                />
+                {revenueData && (
+                    <ParkingRevenueChart
+                        data={revenueData}
+                        selectedPeriod={selectedRevenuePeriod}
+                        selectedDate={toIsoDate(selectedRevenueFrom)}
+                        onPeriodChange={handleRevenuePeriodChange}
+                        onDateChange={(date) =>
+                            setSelectedRevenueFrom(getDateFromIso(date))
+                        }
+                    />
+                )}
             </StatisticsAccordionTile>
 
             <StatisticsAccordionTile
                 title={formatMessage({id: 'statistics.averageStay.tileTitle'})}
                 description={formatMessage({id: 'statistics.averageStay.tileDescription'})}
+                expanded={expandedStatistic === 'averageStay'}
+                onChange={() => handleAccordionChange('averageStay')}
             >
-                <ParkingAverageStayChart
-                    data={averageStayData}
-                    selectedPeriod={selectedAverageStayPeriod}
-                    selectedDate={selectedAverageStayDate}
-                    onPeriodChange={handleAverageStayPeriodChange}
-                    onDateChange={setSelectedAverageStayDate}
-                />
+                {averageStayData && (
+                    <ParkingAverageStayChart
+                        data={averageStayData}
+                        selectedPeriod={selectedAverageStayPeriod}
+                        selectedDate={selectedAverageStayDate}
+                        onPeriodChange={handleAverageStayPeriodChange}
+                        onDateChange={setSelectedAverageStayDate}
+                    />
+                )}
             </StatisticsAccordionTile>
 
             <StatisticsAccordionTile
                 title={formatMessage({id: 'statistics.spaceRanking.tileTitle'})}
                 description={formatMessage({id: 'statistics.spaceRanking.tileDescription'})}
+                expanded={expandedStatistic === 'spaceRanking'}
+                onChange={() => handleAccordionChange('spaceRanking')}
             >
-                <ParkingSpaceRankingChart
-                    data={spaceRankingData}
-                    selectedDate={selectedSpaceRankingDate}
-                    selectedFloor={selectedSpaceRankingFloor}
-                    floors={['A', 'B']}
-                    onDateChange={setSelectedSpaceRankingDate}
-                    onFloorChange={setSelectedSpaceRankingFloor}
-                />
+                {spaceRankingData && (
+                    <ParkingSpaceRankingChart
+                        data={spaceRankingData}
+                        selectedDate={selectedSpaceRankingDate}
+                        selectedFloor={selectedSpaceRankingFloor}
+                        floors={['A', 'B']}
+                        onDateChange={setSelectedSpaceRankingDate}
+                        onFloorChange={setSelectedSpaceRankingFloor}
+                    />
+                )}
             </StatisticsAccordionTile>
         </Box>
     );
