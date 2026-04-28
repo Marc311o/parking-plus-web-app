@@ -19,12 +19,6 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-
-        if (request.method == "OPTIONS") {
-            filterChain.doFilter(request, response)
-            return
-        }
-
         val authHeader = request.getHeader("Authorization")
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
