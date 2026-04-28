@@ -9,7 +9,7 @@ import EyeOff from '@assets/eyeOff.svg';
 import renderIcon from "../../utils/RenderIcon";
 import { useAuthStore } from "../../store/useAuthStore";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
 
