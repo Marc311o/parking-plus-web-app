@@ -7,8 +7,11 @@ import {Box, Alert, CircularProgress} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import renderIcon from "../../utils/RenderIcon";
+import { useAuthStore } from "../../store/useAuthStore";
 
 const Login = () => {
+
+    const setToken = useAuthStore((state) => state.setToken);
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -88,7 +91,8 @@ const Login = () => {
                 setPreToken(result.preAuthToken);
                 setStep('2fa');
             } else {
-                navigate("/");
+                setToken(result.token);
+                navigate("/dashboard");
             }
 
         } catch (err) {
@@ -123,8 +127,7 @@ const Login = () => {
                 throw new Error("Błąd logowania");
             }
 
-            localStorage.setItem("token", data.token);
-
+            setToken(data.token);
             navigate("/");
 
         } catch (err) {
@@ -140,14 +143,13 @@ const Login = () => {
 
 
     async function login(email: string, password: string) {
-
         const response = await fetch("http://localhost:8080/api/auth/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             credentials: "include",
-            body: JSON.stringify({email, password})
+            body: JSON.stringify({ email, password })
         });
 
         const data = await response.json();
@@ -163,8 +165,10 @@ const Login = () => {
             };
         }
 
-        localStorage.setItem("token", data.token);
-        return {mfa: false};
+        return {
+            mfa: false,
+            token: data.token
+        };
     }
 
 

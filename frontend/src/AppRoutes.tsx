@@ -12,6 +12,7 @@ import Login from '@pages/Auth/Login';
 import CreateNewAccount from '@pages/Auth/CreateNewAccountPage';
 import ForgotPassword from '@pages/Auth/ForgotPasswordPage';
 import ResetPassword from '@pages/Auth/ResetPasswordPage';
+import {ProtectedRoute} from "./login/ProtectedRoute.tsx";
 
 
 const AppRoutes = () => {
@@ -19,28 +20,30 @@ const AppRoutes = () => {
     return (
         <Routes>
 
-            <Route element={<PagesLayoutAuth />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/createnewaccount" element={<CreateNewAccount />} />
-                <Route path="/forgotpassword" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
+            <Route element={<PagesLayoutAuth/>}>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/createnewaccount" element={<CreateNewAccount/>}/>
+                <Route path="/forgotpassword" element={<ForgotPassword/>}/>
+                <Route path="/reset-password" element={<ResetPassword/>}/>
             </Route>
 
 
-            <Route element={<PagesLayout />}>
-                <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route element={<ProtectedRoute/>}>
+                <Route element={<PagesLayout/>}>
+                    <Route path="/" element={<Navigate to="/dashboard"/>}/>
 
-                <Route path="statistics">
-                    <Route index element={<Navigate to="parking" replace />} />
-                    <Route path="parking" element={<StatisticsParkingPage />} />
-                    <Route path="places" element={<StatisticsPlacesPage />} />
+                    <Route path="statistics">
+                        <Route index element={<Navigate to="parking" replace/>}/>
+                        <Route path="parking" element={<StatisticsParkingPage/>}/>
+                        <Route path="places" element={<StatisticsPlacesPage/>}/>
+                    </Route>
+
+                    <Route path="dashboard" element={<DashboardPage/>}/>
+                    <Route path="clients" element={<ClientsPage/>}/>
+                    <Route path="events" element={<EventsPage/>}/>
+                    <Route path="pricing" element={<PricesPage/>}/>
+                    <Route path="settings" element={<SettingsPage/>}/>
                 </Route>
-
-                <Route path="dashboard" element={<DashboardPage />} />
-                <Route path="clients" element={<ClientsPage />} />
-                <Route path="events" element={<EventsPage />} />
-                <Route path="pricing" element={<PricesPage />} />
-                <Route path="settings" element={<SettingsPage />} />
             </Route>
         </Routes>
     );
