@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Login.css";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -15,6 +15,7 @@ const Login = () => {
 
 
     const setToken = useAuthStore((state) => state.setToken);
+    const logout = useAuthStore((state) => state.logout);
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -35,6 +36,9 @@ const Login = () => {
     const [emailEmptyError, setEmailEmptyError] = useState(false);
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
 
+    useEffect(() => {
+        logout();
+    }, []);
 
 
     const areEmptyFields = () => {
