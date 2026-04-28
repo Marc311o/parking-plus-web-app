@@ -46,3 +46,18 @@ export type ParkingSpaceRankingResponse = {
     total: number;
     points: ParkingSpaceRankingPoint[];
 };
+
+//PARKING SPOTS
+export type ParkingSpaceTimelineStatus = 'OCCUPIED' | 'RESERVED';
+
+export type ParkingSpaceTimelineItem = {
+    status: ParkingSpaceTimelineStatus;
+    from: string;
+    to: string;
+};
+
+export type ParkingSpaceTimelineResponse = {
+    spaceId: string;
+    date: string;
+    items: ParkingSpaceTimelineItem[];
+};

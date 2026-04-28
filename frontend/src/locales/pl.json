@@ -173,6 +173,15 @@
       "topDescription": "{value} użyć",
       "value": "{value} użyć",
       "floor": "Piętro {floor}"
+    },
+    "parkingSpaces": {
+      "title": "Statystyki miejsc parkingowych",
+      "description": "Wybierz miejsce parkingowe na mapie, aby sprawdzić jego historię zajętości i rezerwacji.",
+      "timelineDescription": "Historia zajętości i rezerwacji w wybranym dniu",
+      "occupied": "Zajęte",
+      "reserved": "Zarezerwowane",
+      "noSpaceSelectedTitle": "Wybierz miejsce parkingowe",
+      "noSpaceSelectedDescription": "Kliknij miejsce na mapie, aby zobaczyć historię zajętości i rezerwacji w wybranym dniu."
     }
   }
 }

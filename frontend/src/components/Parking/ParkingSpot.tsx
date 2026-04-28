@@ -16,7 +16,7 @@ interface ParkingSpotProps {
     selected?: boolean;
     variant?: ParkingSpotVariant;
     interactive?: boolean;
-    onClick?: () => void;
+    onClick: () => void;
 }
 
 const DASHBOARD_SPOT_COLOR = '#BFC0C5';
@@ -83,7 +83,7 @@ const ParkingSpot = ({
             return;
         }
 
-        onClick?.();
+        onClick();
     };
 
     const hoverBackground =
@@ -119,6 +119,7 @@ const ParkingSpot = ({
                         bgcolor: color,
                     }}
                 />
+
                 <Box
                     sx={{
                         position: 'absolute',
@@ -129,6 +130,7 @@ const ParkingSpot = ({
                         bgcolor: color,
                     }}
                 />
+
                 <Box
                     sx={{
                         position: 'absolute',
@@ -187,6 +189,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',
@@ -197,6 +200,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',
@@ -222,6 +226,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',
@@ -232,6 +237,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',

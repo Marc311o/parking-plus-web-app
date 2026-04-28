@@ -176,6 +176,15 @@
       "topDescription": "{value} usages",
       "value": "{value} usages",
       "floor": "Floor {floor}"
+    },
+    "parkingSpaces": {
+      "title": "Parking spaces statistics",
+      "description": "Select a parking space on the map to check its occupancy and reservation history.",
+      "timelineDescription": "Occupancy and reservation history for the selected day",
+      "occupied": "Occupied",
+      "reserved": "Reserved",
+      "noSpaceSelectedTitle": "Select a parking space",
+      "noSpaceSelectedDescription": "Click a parking space on the map to see occupancy and reservation history for the selected day."
     }
   }
 }

@@ -16,12 +16,16 @@ type ParkingMapProps = {
     variant?: ParkingMapVariant;
     interactive?: boolean;
     showDetailsPanel?: boolean;
+    onSpotSelect?: (spotId: string | null) => void;
+    onLevelChange?: (level: ParkingLevel) => void;
 };
 
 export const ParkingMap = ({
                                variant = 'dashboard',
                                interactive = true,
                                showDetailsPanel = true,
+                               onSpotSelect,
+                               onLevelChange,
                            }: ParkingMapProps) => {
     const [activeLevel, setActiveLevel] = useState<ParkingLevel>('A');
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
@@ -49,6 +53,22 @@ export const ParkingMap = ({
             };
         });
     }, [activeLevel, spotsFromBackend]);
+
+    const handleSpotClick = (spotId: string) => {
+        if (!interactive) {
+            return;
+        }
+
+        setSelectedSpotId(spotId);
+        onSpotSelect?.(spotId);
+    };
+
+    const handleLevelChange = (level: ParkingLevel) => {
+        setActiveLevel(level);
+        setSelectedSpotId(null);
+        onSpotSelect?.(null);
+        onLevelChange?.(level);
+    };
 
     return (
         <Box
@@ -112,10 +132,10 @@ export const ParkingMap = ({
                             orientation={spot.orientation}
                             status={spot.status}
                             spaceType={spot.spaceType}
-                            selected={interactive && selectedSpotId === spot.id}
+                            selected={selectedSpotId === spot.id}
                             variant={variant}
                             interactive={interactive}
-                            onClick={() => setSelectedSpotId(spot.id)}
+                            onClick={() => handleSpotClick(spot.id)}
                         />
                     ))}
                 </Box>
@@ -123,10 +143,7 @@ export const ParkingMap = ({
                 <ParkingLevelSwitch
                     value={activeLevel}
                     variant={variant}
-                    onChange={(level) => {
-                        setActiveLevel(level);
-                        setSelectedSpotId(null);
-                    }}
+                    onChange={handleLevelChange}
                 />
             </Box>
 
