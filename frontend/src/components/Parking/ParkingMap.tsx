@@ -8,11 +8,25 @@ import {
     mockParkingSpotsByLevel,
     parkingLayoutByLevel,
 } from './ParkingData';
-import {mockParkingSpotDetailsById} from '../../mocks/mockParkingSpotDetails'
+import {mockParkingSpotDetailsById} from '../../mocks/mockParkingSpotDetails';
 
-const ParkingMap = () => {
+type ParkingMapVariant = 'dashboard' | 'statistics';
+
+type ParkingMapProps = {
+    variant?: ParkingMapVariant;
+    interactive?: boolean;
+    showDetailsPanel?: boolean;
+};
+
+export const ParkingMap = ({
+                               variant = 'dashboard',
+                               interactive = true,
+                               showDetailsPanel = true,
+                           }: ParkingMapProps) => {
     const [activeLevel, setActiveLevel] = useState<ParkingLevel>('A');
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
+
+    const isStatisticsVariant = variant === 'statistics';
 
     const spotsFromBackend = mockParkingSpotsByLevel[activeLevel];
 
@@ -40,78 +54,85 @@ const ParkingMap = () => {
         <Box
             sx={{
                 width: '100%',
-                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2,
             }}
-        > <Box
-            sx={{
-                width: '100%',
-                minHeight: 620,
-                display: 'flex',
-                borderRadius: 2,
-            }}
         >
             <Box
                 sx={{
-                    flex: 1,
-                    position: 'relative',
-                    minWidth: 0,
+                    width: '100%',
                     minHeight: 620,
-                    bgcolor: '#232328',
-                    borderTopLeftRadius: 16,
-                    borderBottomLeftRadius: 16,
-                    overflow: 'hidden',
+                    display: 'flex',
+                    borderRadius: 2,
                 }}
             >
                 <Box
                     sx={{
-                        position: 'absolute',
-                        left: 0,
-                        top: 330,
-                        width: 20,
-                        height: 150,
-                        bgcolor: '#2C2C33',
+                        flex: 1,
+                        position: 'relative',
+                        minWidth: 0,
+                        minHeight: 620,
+                        bgcolor: isStatisticsVariant ? '#FFFFFF' : '#232328',
+                        border: isStatisticsVariant ? '6px solid #8E24AA' : 'none',
+                        borderRight: 'none',
+                        borderTopLeftRadius: 16,
+                        borderBottomLeftRadius: 16,
+                        overflow: 'hidden',
                     }}
-                />
-
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        right: 20,
-                        top: 54,
-                        width: 96,
-                        height: 320,
-                        bgcolor: '#2C2C33',
-                    }}
-                />
-
-                {mappedSpots.map((spot) => (
-                    <ParkingSpot
-                        key={spot.id}
-                        label={spot.label}
-                        x={spot.x}
-                        y={spot.y}
-                        orientation={spot.orientation}
-                        status={spot.status}
-                        spaceType={spot.spaceType}
-                        selected={selectedSpotId === spot.id}
-                        onClick={() => setSelectedSpotId(spot.id)}
+                >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 330,
+                            width: 20,
+                            height: 150,
+                            bgcolor: isStatisticsVariant ? '#E5C9EA' : '#2C2C33',
+                        }}
                     />
-                ))}
+
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            right: 20,
+                            top: 54,
+                            width: 96,
+                            height: 320,
+                            bgcolor: isStatisticsVariant ? '#E5C9EA' : '#2C2C33',
+                        }}
+                    />
+
+                    {mappedSpots.map((spot) => (
+                        <ParkingSpot
+                            key={spot.id}
+                            label={spot.label}
+                            x={spot.x}
+                            y={spot.y}
+                            orientation={spot.orientation}
+                            status={spot.status}
+                            spaceType={spot.spaceType}
+                            selected={interactive && selectedSpotId === spot.id}
+                            variant={variant}
+                            interactive={interactive}
+                            onClick={() => setSelectedSpotId(spot.id)}
+                        />
+                    ))}
+                </Box>
+
+                <ParkingLevelSwitch
+                    value={activeLevel}
+                    variant={variant}
+                    onChange={(level) => {
+                        setActiveLevel(level);
+                        setSelectedSpotId(null);
+                    }}
+                />
             </Box>
 
-            <ParkingLevelSwitch
-                value={activeLevel}
-                onChange={(level) => {
-                    setActiveLevel(level);
-                    setSelectedSpotId(null);
-                }}
-            />
-        </Box>
-
-            <ParkingSpotDetailsPanel details={selectedSpotDetails}/>
+            {interactive && showDetailsPanel && (
+                <ParkingSpotDetailsPanel details={selectedSpotDetails}/>
+            )}
         </Box>
     );
 };
