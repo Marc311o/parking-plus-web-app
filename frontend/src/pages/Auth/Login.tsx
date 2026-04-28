@@ -174,14 +174,14 @@ const Login = () => {
 
     if (step === '2fa') {
         return (
-            <Box sx={{width: '100%', minHeight: '100%'}}>
+            <Box sx={{ width: '100%', minHeight: '100%' }}>
                 <div className='container'>
 
                     <h1>WERYFIKACJA 2FA</h1>
 
                     <p>Wpisz kod z aplikacji Authenticator</p>
 
-                    {/*<form onSubmit={handle2FASubmit}>*/}
+                    <form onSubmit={handle2FASubmit}>
 
                         {verifyError && <Alert severity="error">{verifyError}</Alert>}
 
@@ -193,7 +193,6 @@ const Login = () => {
                                     value={totpCode}
                                     onChange={(e) => setTotpCode(e.target.value)}
                                     maxLength={6}
-                                    onClick={handle2FASubmit}
                                 />
                             </div>
                         </div>
@@ -204,7 +203,7 @@ const Login = () => {
                                 className='loginBtn'
                                 disabled={verifyLoading || totpCode.length !== 6}
                             >
-                                {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
+                                {verifyLoading ? <CircularProgress size={20} /> : "Weryfikuj"}
                             </button>
 
                             <button
@@ -217,7 +216,7 @@ const Login = () => {
                             </button>
                         </div>
 
-                    {/*</form>*/}
+                    </form>
 
                 </div>
             </Box>

@@ -166,3 +166,10 @@ button {
     color: #5E076E;
     user-select: none;
 }
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
