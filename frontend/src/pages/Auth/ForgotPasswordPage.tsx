@@ -47,7 +47,6 @@ const ForgotPasswordPage = () => {
             navigate("/login");
 
         } catch (err) {
-            console.error(err);
             setError("Nie udało się wysłać maila")
         } finally {
             setLoading(false);
