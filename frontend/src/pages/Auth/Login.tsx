@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import "./Login.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress} from "@mui/material";
@@ -275,9 +275,9 @@ const Login = () => {
                         </span>
                     </div>
 
-                    <a href="/forgotpassword" className="forgotPasswordText">
+                    <Link to="/forgotpassword" className="forgotPasswordText">
                         Nie pamiętam hasła
-                    </a>
+                    </Link>
 
                 </div>
 
