@@ -135,7 +135,7 @@ const CreateNewAccountPage = () => {
                 throw new Error("Hasło powinno mieć min. 6 znaków!")
             }
 
-            if (password != passwordRepeat) {
+            if (password !== passwordRepeat) {
                 throw new Error("Hasła nie są identyczne!")
             }
 
