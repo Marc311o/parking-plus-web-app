@@ -160,6 +160,19 @@
         "REGULAR_BOTH": "Zwykłe miejsce z udogodnieniami",
         "EV_BOTH": "Miejsce EV z udogodnieniami"
       }
+    },
+    "spaceRanking": {
+      "tileTitle": "Ranking miejsc parkingowych",
+      "tileDescription": "Najczęściej wybierane miejsca na wybranym piętrze",
+      "title": "Ranking miejsc parkingowych",
+      "description": "Najczęściej używane miejsca na wybranym piętrze danego dnia",
+      "level": "Piętro {level}",
+      "totalLabel": "Łącznie",
+      "totalDescription": "użyć miejsc na piętrze",
+      "topLabel": "Najczęściej używane",
+      "topDescription": "{value} użyć",
+      "value": "{value} użyć",
+      "floor": "Piętro {floor}"
     }
   }
 }

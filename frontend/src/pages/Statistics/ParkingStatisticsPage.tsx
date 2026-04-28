@@ -5,6 +5,7 @@ import {
     ParkingAverageStayChart,
     ParkingEntriesChart,
     ParkingRevenueChart,
+    ParkingSpaceRankingChart,
     StatisticsAccordionTile,
 } from '@components/Statistics';
 import {
@@ -14,6 +15,8 @@ import {
     type EntriesResponse,
     type RevenuePeriod,
     type RevenueResponse,
+    type ParkingFloor,
+    type ParkingSpaceRankingResponse,
 } from '@api/Statistics';
 
 const toIsoDate = (date: Date) => {
@@ -268,6 +271,30 @@ const createMockAverageStay = (
     };
 };
 
+const createMockSpaceRanking = (
+    date: string,
+    floor: ParkingFloor
+): ParkingSpaceRankingResponse => {
+    const dateSeed = Number(date.replaceAll('-', '')) % 7;
+
+    const points = Array.from({length: 28}, (_, index) => {
+        const spaceNumber = index + 1;
+        const baseValue = 34 - index;
+        const randomLikeOffset = (index * 7 + dateSeed) % 9;
+
+        return {
+            spaceId: `${floor}${spaceNumber}`,
+            value: Math.max(3, baseValue + randomLikeOffset),
+        };
+    }).sort((firstPoint, secondPoint) => secondPoint.value - firstPoint.value);
+
+    return {
+        floor,
+        total: points.reduce((sum, point) => sum + point.value, 0),
+        points,
+    };
+};
+
 const ParkingStatisticsPage = () => {
     const {formatMessage} = useIntl();
 
@@ -300,6 +327,17 @@ const ParkingStatisticsPage = () => {
 
     const [averageStayData, setAverageStayData] = useState<AverageStayResponse>(
         createMockAverageStay('DAILY', new Date())
+    );
+
+    const [selectedSpaceRankingDate, setSelectedSpaceRankingDate] = useState(
+        toIsoDate(new Date())
+    );
+
+    const [selectedSpaceRankingFloor, setSelectedSpaceRankingFloor] =
+        useState<ParkingFloor>('A');
+
+    const [spaceRankingData, setSpaceRankingData] = useState<ParkingSpaceRankingResponse>(
+        createMockSpaceRanking(toIsoDate(new Date()), 'A')
     );
 
     useEffect(() => {
@@ -397,6 +435,36 @@ const ParkingStatisticsPage = () => {
         );
     }, [selectedAverageStayPeriod, selectedAverageStayDate]);
 
+    useEffect(() => {
+        // Docelowo backend:
+        //
+        // const fetchSpaceRanking = async () => {
+        //     try {
+        //         const response = await fetch(
+        //             `/api/statistics/parking/space-ranking?date=${selectedSpaceRankingDate}&floor=${selectedSpaceRankingFloor}`
+        //         );
+        //
+        //         if (!response.ok) {
+        //             throw new Error('Failed to fetch parking space ranking');
+        //         }
+        //
+        //         const data: ParkingSpaceRankingResponse = await response.json();
+        //
+        //         setSpaceRankingData(data);
+        //     } catch (error) {
+        //         console.error(error);
+        //         setSpaceRankingData(
+        //             createMockSpaceRanking(selectedSpaceRankingDate, selectedSpaceRankingFloor)
+        //         );
+        //     }
+        // };
+        //
+        // fetchSpaceRanking();
+
+        setSpaceRankingData(
+            createMockSpaceRanking(selectedSpaceRankingDate, selectedSpaceRankingFloor)
+        );
+    }, [selectedSpaceRankingDate, selectedSpaceRankingFloor]);
     const handleEntriesPeriodChange = (period: EntriesPeriod) => {
         setSelectedEntriesPeriod(period);
 
@@ -491,6 +559,20 @@ const ParkingStatisticsPage = () => {
                     selectedDate={selectedAverageStayDate}
                     onPeriodChange={handleAverageStayPeriodChange}
                     onDateChange={setSelectedAverageStayDate}
+                />
+            </StatisticsAccordionTile>
+
+            <StatisticsAccordionTile
+                title={formatMessage({id: 'statistics.spaceRanking.tileTitle'})}
+                description={formatMessage({id: 'statistics.spaceRanking.tileDescription'})}
+            >
+                <ParkingSpaceRankingChart
+                    data={spaceRankingData}
+                    selectedDate={selectedSpaceRankingDate}
+                    selectedFloor={selectedSpaceRankingFloor}
+                    floors={['A', 'B']}
+                    onDateChange={setSelectedSpaceRankingDate}
+                    onFloorChange={setSelectedSpaceRankingFloor}
                 />
             </StatisticsAccordionTile>
         </Box>

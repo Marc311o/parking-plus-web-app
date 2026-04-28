@@ -32,3 +32,17 @@ export type RevenueResponse = {
     currency: string;
     points: RevenuePoint[];
 };
+
+//SPACE RANKING
+export type ParkingFloor = 'A' | 'B';
+
+export type ParkingSpaceRankingPoint = {
+    spaceId: string;
+    value: number;
+};
+
+export type ParkingSpaceRankingResponse = {
+    floor: ParkingFloor;
+    total: number;
+    points: ParkingSpaceRankingPoint[];
+};

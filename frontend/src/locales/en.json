@@ -163,6 +163,19 @@
         "REGULAR_BOTH": "Regular space with facilities",
         "EV_BOTH": "EV space with facilities"
       }
+    },
+    "spaceRanking": {
+      "tileTitle": "Parking space ranking",
+      "tileDescription": "Most frequently selected spaces on the chosen level",
+      "title": "Parking space ranking",
+      "description": "Most used parking spaces on the selected level for a given day",
+      "level": "Level {level}",
+      "totalLabel": "Total",
+      "totalDescription": "space usages on level",
+      "topLabel": "Most used",
+      "topDescription": "{value} usages",
+      "value": "{value} usages",
+      "floor": "Floor {floor}"
     }
   }
 }
