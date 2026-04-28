@@ -168,13 +168,6 @@ const CreateNewAccountPage = () => {
         if (!response.ok) {
             throw new Error("Na podany e-mail jest już założone inne konto!");
         }
-
-        //const data =
-        await response.json();
-
-        if (!response.ok) {
-            throw new Error("Nie można założyć konta!");
-        }
     }
 
 
