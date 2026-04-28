@@ -3,6 +3,7 @@ package com.parkingplus.users
 import com.parkingplus.auth.MfaSetupResponse
 import com.parkingplus.users.requests.CreateUserRequest
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -15,8 +16,13 @@ class UserController(private val userService: UserService) {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    fun getAll(): ResponseEntity<List<UserDTO>> =
-        ResponseEntity.ok(userService.getAllUsers())
+    fun getAll(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(required = false) search: String?
+    ): ResponseEntity<Page<UserDTO>> {
+        return ResponseEntity.ok(userService.getAllUsers(page, size, search))
+    }
 
 
     @PostMapping

@@ -6,6 +6,8 @@ import com.parkingplus.users.requests.CreateUserRequest
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 
 @Service
 class UserService(
@@ -15,8 +17,9 @@ class UserService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getAllUsers(): List<UserDTO> {
-        return userRepository.findAll().map { it.toDTO() }
+    fun getAllUsers(page: Int, size: Int, search: String?): Page<UserDTO> {
+        val pageable = PageRequest.of(page, size)
+        return userRepository.findAllWithSearch(search, pageable).map { it.toDTO() }
     }
 
     @Transactional

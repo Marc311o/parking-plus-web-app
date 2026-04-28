@@ -2,8 +2,13 @@ package com.parkingplus.users
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import java.util.*
 
+@Repository
 interface UserRepository : JpaRepository<UserEntity, Long> {
 
     fun findByEmail(email: String): java.util.Optional<UserEntity>
@@ -12,4 +17,11 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     fun findAllByIsOperatorTrue(): List<UserEntity>     // fetches operators
     fun findAllByIsOperatorFalse(): List<UserEntity>    // fethces users
     fun findByNameAndSurname(name: String, surname: String): List<UserEntity>
+
+    @Query("SELECT u FROM UserEntity u WHERE " +
+            "(:search IS NULL OR :search = '' OR " +
+            "LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(u.surname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))")
+    fun findAllWithSearch(@Param("search") search: String?, pageable: Pageable): Page<UserEntity>
 }
