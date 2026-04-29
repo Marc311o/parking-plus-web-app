@@ -30,7 +30,7 @@ const flattenMessages = (
 const rawMessages = {en: enMessages, pl: plMessages};
 
 function App() {
-    const locale = 'pl';
+    const locale = 'en';
 
     const messages = flattenMessages(
         rawMessages[locale as keyof typeof rawMessages] as Messages
