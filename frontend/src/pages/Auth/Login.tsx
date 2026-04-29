@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
 import "./Login.css";
-import { useNavigate, Link } from "react-router-dom";
+import {useNavigate, Link} from "react-router-dom";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import renderIcon from "../../utils/RenderIcon";
-import { useAuthStore } from "../../store/useAuthStore";
+import {useAuthStore} from "../../store/useAuthStore";
 
 const API_URL = (() => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -43,9 +43,6 @@ const Login = () => {
     const [emailEmptyError, setEmailEmptyError] = useState(false);
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
 
-    useEffect(() => {
-        logout();
-    }, []);
 
 
     const areEmptyFields = () => {
@@ -67,7 +64,7 @@ const Login = () => {
     // input control
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
 
         switch (name) {
             case "email":
@@ -92,7 +89,7 @@ const Login = () => {
         setLoading(true);
         setError("");
 
-        if (areEmptyFields()){
+        if (areEmptyFields()) {
             setError("Wszystkie pola muszą być wypełnione")
             setLoading(false)
             return
@@ -163,7 +160,7 @@ const Login = () => {
                 "Content-Type": "application/json"
             },
             credentials: "include",
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({email, password})
         });
 
         const data = await response.json();
@@ -188,7 +185,7 @@ const Login = () => {
 
     if (step === '2fa') {
         return (
-            <Box sx={{ width: '100%', minHeight: '100%' }}>
+            <Box sx={{width: '100%', minHeight: '100%'}}>
                 <div className='container'>
 
                     <h1>WERYFIKACJA 2FA</h1>
@@ -217,7 +214,7 @@ const Login = () => {
                                 className='loginBtn'
                                 disabled={verifyLoading || totpCode.length !== 6}
                             >
-                                {verifyLoading ? <CircularProgress size={20} /> : "Weryfikuj"}
+                                {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
                             </button>
 
                             <button
