@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./Login.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
 import {Alert, Box} from "@mui/material";
 
@@ -36,7 +36,7 @@ const ForgotPasswordPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({email}),
             });
 
             if (!res.ok) {
@@ -55,7 +55,7 @@ const ForgotPasswordPage = () => {
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
 
         switch (name) {
             case "email":
@@ -80,44 +80,46 @@ const ForgotPasswordPage = () => {
                 }}
             />
 
-            <div className='inputs'>
+            <form onSubmit={handleSendEmail}>
+                <div className='inputs'>
 
-                <h3>
-                    Wprowadź adres e-mail przypisany do Twojego konta.
-                    Na ten adres zostanie wysłany link umożliwiający zresetowanie hasła.
-                </h3>
+                    <h3>
+                        Wprowadź adres e-mail przypisany do Twojego konta.
+                        Na ten adres zostanie wysłany link umożliwiający zresetowanie hasła.
+                    </h3>
 
-                {error && <Alert severity="error">{error}</Alert>}
+                    {error && <Alert severity="error">{error}</Alert>}
 
 
-                {/* email */}
-                <label className='inputTitle'>E-mail</label>
-                <div className='input'>
-                    <input
-                        name="email"
-                        type="email"
-                        placeholder="E-mail"
-                        value={email}
-                        onChange={(e) => handleInputChange(e)}
-                        className={emailEmptyError ? "errorInput" : ""}
-                    />
+                    {/* email */}
+                    <label className='inputTitle'>E-mail</label>
+                    <div className='input'>
+                        <input
+                            name="email"
+                            type="email"
+                            placeholder="E-mail"
+                            value={email}
+                            onChange={(e) => handleInputChange(e)}
+                            className={emailEmptyError ? "errorInput" : ""}
+                        />
+                    </div>
+
                 </div>
 
-            </div>
+                <div className='buttons'>
+                    <button
+                        onClick={handleSendEmail}
+                        className='signupBtn'
+                        disabled={loading}
+                    >
+                        {loading ? "Wysyłanie..." : "Resetuj hasło"}
+                    </button>
 
-            <div className='buttons'>
-                <button
-                    onClick={handleSendEmail}
-                    className='signupBtn'
-                    disabled={loading}
-                >
-                    {loading ? "Wysyłanie..." : "Resetuj hasło"}
-                </button>
-
-                <button onClick={handleBack} className='signupBtn'>
-                    Wróć
-                </button>
-            </div>
+                    <button onClick={handleBack} className='signupBtn'>
+                        Wróć
+                    </button>
+                </div>
+            </form>
 
         </div>
     );
