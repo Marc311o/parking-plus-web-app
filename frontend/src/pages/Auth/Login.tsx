@@ -1,24 +1,30 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {Link as RouterLink} from "react-router-dom";
-import {Link as MuiLink, Stack, Typography} from "@mui/material";
-import { useIntl } from "react-intl";
-import { login, verifyMfa } from "@api/Login/auth";
+import React, {useEffect, useState} from "react";
+import "./Login.css";
+import {useNavigate, Link} from "react-router-dom";
+
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress} from "@mui/material";
-import {useAuthStore} from "@store/useAuthStore";
-import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
-import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
-import ButtonPurple from "@components/Login/ButtonPurple.tsx";
-import ButtonWhite from "@components/Login/ButtonWhite.tsx";
+import EyeOn from '@assets/eyeOn.svg';
+import EyeOff from '@assets/eyeOff.svg';
+import renderIcon from "../../utils/RenderIcon";
+import {useAuthStore} from "../../store/useAuthStore";
 
+const API_URL = (() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
 
+    if (typeof apiUrl !== "string" || apiUrl.trim() === "") {
+        throw new Error("Missing required environment variable: VITE_API_URL");
+    }
+
+    return apiUrl;
+})();
 const Login = () => {
-    const {formatMessage} = useIntl();
 
-    const navigate = useNavigate();
 
-    const setToken = useAuthStore((state: { setToken: any; }) => state.setToken);
+    const setToken = useAuthStore((state) => state.setToken);
+    const logout = useAuthStore((state) => state.logout);
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -38,7 +44,6 @@ const Login = () => {
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
 
 
-    // empty fields control
     const areEmptyFields = () => {
         let hasError = false;
 
@@ -56,6 +61,7 @@ const Login = () => {
     };
 
     // input control
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
 
@@ -73,6 +79,9 @@ const Login = () => {
     };
 
 
+    const navigate = useNavigate();
+
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -80,7 +89,7 @@ const Login = () => {
         setError("");
 
         if (areEmptyFields()) {
-            setError(formatMessage({ id: 'logins.errors.auth.emptyFields' }))
+            setError("Wszystkie pola muszą być wypełnione")
             setLoading(false)
             return
         }
@@ -90,14 +99,14 @@ const Login = () => {
 
             if (result.mfa) {
                 setPreToken(result.preAuthToken);
-                setStep("2fa");
+                setStep('2fa');
             } else {
                 setToken(result.token);
                 navigate("/dashboard");
             }
 
         } catch (err) {
-            setError(formatMessage({ id: 'logins.errors.auth.invalidCredentials' }));
+            setError("Nieprawidłowy e-mail lub hasło");
         } finally {
             setLoading(false);
         }
@@ -111,13 +120,28 @@ const Login = () => {
         setVerifyError("");
 
         try {
-            const data = await verifyMfa(preToken, totpCode);
+            const response = await fetch(`${API_URL}/api/auth/verify-mfa`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    preAuthToken: preToken,
+                    code: totpCode
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error("Błąd logowania");
+            }
 
             setToken(data.token);
             navigate("/");
 
         } catch (err) {
-            setVerifyError(formatMessage({ id: 'logins.errors.auth.invalidCode' }));
+            setVerifyError("Niepoprawny kod 2FA!");
         } finally {
             setVerifyLoading(false);
         }
@@ -128,99 +152,83 @@ const Login = () => {
     };
 
 
+    async function login(email: string, password: string) {
+        const response = await fetch(`${API_URL}/api/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({email, password})
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error("Niepoprawny e-mail lub hasło");
+        }
+
+        if (data.mfaRequired) {
+            return {
+                mfa: true,
+                preAuthToken: data.preAuthToken
+            };
+        }
+
+        return {
+            mfa: false,
+            token: data.token
+        };
+    }
+
+
     if (step === '2fa') {
         return (
             <Box sx={{width: '100%', minHeight: '100%'}}>
-                <Box
-                    sx={{
-                        width: "100%",
-                        backgroundColor: "white",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "flex-start",
-                        padding: "20px 0",
-                        minHeight: "100vh",
-                        boxSizing: "border-box",
-                    }}
-                >
+                <div className='container'>
 
-                    <Typography
-                        variant="h4"
-                        component="h1"
-                        sx={{
-                            color: "#5E076E",
-                            fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
-                            fontWeight: 600,
-                            letterSpacing: "1px",
-                            textTransform: "uppercase",
-                            mt: 4,
-                        }}
-                    >
-                        {formatMessage({ id: 'logins.2fa.title' })}
-                    </Typography>
+                    <h1>WERYFIKACJA 2FA</h1>
 
-                    <Typography sx={{mt: 3}}>
-                        {formatMessage({ id: 'logins.2fa.description' })}
-                    </Typography>
+                    <p>Wpisz kod z aplikacji Authenticator</p>
 
-                    <Box component="form" onSubmit={handle2FASubmit}
-                         sx={{
-                             display: "flex",
-                             flexDirection: "column",
-                             alignItems: "center",
-                         }}
-                    >
+                    <form onSubmit={handle2FASubmit}>
 
                         {verifyError && <Alert severity="error">{verifyError}</Alert>}
 
-                        <Stack
-                            spacing={2}
-                            sx={{
-                                mt: "55px",
-                                alignItems: "flex-start",
-                                width: 350,
-                            }}
-                        >
+                        <div className='inputs'>
+                            <div className='input'>
+                                <input
+                                    type="text"
+                                    placeholder="6-cyfrowy kod"
+                                    value={totpCode}
+                                    onChange={(e) => setTotpCode(e.target.value)}
+                                    maxLength={6}
+                                />
+                            </div>
+                        </div>
 
-                            <AuthDefaultField
-                                name="totpCode"
-                                label={formatMessage({ id: 'logins.2fa.codeLabel' })}
-                                placeholder={formatMessage({ id: 'logins.2fa.codePlaceholder' })}
-                                value={totpCode}
-                                onChange={(e) =>
-                                    setTotpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-                                }
-                                disabled={false}
+                        <div className='buttons'>
+                            <button
+                                type="submit"
+                                className='loginBtn'
+                                disabled={verifyLoading || totpCode.length !== 6}
+                            >
+                                {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
+                            </button>
 
-                            />
+                            <button
+                                type="button"
+                                className='signupBtn'
+                                onClick={() => setStep('login')}
+                                disabled={verifyLoading}
+                            >
+                                Wróć
+                            </button>
+                        </div>
 
-                        </Stack>
+                    </form>
 
-                        <Stack
-                            direction="row"
-                            spacing={1.25}
-                            alignItems="center"
-                            sx={{
-                                py: "5px",
-                                mt: 4,
-                            }}
-                        >
-
-                            <ButtonWhite type="submit" onClick={handle2FASubmit}
-                                         disabled={verifyLoading || totpCode.length !== 6}>
-                                {verifyLoading ? <CircularProgress size={20}/> : formatMessage({ id: 'logins.2fa.verifyButton' })}
-                            </ButtonWhite>
-
-                            <ButtonWhite type="button" onClick={() => setStep('login')} disabled={verifyLoading}>
-                                {formatMessage({ id: 'logins.2fa.backButton' })}
-                            </ButtonWhite>
-
-                        </Stack>
-
-                    </Box>
-
-                </Box>
+                </div>
             </Box>
         );
     }
@@ -228,125 +236,78 @@ const Login = () => {
 
     return (
         <Box sx={{width: '100%', minHeight: '100%'}}>
-            <Box
-                sx={{
-                    width: "100%",
-                    backgroundColor: "white",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                    padding: "20px 0",
-                    minHeight: "100vh",
-                    boxSizing: "border-box",
-                }}
-            >
+            <div className='container'>
 
-                <Typography
-                    variant="h4"
-                    component="h1"
-                    sx={{
-                        color: "#5E076E",
-                        fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
-                        fontWeight: 600,
-                        letterSpacing: "1px",
-                        textTransform: "uppercase",
-                        mt: 2,
-                    }}
-                >
-                    {formatMessage({ id: 'logins.login.title' })}
-                </Typography>
+                <h1>ZALOGUJ SIĘ</h1>
 
                 <Box
                     component="img"
                     src={PersonFill}
                     alt="Person Fill"
-                    sx={{width: '100%', maxWidth: 150, mt: 5,}}
+                    sx={{width: '100%', maxWidth: 150}}
                 />
 
-                <Box component="form" onSubmit={handleLogin}
-                     sx={{
-                         display: "flex",
-                         flexDirection: "column",
-                         alignItems: "center",
-                     }}
-                >
-                    <Stack
-                        spacing={2}
-                        sx={{
-                            mt: "55px",
-                            alignItems: "flex-start",
-                            width: 350,
-                        }}
-                    >
+                <form onSubmit={handleLogin}>
+                    <div className='inputs'>
 
                         {error && <Alert severity="error">{error}</Alert>}
 
-                        <AuthDefaultField
-                            name={"email"}
-                            label={formatMessage({ id: 'logins.login.emailLabel' })}
-                            placeholder={formatMessage({ id: 'logins.login.emailPlaceholder' })}
-                            value={email}
-                            onChange={(e) => handleInputChange(e)}
+                        <label className='inputTitle'>Login</label>
+                        <div className='input'>
+                            <input
+                                name="email"
+                                type="text"
+                                placeholder="E-mail"
+                                value={email}
+                                onChange={handleInputChange}
+                                className={emailEmptyError ? "errorInput" : ""}
+                            />
+                        </div>
+
+                        <label className='inputTitle'>Hasło</label>
+                        <div className='input passwordBox'>
+                            <input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Hasło"
+                                value={password}
+                                onChange={handleInputChange}
+                                className={passwordEmptyError ? "errorInput" : ""}
+                            />
+
+                            <span
+                                className="toggleIcon"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                            {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
+                        </span>
+                        </div>
+
+                        <Link to="/forgotpassword" className="forgotPasswordText">
+                            Nie pamiętam hasła
+                        </Link>
+
+                    </div>
+
+                    <div className='buttons'>
+                        <button
+                            onClick={handleLogin}
+                            className='loginBtn'
                             disabled={loading}
-                            error={emailEmptyError}
-                        />
-
-                        <AuthPasswordField
-                            name="password"
-                            label={formatMessage({ id: 'logins.login.passwordLabel' })}
-                            placeholder={formatMessage({ id: 'logins.login.passwordPlaceholder' })}
-                            value={password}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
-                            disabled={loading}
-                            error={passwordEmptyError}
-                        />
-
-                        <MuiLink
-                            component={RouterLink}
-                            to="/forgotpassword"
-                            sx={{
-                                fontSize: "14px",
-                                fontWeight: 500,
-                                color: "#5E076E",
-                                textDecoration: "none",
-                                cursor: "pointer",
-                                textAlign: "right",
-                                width: "100%",
-                                display: "block",
-
-                                "&:hover": {
-                                    textDecoration: "underline",
-                                },
-                            }}
                         >
-                            {formatMessage({ id: 'logins.login.passwordForgot' })}
-                        </MuiLink>
+                            {loading ? "Logowanie..." : "Zaloguj się"}
+                        </button>
 
-                    </Stack>
+                        <button
+                            onClick={handleCreateAccount}
+                            className='signupBtn'
+                        >
+                            Utwórz konto
+                        </button>
+                    </div>
+                </form>
 
-
-                    <Stack
-                        direction="row"
-                        spacing={1.25}
-                        alignItems="center"
-                        sx={{
-                            py: "5px",
-                            mt: 1,
-                            width: "100%",
-                        }}
-                    >
-                        <ButtonPurple type="submit">
-                            {formatMessage({ id: 'logins.login.loginButton' })}
-                        </ButtonPurple>
-
-                        <ButtonWhite onClick={handleCreateAccount}>
-                            {formatMessage({ id: 'logins.login.newAccButton' })}
-                        </ButtonWhite>
-                    </Stack>
-                </Box>
-
-            </Box>
+            </div>
         </Box>
     );
 };
