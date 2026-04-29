@@ -42,7 +42,7 @@ const CreateNewAccountPage = () => {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
 
         // ustawianie wartości
         switch (name) {
@@ -181,114 +181,116 @@ const CreateNewAccountPage = () => {
             }}
         >
 
-            <div className='container'>
+            <form onSubmit={handleCreateAccount}>
+                <div className='container'>
 
 
-                <h1>ZAŁÓŻ KONTO</h1>
+                    <h1>ZAŁÓŻ KONTO</h1>
 
-                <Box
-                    component="img"
-                    src={PersonFill}
-                    alt="Person Fill"
-                    sx={{
-                        width: '100%',
-                        maxWidth: 150,
-                    }}
-                />
+                    <Box
+                        component="img"
+                        src={PersonFill}
+                        alt="Person Fill"
+                        sx={{
+                            width: '100%',
+                            maxWidth: 150,
+                        }}
+                    />
 
-                <div className='inputs'>
+                    <div className='inputs'>
 
-                    {error && <Alert severity="error">{error}</Alert>}
+                        {error && <Alert severity="error">{error}</Alert>}
 
-                    {/*name*/}
-                    <label className='inputTitle'>Imię</label>
-                    <div className='input'>
-                        <input
-                            name="name"
-                            type="text"
-                            placeholder="Imię"
-                            value={name}
-                            onChange={handleInputChange}
-                            className={nameEmptyError ? "errorInput" : ""}
-                        ></input>
-                    </div>
+                        {/*name*/}
+                        <label className='inputTitle'>Imię</label>
+                        <div className='input'>
+                            <input
+                                name="name"
+                                type="text"
+                                placeholder="Imię"
+                                value={name}
+                                onChange={handleInputChange}
+                                className={nameEmptyError ? "errorInput" : ""}
+                            ></input>
+                        </div>
 
-                    {/*surname*/}
-                    <label className='inputTitle'>Nazwisko</label>
-                    <div className='input'>
-                        <input
-                            name="surname"
-                            type="text"
-                            placeholder="Nazwisko"
-                            value={surname}
-                            onChange={handleInputChange}
-                            className={surnameEmptyError ? "errorInput" : ""}>
-                        </input>
-                    </div>
+                        {/*surname*/}
+                        <label className='inputTitle'>Nazwisko</label>
+                        <div className='input'>
+                            <input
+                                name="surname"
+                                type="text"
+                                placeholder="Nazwisko"
+                                value={surname}
+                                onChange={handleInputChange}
+                                className={surnameEmptyError ? "errorInput" : ""}>
+                            </input>
+                        </div>
 
-                    {/*mail*/}
-                    <label className='inputTitle'>Login</label>
-                    <div className='input'>
-                        <input
-                            name="email"
-                            type="text"
-                            placeholder="E-mail"
-                            value={email}
-                            onChange={handleInputChange}
-                            className={emailEmptyError ? "errorInput" : ""}
-                        ></input>
-                    </div>
+                        {/*mail*/}
+                        <label className='inputTitle'>Login</label>
+                        <div className='input'>
+                            <input
+                                name="email"
+                                type="text"
+                                placeholder="E-mail"
+                                value={email}
+                                onChange={handleInputChange}
+                                className={emailEmptyError ? "errorInput" : ""}
+                            ></input>
+                        </div>
 
-                    {/* password */}
-                    <label className='inputTitle'>Hasło</label>
+                        {/* password */}
+                        <label className='inputTitle'>Hasło</label>
 
-                    <div className='input passwordBox'>
-                        <input
-                            name="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Hasło"
-                            value={password}
-                            onChange={handleInputChange}
-                            className={passwordEmptyError ? "errorInput" : ""}
-                        />
+                        <div className='input passwordBox'>
+                            <input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Hasło"
+                                value={password}
+                                onChange={handleInputChange}
+                                className={passwordEmptyError ? "errorInput" : ""}
+                            />
 
-                        <span
-                            className="toggleIcon"
-                            onClick={() => setShowPassword(prev => !prev)}
-                        >
+                            <span
+                                className="toggleIcon"
+                                onClick={() => setShowPassword(prev => !prev)}
+                            >
         {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
     </span>
-                    </div>
+                        </div>
 
-                    {/* password repeat */}
-                    <label className='inputTitle'>Powtórz hasło</label>
+                        {/* password repeat */}
+                        <label className='inputTitle'>Powtórz hasło</label>
 
-                    <div className='input passwordBox'>
-                        <input
-                            name="passwordRepeat"
-                            type={showRepeatPassword ? "text" : "password"}
-                            placeholder="Powtórz hasło"
-                            value={passwordRepeat}
-                            onChange={handleInputChange}
-                            className={passwordRepeatEmptyError ? "errorInput" : ""}
-                        />
+                        <div className='input passwordBox'>
+                            <input
+                                name="passwordRepeat"
+                                type={showRepeatPassword ? "text" : "password"}
+                                placeholder="Powtórz hasło"
+                                value={passwordRepeat}
+                                onChange={handleInputChange}
+                                className={passwordRepeatEmptyError ? "errorInput" : ""}
+                            />
 
-                        <span
-                            className="toggleIcon"
-                            onClick={() => setShowRepeatPassword(prev => !prev)}
-                        >
+                            <span
+                                className="toggleIcon"
+                                onClick={() => setShowRepeatPassword(prev => !prev)}
+                            >
         {showRepeatPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
     </span>
+                        </div>
+
+
                     </div>
 
-
+                    <div className='buttons'>
+                        <button onClick={handleCreateAccount} className='signupBtn'>Utwórz konto</button>
+                        <button onClick={handleBack} className='signupBtn'>Wróć</button>
+                    </div>
                 </div>
-
-                <div className='buttons'>
-                    <button onClick={handleCreateAccount} className='signupBtn'>Utwórz konto</button>
-                    <button onClick={handleBack} className='signupBtn'>Wróć</button>
-                </div>
-            </div>
+            </form>
         </Box>
     );
 };
