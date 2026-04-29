@@ -22,7 +22,7 @@ const ForgotPasswordPage = () => {
     };
 
     const handleSendEmail = async () => {
-        if (!email) {
+        if (!email.trim()) {
             setError("Uzupełnij adres email!")
             setEmailEmptyError(true)
             return;
