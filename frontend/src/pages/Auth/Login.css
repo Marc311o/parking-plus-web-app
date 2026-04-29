@@ -46,6 +46,11 @@ h1 {
 
 }
 
+.errorInput {
+    border: 1px solid red;
+    box-shadow: 0 0 5px red;
+}
+
 .input {
     display: flex;
     flex-direction: column;
@@ -160,4 +165,11 @@ button {
     cursor: pointer;
     color: #5E076E;
     user-select: none;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
