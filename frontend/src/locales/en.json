@@ -38,6 +38,8 @@
         "options": {
           "nameAsc": "Name A-Z",
           "nameDesc": "Name Z-A",
+          "emailAsc": "Email A-Z",
+          "emailDesc": "Email Z-A",
           "dateNewest": "Newest",
           "dateOldest": "Oldest"
         }
@@ -185,6 +187,12 @@
       "reserved": "Reserved",
       "noSpaceSelectedTitle": "Select a parking space",
       "noSpaceSelectedDescription": "Click a parking space on the map to see occupancy and reservation history for the selected day."
+    }
+  },
+  "clients": {
+    "list": {
+      "empty": "No clients found",
+      "vehiclesButton": "vehicles"
     }
   }
 }

@@ -1,9 +1,31 @@
 import {Box} from '@mui/material';
+import {useSearchParams} from 'react-router-dom';
+
 import ClientsFilterCard from '../NavbarCard/ClientsFilterCard.tsx';
 import ClockCard from '../NavbarCard/ClockCard.tsx';
 import UserCard from '../NavbarCard/UserCard.tsx';
 
 const ClientsNavbar = () => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const search = searchParams.get('search') ?? '';
+    const sortBy = searchParams.get('sortBy') ?? 'name';
+
+    const updateParams = (nextValues: Record<string, string>) => {
+        const nextParams = new URLSearchParams(searchParams);
+
+        Object.entries(nextValues).forEach(([key, value]) => {
+            if (value.trim()) {
+                nextParams.set(key, value);
+            } else {
+                nextParams.delete(key);
+            }
+        });
+
+        nextParams.set('page', '0');
+        setSearchParams(nextParams);
+    };
+
     return (
         <Box
             sx={{
@@ -14,7 +36,13 @@ const ClientsNavbar = () => {
                 alignItems: 'center',
             }}
         >
-            <ClientsFilterCard/>
+            <ClientsFilterCard
+                search={search}
+                sortBy={sortBy}
+                onSearchChange={(value) => updateParams({search: value})}
+                onSortChange={(value) => updateParams({sortBy: value})}
+            />
+
             <ClockCard/>
             <UserCard/>
         </Box>

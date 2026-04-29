@@ -37,6 +37,8 @@
         "options": {
           "nameAsc": "Nazwa A-Z",
           "nameDesc": "Nazwa Z-A",
+          "emailAsc": "Email A-Z",
+          "emailDesc": "Email Z-A",
           "dateNewest": "Najnowsze",
           "dateOldest": "Najstarsze"
         }
@@ -182,6 +184,12 @@
       "reserved": "Zarezerwowane",
       "noSpaceSelectedTitle": "Wybierz miejsce parkingowe",
       "noSpaceSelectedDescription": "Kliknij miejsce na mapie, aby zobaczyć historię zajętości i rezerwacji w wybranym dniu."
+    }
+  },
+  "clients": {
+    "list": {
+      "empty": "Brak klientów",
+      "vehiclesButton": "pojazdy"
     }
   }
 }
