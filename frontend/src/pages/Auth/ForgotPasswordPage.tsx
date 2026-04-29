@@ -3,6 +3,7 @@ import "./Login.css";
 import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
 import {Alert, Box} from "@mui/material";
+import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -92,17 +93,15 @@ const ForgotPasswordPage = () => {
 
 
                     {/* email */}
-                    <label className='inputTitle'>E-mail</label>
-                    <div className='input'>
-                        <input
-                            name="email"
-                            type="email"
-                            placeholder="E-mail"
-                            value={email}
-                            onChange={(e) => handleInputChange(e)}
-                            className={emailEmptyError ? "errorInput" : ""}
-                        />
-                    </div>
+                    <AuthDefaultField
+                        name={"email"}
+                        label={"E-mail"}
+                        placeholder={"E-mail"}
+                        value={email}
+                        onChange={(e) => handleInputChange(e)}
+                        disabled={loading}
+                        error={emailEmptyError}
+                    />
 
                 </div>
 
