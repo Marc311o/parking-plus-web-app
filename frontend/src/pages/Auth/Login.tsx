@@ -9,8 +9,15 @@ import EyeOff from '@assets/eyeOff.svg';
 import renderIcon from "../../utils/RenderIcon";
 import { useAuthStore } from "../../store/useAuthStore";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = (() => {
+    const apiUrl = import.meta.env.VITE_API_URL;
 
+    if (typeof apiUrl !== "string" || apiUrl.trim() === "") {
+        throw new Error("Missing required environment variable: VITE_API_URL");
+    }
+
+    return apiUrl;
+})();
 const Login = () => {
 
 
