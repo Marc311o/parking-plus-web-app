@@ -1,18 +1,19 @@
 import React, {useState} from "react";
+import "./Login.css";
 import {useNavigate} from "react-router-dom";
-import { useIntl } from "react-intl";
-import PersonFill from '@assets/PersonFillPurple.svg';
-import {Alert, Box, Stack, Typography} from "@mui/material";
-import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
-import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
-import ButtonWhite from "@components/Login/ButtonWhite.tsx";
-import { createNewAccount } from "@api/Login/auth";
+import renderIcon from "../../utils/RenderIcon";
 
+import PersonFill from '@assets/PersonFillPurple.svg';
+import {Alert, Box} from "@mui/material";
+import EyeOn from '@assets/eyeOn.svg';
+import EyeOff from '@assets/eyeOff.svg';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateNewAccountPage = () => {
-    const {formatMessage} = useIntl();
 
-    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
     const [error, setError] = useState("");
 
@@ -30,6 +31,8 @@ const CreateNewAccountPage = () => {
     const [passwordRepeatEmptyError, setPasswordRepeatEmptyError] = useState(false);
 
 
+    const navigate = useNavigate();
+
     const handleBack = () => {
         navigate("/login");
     };
@@ -41,6 +44,7 @@ const CreateNewAccountPage = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
 
+        // ustawianie wartości
         switch (name) {
             case "name":
                 setName(value);
@@ -121,36 +125,51 @@ const CreateNewAccountPage = () => {
         try {
 
             if (areEmptyFields()) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.emptyFields' }));
+                throw new Error("Wszystkie pola są wymagane");
             }
 
             if (!isValidEmail(email)) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.invalidEmail' }));
+                throw new Error("Niepoprawny adres e-mail!");
             }
 
             if (password.length < 6) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.passwordTooShort' }))
+                throw new Error("Hasło powinno mieć min. 6 znaków!")
             }
 
             if (password !== passwordRepeat) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }))
+                throw new Error("Hasła nie są identyczne!")
             }
 
-            await createNewAccount(name, surname, email, password);
+            // const result =
+            await createNewAcc(name, surname, email, password);
 
             navigate("/login");
 
         } catch (err) {
             if (err instanceof Error) {
-                setError(formatMessage({ id: err.message }));
+                setError(err.message);
             } else {
-                setError(formatMessage({ id: 'logins.errors.auth.unknown' }));
+                setError("Wystąpił nieznany błąd");
             }
         } finally {
             setLoading(false);
         }
 
     };
+
+    async function createNewAcc(name: string, surname: string, email: string, password: string) {
+        const response = await fetch(`${API_URL}/api/users`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({name, surname, email, password})
+        });
+
+        if (!response.ok) {
+            throw new Error("Na podany e-mail jest już założone inne konto!");
+        }
+    }
 
 
     return (
@@ -162,140 +181,116 @@ const CreateNewAccountPage = () => {
             }}
         >
 
-            <Box component="form" onSubmit={handleCreateAccount}
-                 sx={{
-                     display: "flex",
-                     flexDirection: "column",
-                     alignItems: "center",
-                 }}
-            >
-                <Box
-                    sx={{
-                        width: "100%",
-                        backgroundColor: "white",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "flex-start",
-                        padding: "20px 0",
-                        minHeight: "100vh",
-                        boxSizing: "border-box",
-                    }}
-                >
+            <form onSubmit={handleCreateAccount}>
+                <div className='container'>
 
 
-                    <Typography
-                        variant="h4"
-                        component="h1"
-                        sx={{
-                            color: "#5E076E",
-                            fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
-                            fontWeight: 600,
-                            letterSpacing: "1px",
-                            textTransform: "uppercase",
-                            mt: 2,
-                        }}
-                    >
-                        {formatMessage({ id: 'logins.createNewAccount.title' })}
-                    </Typography>
+                    <h1>ZAŁÓŻ KONTO</h1>
 
                     <Box
                         component="img"
                         src={PersonFill}
                         alt="Person Fill"
-                        sx={{width: '100%', maxWidth: 150, mt: 5,}}
+                        sx={{
+                            width: '100%',
+                            maxWidth: 150,
+                        }}
                     />
 
-                    <Stack
-                        spacing={2}
-                        sx={{
-                            mt: "55px",
-                            alignItems: "flex-start",
-                            width: 350,
-                        }}
-                    >
+                    <div className='inputs'>
 
                         {error && <Alert severity="error">{error}</Alert>}
 
                         {/*name*/}
-                        <AuthDefaultField
-                            name={"name"}
-                            label={formatMessage({ id: 'logins.createNewAccount.firstNameLabel' })}
-                            placeholder={formatMessage({ id: 'logins.createNewAccount.firstNamePlaceholder' })}
-                            value={name}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
-                            disabled={loading}
-                            error={nameEmptyError}
-                        />
+                        <label className='inputTitle'>Imię</label>
+                        <div className='input'>
+                            <input
+                                name="name"
+                                type="text"
+                                placeholder="Imię"
+                                value={name}
+                                onChange={handleInputChange}
+                                className={nameEmptyError ? "errorInput" : ""}
+                            ></input>
+                        </div>
 
                         {/*surname*/}
-                        <AuthDefaultField
-                            name={"surname"}
-                            label={formatMessage({ id: 'logins.createNewAccount.lastNameLabel' })}
-                            placeholder={formatMessage({ id: 'logins.createNewAccount.lastNamePlaceholder' })}
-                            value={surname}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
-                            disabled={loading}
-                            error={surnameEmptyError}
-                        />
+                        <label className='inputTitle'>Nazwisko</label>
+                        <div className='input'>
+                            <input
+                                name="surname"
+                                type="text"
+                                placeholder="Nazwisko"
+                                value={surname}
+                                onChange={handleInputChange}
+                                className={surnameEmptyError ? "errorInput" : ""}>
+                            </input>
+                        </div>
 
                         {/*mail*/}
-                        <AuthDefaultField
-                            name={"email"}
-                            label={formatMessage({ id: 'logins.createNewAccount.emailLabel' })}
-                            placeholder={formatMessage({ id: 'logins.createNewAccount.emailPlaceholder' })}
-                            value={email}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
-                            disabled={loading}
-                            error={emailEmptyError}
-                        />
+                        <label className='inputTitle'>Login</label>
+                        <div className='input'>
+                            <input
+                                name="email"
+                                type="text"
+                                placeholder="E-mail"
+                                value={email}
+                                onChange={handleInputChange}
+                                className={emailEmptyError ? "errorInput" : ""}
+                            ></input>
+                        </div>
 
                         {/* password */}
-                        <AuthPasswordField
-                            name="password"
-                            label={formatMessage({ id: 'logins.createNewAccount.passwordLabel' })}
-                            placeholder={formatMessage({ id: 'logins.createNewAccount.passwordPlaceholder' })}
-                            value={password}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
-                            disabled={loading}
-                            error={passwordEmptyError}
-                        />
+                        <label className='inputTitle'>Hasło</label>
+
+                        <div className='input passwordBox'>
+                            <input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Hasło"
+                                value={password}
+                                onChange={handleInputChange}
+                                className={passwordEmptyError ? "errorInput" : ""}
+                            />
+
+                            <span
+                                className="toggleIcon"
+                                onClick={() => setShowPassword(prev => !prev)}
+                            >
+        {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
+    </span>
+                        </div>
 
                         {/* password repeat */}
-                        <AuthPasswordField
-                            name="passwordRepeat"
-                            label={formatMessage({ id: 'logins.createNewAccount.confirmPasswordLabel' })}
-                            placeholder={formatMessage({ id: 'logins.createNewAccount.confirmPasswordPlaceholder' })}
-                            value={passwordRepeat}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
-                            disabled={loading}
-                            error={passwordRepeatEmptyError}
-                        />
+                        <label className='inputTitle'>Powtórz hasło</label>
+
+                        <div className='input passwordBox'>
+                            <input
+                                name="passwordRepeat"
+                                type={showRepeatPassword ? "text" : "password"}
+                                placeholder="Powtórz hasło"
+                                value={passwordRepeat}
+                                onChange={handleInputChange}
+                                className={passwordRepeatEmptyError ? "errorInput" : ""}
+                            />
+
+                            <span
+                                className="toggleIcon"
+                                onClick={() => setShowRepeatPassword(prev => !prev)}
+                            >
+        {showRepeatPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
+    </span>
+                        </div>
 
 
-                    </Stack>
+                    </div>
 
-                    <Stack
-                        direction="row"
-                        spacing={1.25}
-                        alignItems="center"
-                        sx={{
-                            py: "5px",
-                            mt: 4,
-                        }}
-                    >
-
-                        <ButtonWhite type="submit" onClick={handleCreateAccount}>
-                            {formatMessage({ id: 'logins.createNewAccount.createButton' })}
-                        </ButtonWhite>
-
-                        <ButtonWhite type="button" onClick={handleBack}>
-                            {formatMessage({ id: 'logins.createNewAccount.backButton' })}
-                        </ButtonWhite>
-
-                    </Stack>
-                </Box>
-            </Box>
+                    <div className='buttons'>
+                        <button onClick={handleCreateAccount} className='signupBtn'>Utwórz konto</button>
+                        <button onClick={handleBack} className='signupBtn'>Wróć</button>
+                    </div>
+                </div>
+            </form>
         </Box>
     );
 };
