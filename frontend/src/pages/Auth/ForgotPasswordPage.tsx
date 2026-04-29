@@ -1,28 +1,69 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import "./Login.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
-import EyeOn from '@assets/eyeOn.svg';
-import EyeOff from '@assets/eyeOff.svg';
-import {Box} from "@mui/material";
-import renderIcon from "../../utils/RenderIcon";
+import {Alert, Box} from "@mui/material";
 
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ForgotPasswordPage = () => {
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+    const [error, setError] = useState("");
+
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const [emailEmptyError, setEmailEmptyError] = useState(false);
+
     const navigate = useNavigate();
 
     const handleBack = () => {
         navigate("/login");
     };
 
-    const handleResetPassword = () => {
-        // todo
+    const handleSendEmail = async () => {
+        if (!email.trim()) {
+            setError("Uzupełnij adres email!")
+            setEmailEmptyError(true)
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            if (!res.ok) {
+                throw new Error("Błąd wysyłania");
+            }
+
+            alert("Jeśli konto istnieje, link do resetu został wysłany");
+            navigate("/login");
+
+        } catch (err) {
+            setError("Nie udało się wysłać maila")
+        } finally {
+            setLoading(false);
+        }
     };
 
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        switch (name) {
+            case "email":
+                setEmail(value);
+                if (value.trim()) setEmailEmptyError(false);
+                break;
+        }
+    };
 
     return (
         <div className='container'>
@@ -46,52 +87,33 @@ const ForgotPasswordPage = () => {
                     Na ten adres zostanie wysłany link umożliwiający zresetowanie hasła.
                 </h3>
 
+                {error && <Alert severity="error">{error}</Alert>}
+
+
                 {/* email */}
                 <label className='inputTitle'>E-mail</label>
                 <div className='input'>
-                    <input type="text" placeholder="E-mail"/>
-                </div>
-
-                {/* password */}
-                <label className='inputTitle'>Nowe hasło</label>
-
-                <div className='input passwordBox'>
                     <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Nowe hasło"
+                        name="email"
+                        type="email"
+                        placeholder="E-mail"
+                        value={email}
+                        onChange={(e) => handleInputChange(e)}
+                        className={emailEmptyError ? "errorInput" : ""}
                     />
-
-                    <span
-                        className="toggleIcon"
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-                    </span>
-                </div>
-
-                {/* repeat password */}
-                <label className='inputTitle'>Powtórz nowe hasło</label>
-
-                <div className='input passwordBox'>
-                    <input
-                        type={showRepeatPassword ? "text" : "password"}
-                        placeholder="Powtórz nowe hasło"
-                    />
-
-                    <span
-                        className="toggleIcon"
-                        onClick={() => setShowRepeatPassword(!showRepeatPassword)}
-                    >
-                        {showRepeatPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-                    </span>
                 </div>
 
             </div>
 
             <div className='buttons'>
-                <button onClick={handleResetPassword} className='signupBtn'>
-                    Resetuj hasło
+                <button
+                    onClick={handleSendEmail}
+                    className='signupBtn'
+                    disabled={loading}
+                >
+                    {loading ? "Wysyłanie..." : "Resetuj hasło"}
                 </button>
+
                 <button onClick={handleBack} className='signupBtn'>
                     Wróć
                 </button>

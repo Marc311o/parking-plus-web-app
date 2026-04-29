@@ -4,16 +4,31 @@ import {useNavigate} from "react-router-dom";
 import renderIcon from "../../utils/RenderIcon";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
-import {Box} from "@mui/material";
+import {Alert, Box} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateNewAccountPage = () => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+
+    const [error, setError] = useState("");
+
+    const [loading, setLoading] = useState(false);
+    const [name, setName] = useState("");
+    const [surname, setSurname] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordRepeat, setPasswordRepeat] = useState("");
+
+    const [nameEmptyError, setNameEmptyError] = useState(false);
+    const [surnameEmptyError, setSurnameEmptyError] = useState(false);
+    const [emailEmptyError, setEmailEmptyError] = useState(false);
+    const [passwordEmptyError, setPasswordEmptyError] = useState(false);
+    const [passwordRepeatEmptyError, setPasswordRepeatEmptyError] = useState(false);
 
 
     const navigate = useNavigate();
@@ -22,10 +37,139 @@ const CreateNewAccountPage = () => {
         navigate("/login");
     };
 
-    const handleCreateAccount = () => {
-        // todo
+    const isValidEmail = (email: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     };
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        // ustawianie wartości
+        switch (name) {
+            case "name":
+                setName(value);
+                if (value.trim()) setNameEmptyError(false);
+                break;
+
+            case "surname":
+                setSurname(value);
+                if (value.trim()) setSurnameEmptyError(false);
+                break;
+
+            case "email":
+                setEmail(value);
+                if (value.trim()) setEmailEmptyError(false);
+                break;
+
+            case "password":
+                setPassword(value);
+                if (value.trim()) setPasswordEmptyError(false);
+                break;
+
+            case "passwordRepeat":
+                setPasswordRepeat(value);
+                if (value.trim()) setPasswordRepeatEmptyError(false);
+                break;
+        }
+    };
+
+    const resetEmptyFieldErrors = () => {
+        setNameEmptyError(false);
+        setSurnameEmptyError(false);
+        setEmailEmptyError(false);
+        setPasswordEmptyError(false);
+        setPasswordRepeatEmptyError(false);
+    }
+
+    const areEmptyFields = () => {
+        let hasError = false;
+
+
+        if (!name.trim()) {
+            setNameEmptyError(true);
+            hasError = true;
+        }
+
+        if (!surname.trim()) {
+            setSurnameEmptyError(true);
+            hasError = true;
+        }
+
+        if (!email.trim()) {
+            setEmailEmptyError(true);
+            hasError = true;
+        }
+
+        if (!password.trim()) {
+            setPasswordEmptyError(true);
+            hasError = true;
+        }
+
+        if (!passwordRepeat.trim()) {
+            setPasswordRepeatEmptyError(true);
+            hasError = true;
+        }
+
+        return hasError;
+    };
+
+    const handleCreateAccount = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        setLoading(true);
+        setError("");
+
+        resetEmptyFieldErrors()
+
+
+        try {
+
+            if (areEmptyFields()) {
+                throw new Error("Wszystkie pola są wymagane");
+            }
+
+            if (!isValidEmail(email)) {
+                throw new Error("Niepoprawny adres e-mail!");
+            }
+
+            if (password.length < 6) {
+                throw new Error("Hasło powinno mieć min. 6 znaków!")
+            }
+
+            if (password !== passwordRepeat) {
+                throw new Error("Hasła nie są identyczne!")
+            }
+
+            // const result =
+            await createNewAcc(name, surname, email, password);
+
+            navigate("/login");
+
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError("Wystąpił nieznany błąd");
+            }
+        } finally {
+            setLoading(false);
+        }
+
+    };
+
+    async function createNewAcc(name: string, surname: string, email: string, password: string) {
+        const response = await fetch(`${API_URL}/api/users`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({name, surname, email, password})
+        });
+
+        if (!response.ok) {
+            throw new Error("Na podany e-mail jest już założone inne konto!");
+        }
+    }
 
 
     return (
@@ -52,24 +196,47 @@ const CreateNewAccountPage = () => {
                     }}
                 />
 
-
                 <div className='inputs'>
+
+                    {error && <Alert severity="error">{error}</Alert>}
+
                     {/*name*/}
                     <label className='inputTitle'>Imię</label>
                     <div className='input'>
-                        <input type="text" placeholder="Imię"></input>
+                        <input
+                            name="name"
+                            type="text"
+                            placeholder="Imię"
+                            value={name}
+                            onChange={handleInputChange}
+                            className={nameEmptyError ? "errorInput" : ""}
+                        ></input>
                     </div>
 
                     {/*surname*/}
                     <label className='inputTitle'>Nazwisko</label>
                     <div className='input'>
-                        <input type="text" placeholder="Nazwisko"></input>
+                        <input
+                            name="surname"
+                            type="text"
+                            placeholder="Nazwisko"
+                            value={surname}
+                            onChange={handleInputChange}
+                            className={surnameEmptyError ? "errorInput" : ""}>
+                        </input>
                     </div>
 
                     {/*mail*/}
                     <label className='inputTitle'>Login</label>
                     <div className='input'>
-                        <input type="text" placeholder="E-mail"></input>
+                        <input
+                            name="email"
+                            type="text"
+                            placeholder="E-mail"
+                            value={email}
+                            onChange={handleInputChange}
+                            className={emailEmptyError ? "errorInput" : ""}
+                        ></input>
                     </div>
 
                     {/* password */}
@@ -77,8 +244,12 @@ const CreateNewAccountPage = () => {
 
                     <div className='input passwordBox'>
                         <input
+                            name="password"
                             type={showPassword ? "text" : "password"}
                             placeholder="Hasło"
+                            value={password}
+                            onChange={handleInputChange}
+                            className={passwordEmptyError ? "errorInput" : ""}
                         />
 
                         <span
@@ -94,8 +265,12 @@ const CreateNewAccountPage = () => {
 
                     <div className='input passwordBox'>
                         <input
+                            name="passwordRepeat"
                             type={showRepeatPassword ? "text" : "password"}
                             placeholder="Powtórz hasło"
+                            value={passwordRepeat}
+                            onChange={handleInputChange}
+                            className={passwordRepeatEmptyError ? "errorInput" : ""}
                         />
 
                         <span
