@@ -6,6 +6,7 @@ import renderIcon from "../../utils/RenderIcon";
 import { Alert, Box } from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
+import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -120,46 +121,26 @@ const ResetPasswordPage = () => {
                     {error && <Alert severity="error">{error}</Alert>}
 
                     {/* password */}
-                    <label className='inputTitle'>Nowe hasło</label>
+                    <AuthPasswordField
+                        name="password"
+                        label="Nowe hasło"
+                        placeholder="Nowe hasło"
+                        value={password}
+                        onChange={(e) => handleInputChange(e)}
+                        disabled={loading}
+                        error={passwordEmptyError}
+                    />
 
-                    <div className='input passwordBox'>
-                        <input
-                            name="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Nowe hasło"
-                            value={password}
-                            onChange={(e) => handleInputChange(e)}
-                            className={passwordEmptyError ? "errorInput" : ""}
-                        />
-
-                        <span
-                            className="toggleIcon"
-                            onClick={() => setShowPassword(prev => !prev)}
-                        >
-                            {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-                        </span>
-                    </div>
-
-                    {/* repeat password */}
-                    <label className='inputTitle'>Powtórz nowe hasło</label>
-
-                    <div className='input passwordBox'>
-                        <input
-                            name="passwordRepeat"
-                            type={showRepeatPassword ? "text" : "password"}
-                            placeholder="Powtórz nowe hasło"
-                            value={passwordRepeat}
-                            onChange={(e) => handleInputChange(e)}
-                            className={passwordRepeatEmptyError ? "errorInput" : ""}
-                        />
-
-                        <span
-                            className="toggleIcon"
-                            onClick={() => setShowRepeatPassword(prev => !prev)}
-                        >
-                            {showRepeatPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-                        </span>
-                    </div>
+                    {/* password repeat */}
+                    <AuthPasswordField
+                        name="passwordRepeat"
+                        label="Powtórz nowe hasło"
+                        placeholder="Powtórz nowe hasło"
+                        value={passwordRepeat}
+                        onChange={(e) => handleInputChange(e)}
+                        disabled={loading}
+                        error={passwordRepeatEmptyError}
+                    />
 
                 </div>
 
