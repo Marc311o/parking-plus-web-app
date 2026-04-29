@@ -4,6 +4,8 @@ import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
 import type {ParkingSpotStatus, SpaceType} from '@api/types.ts';
 import type {SpotOrientation} from './ParkingData';
 
+type ParkingSpotVariant = 'dashboard' | 'statistics';
+
 interface ParkingSpotProps {
     label: string;
     x: number;
@@ -12,15 +14,25 @@ interface ParkingSpotProps {
     status?: ParkingSpotStatus;
     spaceType: SpaceType;
     selected?: boolean;
+    variant?: ParkingSpotVariant;
+    interactive?: boolean;
     onClick: () => void;
 }
 
-const DEFAULT_SPOT_COLOR = '#BFC0C5';
+const DASHBOARD_SPOT_COLOR = '#BFC0C5';
+const STATISTICS_SPOT_COLOR = '#8E24AA';
 const SELECTED_SPOT_COLOR = '#A93BFF';
 
-const getMainColor = (selected?: boolean) => {
-    if (selected) return SELECTED_SPOT_COLOR;
-    return DEFAULT_SPOT_COLOR;
+const getMainColor = (variant: ParkingSpotVariant, selected?: boolean) => {
+    if (selected) {
+        return SELECTED_SPOT_COLOR;
+    }
+
+    if (variant === 'statistics') {
+        return STATISTICS_SPOT_COLOR;
+    }
+
+    return DASHBOARD_SPOT_COLOR;
 };
 
 const renderSpaceIcons = (spaceType: SpaceType, color: string) => {
@@ -52,9 +64,11 @@ const ParkingSpot = ({
                          orientation,
                          spaceType,
                          selected = false,
+                         variant = 'dashboard',
+                         interactive = true,
                          onClick,
                      }: ParkingSpotProps) => {
-    const color = getMainColor(selected);
+    const color = getMainColor(variant, selected);
     const icons = renderSpaceIcons(spaceType, color);
 
     const isLeft = orientation === 'left';
@@ -64,10 +78,24 @@ const ParkingSpot = ({
 
     const lineThickness = 5;
 
+    const handleClick = () => {
+        if (!interactive) {
+            return;
+        }
+
+        onClick();
+    };
+
+    const hoverBackground =
+        variant === 'statistics'
+            ? 'rgba(142, 36, 170, 0.06)'
+            : 'rgba(255,255,255,0.04)';
+
     if (isLeft) {
         return (
             <ButtonBase
-                onClick={onClick}
+                onClick={handleClick}
+                disableRipple={!interactive}
                 sx={{
                     position: 'absolute',
                     left: x,
@@ -75,8 +103,9 @@ const ParkingSpot = ({
                     width: 140,
                     height: 62,
                     borderRadius: 1,
+                    cursor: interactive ? 'pointer' : 'default',
                     '&:hover': {
-                        bgcolor: 'rgba(255,255,255,0.04)',
+                        bgcolor: interactive ? hoverBackground : 'transparent',
                     },
                 }}
             >
@@ -90,6 +119,7 @@ const ParkingSpot = ({
                         bgcolor: color,
                     }}
                 />
+
                 <Box
                     sx={{
                         position: 'absolute',
@@ -100,6 +130,7 @@ const ParkingSpot = ({
                         bgcolor: color,
                     }}
                 />
+
                 <Box
                     sx={{
                         position: 'absolute',
@@ -158,6 +189,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',
@@ -168,6 +200,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',
@@ -193,6 +226,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',
@@ -203,6 +237,7 @@ const ParkingSpot = ({
                     bgcolor: color,
                 }}
             />
+
             <Box
                 sx={{
                     position: 'absolute',
@@ -218,7 +253,8 @@ const ParkingSpot = ({
 
     return (
         <ButtonBase
-            onClick={onClick}
+            onClick={handleClick}
+            disableRipple={!interactive}
             sx={{
                 position: 'absolute',
                 left: x,
@@ -226,8 +262,9 @@ const ParkingSpot = ({
                 width: spotWidth,
                 height: spotHeight,
                 borderRadius: 1,
+                cursor: interactive ? 'pointer' : 'default',
                 '&:hover': {
-                    bgcolor: 'rgba(255,255,255,0.04)',
+                    bgcolor: interactive ? hoverBackground : 'transparent',
                 },
             }}
         >

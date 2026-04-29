@@ -1,4 +1,4 @@
-import type {ParkingSpaceDto} from './types';
+import type {ParkingSpaceDto} from './types.ts';
 
 //TODO: TAKE BACK FROM ENV
 

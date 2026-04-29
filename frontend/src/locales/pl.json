@@ -83,5 +83,105 @@
         "EV_BOTH": "Elektryczne + oba"
       }
     }
+  },
+  "statistics": {
+    "week": {
+      "previous": "Poprzedni tydzień",
+      "next": "Następny tydzień"
+    },
+    "month": {
+      "previous": "Poprzedni miesiąc",
+      "next": "Następny miesiąc"
+    },
+    "weekPicker": {
+      "helper": "Kliknij dowolny dzień, aby wybrać cały tydzień od poniedziałku do niedzieli."
+    },
+    "weekday": {
+      "mondayShort": "PN",
+      "tuesdayShort": "WT",
+      "wednesdayShort": "ŚR",
+      "thursdayShort": "CZ",
+      "fridayShort": "PT",
+      "saturdayShort": "SB",
+      "sundayShort": "ND"
+    },
+    "entries": {
+      "title": "Wjazdy na parking",
+      "description": "Liczba wjazdów rozbita na dni wybranego tygodnia",
+      "descriptionDaily": "Liczba wjazdów rozbita godzinowo dla wybranego dnia",
+      "descriptionWeekly": "Liczba wjazdów rozbita na dni wybranego tygodnia",
+      "descriptionYearly": "Liczba wjazdów rozbita na miesiące wybranego roku",
+      "totalLabel": "Łącznie",
+      "totalDescription": "wjazdów w tygodniu",
+      "totalDescriptionDaily": "wjazdów w wybranym dniu",
+      "totalDescriptionWeekly": "wjazdów w tygodniu",
+      "totalDescriptionYearly": "wjazdów w roku",
+      "averageLabel": "Średnio",
+      "averageDescription": "wjazdów dziennie",
+      "averageDescriptionDaily": "wjazdów na przedział",
+      "averageDescriptionWeekly": "wjazdów dziennie",
+      "averageDescriptionYearly": "wjazdów miesięcznie",
+      "tileTitle": "Wjazdy na parking",
+      "tileDescription": "Liczba wjazdów w wybranym okresie",
+      "periods": {
+        "daily": "Dziennie",
+        "weekly": "Tygodniowo",
+        "yearly": "Rocznie"
+      }
+    },
+    "revenue": {
+      "title": "Przychody",
+      "description": "Przychody parkingu w wybranym okresie",
+      "totalLabel": "Przychód",
+      "totalDescription": "łącznie w okresie",
+      "changeLabel": "Zmiana",
+      "changeDescription": "do poprzedniego okresu",
+      "periods": {
+        "daily": "Dziennie",
+        "weekly": "Tygodniowo",
+        "yearly": "Rocznie"
+      }
+    },
+    "averageStay": {
+      "tileTitle": "Średni czas postoju",
+      "tileDescription": "Średni czas postoju w wybranym okresie",
+      "title": "Średni czas postoju",
+      "description": "Średni czas postoju z podziałem na typ miejsca",
+      "periods": {
+        "daily": "Dziennie",
+        "weekly": "Tygodniowo",
+        "yearly": "Rocznie"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Zwykłe miejsce parkingowe",
+        "REGULAR_HANDICAPED": "Miejsce dla niepełnosprawnych",
+        "EV_ABLEBODIED": "Miejsce z ładowarką EV",
+        "EV_HANDICAPED": "Miejsce EV dla niepełnosprawnych",
+        "REGULAR_BOTH": "Zwykłe miejsce z udogodnieniami",
+        "EV_BOTH": "Miejsce EV z udogodnieniami"
+      }
+    },
+    "spaceRanking": {
+      "tileTitle": "Ranking miejsc parkingowych",
+      "tileDescription": "Najczęściej wybierane miejsca na wybranym piętrze",
+      "title": "Ranking miejsc parkingowych",
+      "description": "Najczęściej używane miejsca na wybranym piętrze danego dnia",
+      "level": "Piętro {level}",
+      "totalLabel": "Łącznie",
+      "totalDescription": "użyć miejsc na piętrze",
+      "topLabel": "Najczęściej używane",
+      "topDescription": "{value} użyć",
+      "value": "{value} użyć",
+      "floor": "Piętro {floor}"
+    },
+    "parkingSpaces": {
+      "title": "Statystyki miejsc parkingowych",
+      "description": "Wybierz miejsce parkingowe na mapie, aby sprawdzić jego historię zajętości i rezerwacji.",
+      "timelineDescription": "Historia zajętości i rezerwacji w wybranym dniu",
+      "occupied": "Zajęte",
+      "reserved": "Zarezerwowane",
+      "noSpaceSelectedTitle": "Wybierz miejsce parkingowe",
+      "noSpaceSelectedDescription": "Kliknij miejsce na mapie, aby zobaczyć historię zajętości i rezerwacji w wybranym dniu."
+    }
   }
 }

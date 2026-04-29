@@ -84,5 +84,107 @@
         "EV_BOTH": "Electric + both"
       }
     }
+  },
+  "statistics": {
+    "week": {
+      "previous": "Previous week",
+      "next": "Next week"
+    },
+    "month": {
+      "previous": "Previous month",
+      "next": "Next month"
+    },
+    "weekPicker": {
+      "helper": "Click any day to select the whole week from Monday to Sunday."
+    },
+    "weekday": {
+      "mondayShort": "MON",
+      "tuesdayShort": "TUE",
+      "wednesdayShort": "WED",
+      "thursdayShort": "THU",
+      "fridayShort": "FRI",
+      "saturdayShort": "SAT",
+      "sundayShort": "SUN"
+    },
+    "entries": {
+      "title": "Parking entries",
+      "description": "Number of entries split by days of the selected week",
+      "descriptionDaily": "Number of entries grouped hourly for the selected day",
+      "descriptionWeekly": "Number of entries split by days of the selected week",
+      "descriptionYearly": "Number of entries split by months of the selected year",
+      "totalLabel": "Total",
+      "totalDescription": "entries this week",
+      "totalDescriptionDaily": "entries on selected day",
+      "totalDescriptionWeekly": "entries this week",
+      "totalDescriptionYearly": "entries this year",
+      "averageLabel": "Average",
+      "averageDescription": "entries per day",
+      "averageDescriptionDaily": "entries per interval",
+      "averageDescriptionWeekly": "entries per day",
+      "averageDescriptionYearly": "entries per month",
+      "tileTitle": "Parking entries",
+      "tileDescription": "Number of entries in the selected period",
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "yearly": "Yearly"
+      }
+    },
+    "revenue": {
+      "tileTitle": "Revenue",
+      "tileDescription": "Parking revenue in the selected period",
+      "title": "Revenue",
+      "description": "Parking revenue in the selected period",
+      "totalLabel": "Revenue",
+      "totalDescription": "total for period",
+      "changeLabel": "Change",
+      "changeDescription": "vs previous period",
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "yearly": "Yearly"
+      }
+    },
+    "averageStay": {
+      "tileTitle": "Average stay time",
+      "tileDescription": "Average parking stay time in the selected period",
+      "title": "Average stay time",
+      "description": "Average stay time by parking space type",
+      "periods": {
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "yearly": "Yearly"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Regular parking space",
+        "REGULAR_HANDICAPED": "Disabled parking space",
+        "EV_ABLEBODIED": "EV parking space",
+        "EV_HANDICAPED": "Disabled EV parking space",
+        "REGULAR_BOTH": "Regular space with facilities",
+        "EV_BOTH": "EV space with facilities"
+      }
+    },
+    "spaceRanking": {
+      "tileTitle": "Parking space ranking",
+      "tileDescription": "Most frequently selected spaces on the chosen level",
+      "title": "Parking space ranking",
+      "description": "Most used parking spaces on the selected level for a given day",
+      "level": "Level {level}",
+      "totalLabel": "Total",
+      "totalDescription": "space usages on level",
+      "topLabel": "Most used",
+      "topDescription": "{value} usages",
+      "value": "{value} usages",
+      "floor": "Floor {floor}"
+    },
+    "parkingSpaces": {
+      "title": "Parking spaces statistics",
+      "description": "Select a parking space on the map to check its occupancy and reservation history.",
+      "timelineDescription": "Occupancy and reservation history for the selected day",
+      "occupied": "Occupied",
+      "reserved": "Reserved",
+      "noSpaceSelectedTitle": "Select a parking space",
+      "noSpaceSelectedDescription": "Click a parking space on the map to see occupancy and reservation history for the selected day."
+    }
   }
 }

@@ -1,13 +1,21 @@
 import {Box, ButtonBase, Typography} from '@mui/material';
 import type {ParkingLevel} from '@api/types.ts';
 
+type ParkingLevelSwitchVariant = 'dashboard' | 'statistics';
+
 interface ParkingLevelSwitchProps {
     value: ParkingLevel;
     onChange: (level: ParkingLevel) => void;
+    variant?: ParkingLevelSwitchVariant;
 }
 
-const ParkingLevelSwitch = ({value, onChange}: ParkingLevelSwitchProps) => {
+const ParkingLevelSwitch = ({
+                                value,
+                                onChange,
+                                variant = 'dashboard',
+                            }: ParkingLevelSwitchProps) => {
     const levels: ParkingLevel[] = ['B', 'A'];
+    const isStatisticsVariant = variant === 'statistics';
 
     return (
         <Box
@@ -17,7 +25,7 @@ const ParkingLevelSwitch = ({value, onChange}: ParkingLevelSwitchProps) => {
                 minWidth: 44,
                 display: 'flex',
                 flexDirection: 'column',
-                bgcolor: '#D9D9DE',
+                bgcolor: isStatisticsVariant ? '#D8D8D8' : '#D9D9DE',
                 borderTopRightRadius: 16,
                 borderBottomRightRadius: 16,
                 overflow: 'hidden',
@@ -37,12 +45,22 @@ const ParkingLevelSwitch = ({value, onChange}: ParkingLevelSwitchProps) => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            bgcolor: active ? '#BFC0C5' : 'transparent',
+                            bgcolor: active
+                                ? isStatisticsVariant
+                                    ? '#B6B6B6'
+                                    : '#BFC0C5'
+                                : 'transparent',
                             borderTop:
                                 index === 1 ? '1px solid rgba(0,0,0,0.08)' : 'none',
                             transition: 'background-color 0.2s ease',
                             '&:hover': {
-                                bgcolor: active ? '#BFC0C5' : '#CECFD4',
+                                bgcolor: active
+                                    ? isStatisticsVariant
+                                        ? '#B6B6B6'
+                                        : '#BFC0C5'
+                                    : isStatisticsVariant
+                                        ? '#C9C9C9'
+                                        : '#CECFD4',
                             },
                         }}
                     >
@@ -50,7 +68,7 @@ const ParkingLevelSwitch = ({value, onChange}: ParkingLevelSwitchProps) => {
                             sx={{
                                 fontSize: 18,
                                 fontWeight: 700,
-                                color: '#111111',
+                                color: isStatisticsVariant ? '#8E24AA' : '#111111',
                                 lineHeight: 1,
                             }}
                         >
