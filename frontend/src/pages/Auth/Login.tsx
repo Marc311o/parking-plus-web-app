@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import "./Login.css";
 import {useNavigate, Link} from "react-router-dom";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress} from "@mui/material";
-import EyeOn from '@assets/eyeOn.svg';
-import EyeOff from '@assets/eyeOff.svg';
-import renderIcon from "../../utils/RenderIcon";
 import {useAuthStore} from "../../store/useAuthStore";
+import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
+import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
 
 const API_URL = (() => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -252,36 +251,25 @@ const Login = () => {
 
                         {error && <Alert severity="error">{error}</Alert>}
 
-                        <label className='inputTitle'>Login</label>
-                        <div className='input'>
-                            <input
-                                name="email"
-                                type="text"
-                                placeholder="E-mail"
-                                value={email}
-                                onChange={handleInputChange}
-                                className={emailEmptyError ? "errorInput" : ""}
-                            />
-                        </div>
+                        <AuthDefaultField
+                            name={"email"}
+                            label={"E-mail"}
+                            placeholder={"E-mail"}
+                            value={email}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={emailEmptyError}
+                        />
 
-                        <label className='inputTitle'>Hasło</label>
-                        <div className='input passwordBox'>
-                            <input
-                                name="password"
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Hasło"
-                                value={password}
-                                onChange={handleInputChange}
-                                className={passwordEmptyError ? "errorInput" : ""}
-                            />
-
-                            <span
-                                className="toggleIcon"
-                                onClick={() => setShowPassword(!showPassword)}
-                            >
-                            {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-                        </span>
-                        </div>
+                        <AuthPasswordField
+                            name="password"
+                            label="Hasło"
+                            placeholder="Hasło"
+                            value={password}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={passwordEmptyError}
+                        />
 
                         <Link to="/forgotpassword" className="forgotPasswordText">
                             Nie pamiętam hasła
