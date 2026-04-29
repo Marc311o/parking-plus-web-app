@@ -44,7 +44,6 @@ const Login = () => {
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
 
 
-
     const areEmptyFields = () => {
         let hasError = false;
 
@@ -248,63 +247,65 @@ const Login = () => {
                     sx={{width: '100%', maxWidth: 150}}
                 />
 
-                <div className='inputs'>
+                <form onSubmit={handleLogin}>
+                    <div className='inputs'>
 
-                    {error && <Alert severity="error">{error}</Alert>}
+                        {error && <Alert severity="error">{error}</Alert>}
 
-                    <label className='inputTitle'>Login</label>
-                    <div className='input'>
-                        <input
-                            name="email"
-                            type="text"
-                            placeholder="E-mail"
-                            value={email}
-                            onChange={handleInputChange}
-                            className={emailEmptyError ? "errorInput" : ""}
-                        />
-                    </div>
+                        <label className='inputTitle'>Login</label>
+                        <div className='input'>
+                            <input
+                                name="email"
+                                type="text"
+                                placeholder="E-mail"
+                                value={email}
+                                onChange={handleInputChange}
+                                className={emailEmptyError ? "errorInput" : ""}
+                            />
+                        </div>
 
-                    <label className='inputTitle'>Hasło</label>
-                    <div className='input passwordBox'>
-                        <input
-                            name="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Hasło"
-                            value={password}
-                            onChange={handleInputChange}
-                            className={passwordEmptyError ? "errorInput" : ""}
-                        />
+                        <label className='inputTitle'>Hasło</label>
+                        <div className='input passwordBox'>
+                            <input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Hasło"
+                                value={password}
+                                onChange={handleInputChange}
+                                className={passwordEmptyError ? "errorInput" : ""}
+                            />
 
-                        <span
-                            className="toggleIcon"
-                            onClick={() => setShowPassword(!showPassword)}
-                        >
+                            <span
+                                className="toggleIcon"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
                             {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
                         </span>
+                        </div>
+
+                        <Link to="/forgotpassword" className="forgotPasswordText">
+                            Nie pamiętam hasła
+                        </Link>
+
                     </div>
 
-                    <Link to="/forgotpassword" className="forgotPasswordText">
-                        Nie pamiętam hasła
-                    </Link>
+                    <div className='buttons'>
+                        <button
+                            onClick={handleLogin}
+                            className='loginBtn'
+                            disabled={loading}
+                        >
+                            {loading ? "Logowanie..." : "Zaloguj się"}
+                        </button>
 
-                </div>
-
-                <div className='buttons'>
-                    <button
-                        onClick={handleLogin}
-                        className='loginBtn'
-                        disabled={loading}
-                    >
-                        {loading ? "Logowanie..." : "Zaloguj się"}
-                    </button>
-
-                    <button
-                        onClick={handleCreateAccount}
-                        className='signupBtn'
-                    >
-                        Utwórz konto
-                    </button>
-                </div>
+                        <button
+                            onClick={handleCreateAccount}
+                            className='signupBtn'
+                        >
+                            Utwórz konto
+                        </button>
+                    </div>
+                </form>
 
             </div>
         </Box>
