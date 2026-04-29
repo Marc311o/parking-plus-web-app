@@ -1,15 +1,12 @@
 import React, {useState} from "react";
+import "./Login.css";
 import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
-import { useIntl } from "react-intl";
-import {Alert, Box, Stack, Typography} from "@mui/material";
-import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
-import ButtonWhite from "@components/Login/ButtonWhite.tsx";
-import { forgotPassword  } from "@api/Login/auth";
+import {Alert, Box} from "@mui/material";
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ForgotPasswordPage = () => {
-    const {formatMessage} = useIntl();
 
     const [error, setError] = useState("");
 
@@ -24,11 +21,9 @@ const ForgotPasswordPage = () => {
         navigate("/login");
     };
 
-    const handleSendEmail = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    const handleSendEmail = async () => {
         if (!email.trim()) {
-            setError(formatMessage({ id: 'logins.errors.auth.emailRequired' }))
+            setError("Uzupełnij adres email!")
             setEmailEmptyError(true)
             return;
         }
@@ -36,13 +31,23 @@ const ForgotPasswordPage = () => {
         try {
             setLoading(true);
 
-            await forgotPassword(email);
+            const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email}),
+            });
 
-            alert(formatMessage({ id: 'logins.forgotPassword.success' }));
+            if (!res.ok) {
+                throw new Error("Błąd wysyłania");
+            }
+
+            alert("Jeśli konto istnieje, link do resetu został wysłany");
             navigate("/login");
 
         } catch (err) {
-            setError(formatMessage({ id: 'logins.errors.auth.sendEmailFailed' }))
+            setError("Nie udało się wysłać maila")
         } finally {
             setLoading(false);
         }
@@ -61,101 +66,62 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <Box
-            sx={{
-                width: "100%",
-                backgroundColor: "white",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "flex-start",
-                padding: "20px 0",
-                minHeight: "100vh",
-                boxSizing: "border-box",
-            }}
-        >
+        <div className='container'>
 
-            <Typography
-                variant="h4"
-                component="h1"
-                sx={{
-                    color: "#5E076E",
-                    fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
-                    fontWeight: 600,
-                    letterSpacing: "1px",
-                    textTransform: "uppercase",
-                    mt: 2,
-                }}
-            >
-                {formatMessage({ id: "logins.forgotPassword.title" })}
-            </Typography>
+            <h1>RESET HASŁA</h1>
 
             <Box
                 component="img"
                 src={QuestionMark}
                 alt="Question Mark"
-                sx={{width: '100%', maxWidth: 150, mt: 5,}}
+                sx={{
+                    width: '100%',
+                    maxWidth: 150,
+                }}
             />
 
-            <Box component="form" onSubmit={handleSendEmail}
-                 sx={{
-                     display: "flex",
-                     flexDirection: "column",
-                     alignItems: "center",
-                 }}
-            >
-                <Stack
-                    spacing={2}
-                    sx={{
-                        mt: "55px",
-                        alignItems: "flex-start",
-                        width: 350,
-                    }}
-                >
+            <form onSubmit={handleSendEmail}>
+                <div className='inputs'>
 
-                    <Typography sx={{mt: 3}}>
-                        {formatMessage({ id: "logins.forgotPassword.description" })}
-                    </Typography>
-
+                    <h3>
+                        Wprowadź adres e-mail przypisany do Twojego konta.
+                        Na ten adres zostanie wysłany link umożliwiający zresetowanie hasła.
+                    </h3>
 
                     {error && <Alert severity="error">{error}</Alert>}
 
 
                     {/* email */}
-                    <AuthDefaultField
-                        name={"email"}
-                        label={formatMessage({ id: "logins.forgotPassword.emailLabel" })}
-                        placeholder={formatMessage({ id: "logins.forgotPassword.emailPlaceholder" })}
-                        value={email}
-                        onChange={(e) => handleInputChange(e)}
+                    <label className='inputTitle'>E-mail</label>
+                    <div className='input'>
+                        <input
+                            name="email"
+                            type="email"
+                            placeholder="E-mail"
+                            value={email}
+                            onChange={(e) => handleInputChange(e)}
+                            className={emailEmptyError ? "errorInput" : ""}
+                        />
+                    </div>
+
+                </div>
+
+                <div className='buttons'>
+                    <button
+                        onClick={handleSendEmail}
+                        className='signupBtn'
                         disabled={loading}
-                        error={emailEmptyError}
-                    />
+                    >
+                        {loading ? "Wysyłanie..." : "Resetuj hasło"}
+                    </button>
 
-                </Stack>
+                    <button onClick={handleBack} className='signupBtn'>
+                        Wróć
+                    </button>
+                </div>
+            </form>
 
-                <Stack
-                    direction="row"
-                    spacing={1.25}
-                    alignItems="center"
-                    sx={{
-                        py: "5px",
-                        mt: 4,
-                    }}
-                >
-
-                    <ButtonWhite type="submit">
-                        {loading ? formatMessage({ id: "logins.forgotPassword.sendingButton" }) : formatMessage({ id: "logins.forgotPassword.resetButton" })}
-                    </ButtonWhite>
-
-                    <ButtonWhite type="button" onClick={handleBack}>
-                        {formatMessage({ id: "logins.forgotPassword.backButton" })}
-                    </ButtonWhite>
-
-                </Stack>
-            </Box>
-
-        </Box>
+        </div>
     );
 };
 
