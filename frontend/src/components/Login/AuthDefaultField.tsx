@@ -11,7 +11,6 @@ type Props = {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     disabled?: boolean;
     error?: boolean;
-    maxLength?: number;
 };
 
 export function AuthDefaultField({
@@ -21,7 +20,6 @@ export function AuthDefaultField({
                                      value,
                                      onChange,
                                      disabled,
-                                     maxLength,
                                      error = false,
                                  }: Props) {
     return (
@@ -48,11 +46,6 @@ export function AuthDefaultField({
                 disabled={disabled}
                 fullWidth
                 required
-                slotProps={{
-                    htmlInput: {
-                        maxLength: maxLength,
-                    },
-                }}
 
                 sx={{
                     "& .MuiOutlinedInput-root": {
