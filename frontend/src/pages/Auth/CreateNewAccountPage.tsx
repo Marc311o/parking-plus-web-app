@@ -7,6 +7,8 @@ import PersonFill from '@assets/PersonFillPurple.svg';
 import {Alert, Box} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
+import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
+import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -202,85 +204,59 @@ const CreateNewAccountPage = () => {
                         {error && <Alert severity="error">{error}</Alert>}
 
                         {/*name*/}
-                        <label className='inputTitle'>Imię</label>
-                        <div className='input'>
-                            <input
-                                name="name"
-                                type="text"
-                                placeholder="Imię"
-                                value={name}
-                                onChange={handleInputChange}
-                                className={nameEmptyError ? "errorInput" : ""}
-                            ></input>
-                        </div>
+                        <AuthDefaultField
+                            name={"name"}
+                            label={"Imię"}
+                            placeholder={"Imię"}
+                            value={name}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={nameEmptyError}
+                        />
 
                         {/*surname*/}
-                        <label className='inputTitle'>Nazwisko</label>
-                        <div className='input'>
-                            <input
-                                name="surname"
-                                type="text"
-                                placeholder="Nazwisko"
-                                value={surname}
-                                onChange={handleInputChange}
-                                className={surnameEmptyError ? "errorInput" : ""}>
-                            </input>
-                        </div>
+                        <AuthDefaultField
+                            name={"surname"}
+                            label={"Nazwisko"}
+                            placeholder={"Nazwisko"}
+                            value={surname}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={surnameEmptyError}
+                        />
 
                         {/*mail*/}
-                        <label className='inputTitle'>Login</label>
-                        <div className='input'>
-                            <input
-                                name="email"
-                                type="text"
-                                placeholder="E-mail"
-                                value={email}
-                                onChange={handleInputChange}
-                                className={emailEmptyError ? "errorInput" : ""}
-                            ></input>
-                        </div>
+                        <AuthDefaultField
+                            name={"email"}
+                            label={"E-mail"}
+                            placeholder={"E-mail"}
+                            value={email}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={emailEmptyError}
+                        />
 
                         {/* password */}
-                        <label className='inputTitle'>Hasło</label>
-
-                        <div className='input passwordBox'>
-                            <input
-                                name="password"
-                                type={showPassword ? "text" : "password"}
-                                placeholder="Hasło"
-                                value={password}
-                                onChange={handleInputChange}
-                                className={passwordEmptyError ? "errorInput" : ""}
-                            />
-
-                            <span
-                                className="toggleIcon"
-                                onClick={() => setShowPassword(prev => !prev)}
-                            >
-        {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-    </span>
-                        </div>
+                        <AuthPasswordField
+                            name="password"
+                            label="Hasło"
+                            placeholder="Hasło"
+                            value={password}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={passwordEmptyError}
+                        />
 
                         {/* password repeat */}
-                        <label className='inputTitle'>Powtórz hasło</label>
-
-                        <div className='input passwordBox'>
-                            <input
-                                name="passwordRepeat"
-                                type={showRepeatPassword ? "text" : "password"}
-                                placeholder="Powtórz hasło"
-                                value={passwordRepeat}
-                                onChange={handleInputChange}
-                                className={passwordRepeatEmptyError ? "errorInput" : ""}
-                            />
-
-                            <span
-                                className="toggleIcon"
-                                onClick={() => setShowRepeatPassword(prev => !prev)}
-                            >
-        {showRepeatPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-    </span>
-                        </div>
+                        <AuthPasswordField
+                            name="passwordRepeat"
+                            label="Powtórz hasło"
+                            placeholder="Powtórz hasło"
+                            value={passwordRepeat}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={passwordRepeatEmptyError}
+                        />
 
 
                     </div>
