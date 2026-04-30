@@ -1,14 +1,17 @@
 package com.parkingplus.parkingspaces
 
+import com.parkingplus.parkinghistory.ParkingHistoryRepository
 import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import java.util.NoSuchElementException
 
 @Service
 class ParkingSpaceService(
-    private val parkingSpaceRepository: ParkingSpaceRepository
+    private val parkingSpaceRepository: ParkingSpaceRepository,
+    private val parkingHistoryRepository: ParkingHistoryRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -95,5 +98,49 @@ class ParkingSpaceService(
         val total = free + occupied + reserved
 
         return ParkingSpaceStatsDTO(free, occupied, reserved, total)
+    }
+
+
+    @Transactional(readOnly = true)
+    fun getSpaceDetails(id: String): ParkingSpotDetailsDTO {
+        val space = parkingSpaceRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Parking space with id $id does not exist.") }
+
+        var occupantDto: ParkingSpotOccupantDetailsDTO? = null
+
+        if (space.status == ParkingSpaceStatus.OCCUPIED) {
+            val activeHistory = parkingHistoryRepository.findByParkingSpaceIdAndEndTimeIsNull(id)
+
+            if (activeHistory != null) {
+                val vehicle = activeHistory.vehicle
+                val owner = vehicle.owner
+
+                // Obliczanie czasu trwania postoju w sekundach
+                val duration = java.time.Duration.between(activeHistory.startTime, LocalDateTime.now())
+                val durationInSeconds = duration.seconds
+
+                val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+
+                occupantDto = ParkingSpotOccupantDetailsDTO(
+                    ownerId = owner.id.toString(),
+                    ownerName = "${owner.name} ${owner.surname}",
+                    ownerEmail = owner.email,
+                    ownerPhone = "",
+                    vehiclePlate = vehicle.licensePlate,
+                    entryTime = activeHistory.startTime.format(formatter),
+                    parkingDurationSec = durationInSeconds,
+                    amountDue = 0.0,
+                    imageUrl = activeHistory.photoPath
+                )
+            }
+        }
+
+        return ParkingSpotDetailsDTO(
+            id = space.id,
+            type = space.spaceType,
+            status = space.status,
+            level = space.level,
+            occupant = occupantDto
+        )
     }
 }
