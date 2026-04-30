@@ -4,8 +4,8 @@ import { useIntl } from "react-intl";
 import {Alert, Box, Stack, Typography} from "@mui/material";
 import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
 import ButtonWhite from "@components/Login/ButtonWhite.tsx";
+import { resetPassword  } from "@api/Login/auth";
 
-const API_URL = import.meta.env.VITE_API_URL;
 
 const ResetPasswordPage = () => {
     const {formatMessage} = useIntl();
@@ -32,7 +32,8 @@ const ResetPasswordPage = () => {
         navigate("/login");
     };
 
-    const handleResetPassword = async () => {
+    const handleResetPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
         setError("");
 
         if (!token) {
@@ -63,20 +64,7 @@ const ResetPasswordPage = () => {
         try {
             setLoading(true);
 
-            const res = await fetch(`${API_URL}/api/auth/reset-password`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    token: token,
-                    newPassword: password,
-                }),
-            });
-
-            if (!res.ok) {
-                throw new Error("Token jest nieprawidłowy lub wygasł");
-            }
+            await resetPassword(token, password);
 
             alert("Hasło zostało zmienione poprawnie");
             navigate("/login");
@@ -193,7 +181,7 @@ const ResetPasswordPage = () => {
                         }}
                     >
 
-                        <ButtonWhite type="submit" onClick={handleResetPassword} disabled={loading}>
+                        <ButtonWhite type="submit">
                             {loading ? formatMessage({ id: "logins.resetPassword.resetButton" }) : formatMessage({ id: "logins.resetPassword.verifyButton" })}
                         </ButtonWhite>
 
