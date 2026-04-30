@@ -21,6 +21,8 @@ export function ButtonPurple({
             disabled={disabled}
             variant="contained"
             sx={{
+                width: "200px",
+                fontSize: "20px",
                 color: "#f3f4f6",
                 background: "linear-gradient(135deg, #c22bdd, #8b1f9e)",
                 border: "none",

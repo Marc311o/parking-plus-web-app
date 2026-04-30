@@ -184,7 +184,13 @@ const CreateNewAccountPage = () => {
             }}
         >
 
-            <form onSubmit={handleCreateAccount}>
+            <Box component="form" onSubmit={handleCreateAccount}
+                 sx={{
+                     display: "flex",
+                     flexDirection: "column",
+                     alignItems: "center",
+                 }}
+            >
                 <div className='container'>
 
 
@@ -274,7 +280,7 @@ const CreateNewAccountPage = () => {
 
                     </div>
                 </div>
-            </form>
+            </Box>
         </Box>
     );
 };
