@@ -3,8 +3,8 @@ import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
 import { useIntl } from "react-intl";
 import {Alert, Box, Stack, Typography} from "@mui/material";
-import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
-import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
+import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
+import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
