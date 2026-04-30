@@ -37,7 +37,10 @@ class ParkingHistoryController(
 
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/vehicle/{vehicleId}")
-    fun getParkingHistoryByVehicle(@PathVariable vehicleId: Long, authentication: Authentication): ResponseEntity<List<ParkingHistoryDTO>> {
+    fun getParkingHistoryByVehicle(
+        @PathVariable vehicleId: Long,
+        authentication: Authentication
+    ): ResponseEntity<List<ParkingHistoryDTO>> {
         val authUserId = authentication.details as? Long
         if (authentication.authorities.none { it.authority == "ROLE_ADMIN" }) {
             val vehicle = vehicleService.getVehicleById(vehicleId)
@@ -84,5 +87,14 @@ class ParkingHistoryController(
     ): ResponseEntity<Double> {
         val revenue = parkingHistoryService.getDailyRevenue(date)
         return ResponseEntity.ok(revenue)
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/entries-stats")
+    fun getEntriesStats(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
+        @RequestParam period: AggregationPeriod
+    ): ResponseEntity<EntriesResponseDTO> {
+        return ResponseEntity.ok(parkingHistoryService.getEntriesStatistics(date, period))
     }
 }
