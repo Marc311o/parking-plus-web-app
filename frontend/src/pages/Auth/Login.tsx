@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./Login.css";
 import {useNavigate, Link} from "react-router-dom";
-import { Link as RouterLink } from "react-router-dom";
+import {Link as RouterLink} from "react-router-dom";
 import {Link as MuiLink, Stack, Typography} from "@mui/material";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
@@ -32,7 +32,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [step, setStep] = useState<'login' | '2fa'>('login');
+    const [step, setStep] = useState<'login' | '2fa'>('2fa');
 
     const [preToken, setPreToken] = useState('');
     const [totpCode, setTotpCode] = useState('');
@@ -217,11 +217,17 @@ const Login = () => {
                         WERYFIKACJA 2FA
                     </Typography>
 
-                    <Typography sx = {{mt: 3}}>
+                    <Typography sx={{mt: 3}}>
                         Wpisz kod z aplikacji Authenticator
                     </Typography>
 
-                    <Box component="form"  onSubmit={handle2FASubmit}>
+                    <Box component="form" onSubmit={handle2FASubmit}
+                         sx={{
+                             display: "flex",
+                             flexDirection: "column",
+                             alignItems: "center",
+                         }}
+                    >
 
                         {verifyError && <Alert severity="error">{verifyError}</Alert>}
 
@@ -234,17 +240,17 @@ const Login = () => {
                             }}
                         >
 
-                                <AuthDefaultField
-                                    name="totpCode"
-                                    label="Kod 2FA"
-                                    placeholder="6-cyfrowy kod"
-                                    value={totpCode}
-                                    onChange={(e) =>
-                                        setTotpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-                                    }
-                                    disabled={false}
+                            <AuthDefaultField
+                                name="totpCode"
+                                label="Kod 2FA"
+                                placeholder="6-cyfrowy kod"
+                                value={totpCode}
+                                onChange={(e) =>
+                                    setTotpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                                }
+                                disabled={false}
 
-                                />
+                            />
 
                         </Stack>
 
@@ -258,7 +264,8 @@ const Login = () => {
                             }}
                         >
 
-                            <ButtonWhite type="submit" onClick={handle2FASubmit} disabled={verifyLoading || totpCode.length !== 6}>
+                            <ButtonWhite type="submit" onClick={handle2FASubmit}
+                                         disabled={verifyLoading || totpCode.length !== 6}>
                                 {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
                             </ButtonWhite>
 
@@ -314,7 +321,13 @@ const Login = () => {
                     sx={{width: '100%', maxWidth: 150, mt: 5,}}
                 />
 
-                <Box component="form" onSubmit={handleLogin}>
+                <Box component="form" onSubmit={handleLogin}
+                     sx={{
+                         display: "flex",
+                         flexDirection: "column",
+                         alignItems: "center",
+                     }}
+                >
                     <Stack
                         spacing={2}
                         sx={{
@@ -377,13 +390,14 @@ const Login = () => {
                         sx={{
                             py: "5px",
                             mt: 1,
+                            width: "100%",
                         }}
                     >
                         <ButtonPurple type="submit">
                             Zaloguj się
                         </ButtonPurple>
 
-                        <ButtonWhite type="button" onClick={handleCreateAccount}>
+                        <ButtonWhite onClick={handleCreateAccount}>
                             Załóż konto
                         </ButtonWhite>
                     </Stack>
