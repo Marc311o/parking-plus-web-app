@@ -1,12 +1,14 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Login.css";
 import {useNavigate, Link} from "react-router-dom";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
-import {Box, Alert, CircularProgress} from "@mui/material";
+import {Box, Alert, CircularProgress, Button} from "@mui/material";
 import {useAuthStore} from "../../store/useAuthStore";
 import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
 import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
+import ButtonPurple from "../../components/Login/ButtonPurple.tsx";
+import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 
 const API_URL = (() => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -207,22 +209,15 @@ const Login = () => {
                         </div>
 
                         <div className='buttons'>
-                            <button
-                                type="submit"
-                                className='loginBtn'
-                                disabled={verifyLoading || totpCode.length !== 6}
-                            >
-                                {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
-                            </button>
 
-                            <button
-                                type="button"
-                                className='signupBtn'
-                                onClick={() => setStep('login')}
-                                disabled={verifyLoading}
-                            >
+                            <ButtonWhite type="submit" onClick={handle2FASubmit} disabled={verifyLoading || totpCode.length !== 6}>
+                                {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
+                            </ButtonWhite>
+
+                            <ButtonWhite type="button" onClick={() => setStep('login')} disabled={verifyLoading}>
                                 Wróć
-                            </button>
+                            </ButtonWhite>
+
                         </div>
 
                     </form>
@@ -278,20 +273,13 @@ const Login = () => {
                     </div>
 
                     <div className='buttons'>
-                        <button
-                            onClick={handleLogin}
-                            className='loginBtn'
-                            disabled={loading}
-                        >
-                            {loading ? "Logowanie..." : "Zaloguj się"}
-                        </button>
+                        <ButtonPurple type="submit" onClick={handleLogin}>
+                            Login
+                        </ButtonPurple>
 
-                        <button
-                            onClick={handleCreateAccount}
-                            className='signupBtn'
-                        >
-                            Utwórz konto
-                        </button>
+                        <ButtonWhite type="button" onClick={handleCreateAccount}>
+                            Sign Up
+                        </ButtonWhite>
                     </div>
                 </form>
 

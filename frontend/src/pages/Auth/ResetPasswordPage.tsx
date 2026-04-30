@@ -7,6 +7,7 @@ import { Alert, Box } from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
+import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -145,17 +146,15 @@ const ResetPasswordPage = () => {
                 </div>
 
                 <div className='buttons'>
-                    <button
-                        onClick={handleResetPassword}
-                        className='signupBtn'
-                        disabled={loading}
-                    >
-                        {loading ? "Resetowanie..." : "Resetuj hasło"}
-                    </button>
 
-                    <button onClick={handleBack} className='signupBtn'>
+                    <ButtonWhite type="submit" onClick={handleResetPassword} disabled={loading}>
+                        {loading ? "Resetowanie..." : "Resetuj hasło"}
+                    </ButtonWhite>
+
+                    <ButtonWhite type="button" onClick={handleBack}>
                         Wróć
-                    </button>
+                    </ButtonWhite>
+
                 </div>
             </div>
         </Box>
