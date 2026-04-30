@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import renderIcon from "../../utils/RenderIcon";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
-import {Alert, Box} from "@mui/material";
+import {Alert, Box, Stack, Typography} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
@@ -191,22 +191,51 @@ const CreateNewAccountPage = () => {
                      alignItems: "center",
                  }}
             >
-                <div className='container'>
+                <Box
+                    sx={{
+                        width: "100%",
+                        backgroundColor: "white",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        padding: "20px 0",
+                        minHeight: "100vh",
+                        boxSizing: "border-box",
+                    }}
+                >
 
 
-                    <h1>ZAŁÓŻ KONTO</h1>
+                    <Typography
+                        variant="h4"
+                        component="h1"
+                        sx={{
+                            color: "#5E076E",
+                            fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
+                            fontWeight: 600,
+                            letterSpacing: "1px",
+                            textTransform: "uppercase",
+                            mt: 2,
+                        }}
+                    >
+                        ZAŁÓŻ KONTO
+                    </Typography>
 
                     <Box
                         component="img"
                         src={PersonFill}
                         alt="Person Fill"
-                        sx={{
-                            width: '100%',
-                            maxWidth: 150,
-                        }}
+                        sx={{width: '100%', maxWidth: 150, mt: 5,}}
                     />
 
-                    <div className='inputs'>
+                    <Stack
+                        spacing={2}
+                        sx={{
+                            mt: "55px",
+                            alignItems: "flex-start",
+                            width: 350,
+                        }}
+                    >
 
                         {error && <Alert severity="error">{error}</Alert>}
 
@@ -266,9 +295,17 @@ const CreateNewAccountPage = () => {
                         />
 
 
-                    </div>
+                    </Stack>
 
-                    <div className='buttons'>
+                    <Stack
+                        direction="row"
+                        spacing={1.25}
+                        alignItems="center"
+                        sx={{
+                            py: "5px",
+                            mt: 4,
+                        }}
+                    >
 
                         <ButtonWhite type="submit" onClick={handleCreateAccount}>
                             Utwórz konto
@@ -278,8 +315,8 @@ const CreateNewAccountPage = () => {
                             Wróć
                         </ButtonWhite>
 
-                    </div>
-                </div>
+                    </Stack>
+                </Box>
             </Box>
         </Box>
     );
