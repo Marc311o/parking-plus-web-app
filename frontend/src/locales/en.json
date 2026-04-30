@@ -41,7 +41,9 @@
       "confirmPasswordPlaceholder": "Confirm password",
       "verifyButton": "Verify",
       "resetButton": "Resetting...",
-      "backButton": "Back"
+      "backButton": "Back",
+      "success": "Password has been successfully changed"
+
     },
     "forgotPassword": {
       "title": "FORGOT PASSWORD",
@@ -50,7 +52,26 @@
       "emailPlaceholder": "Email",
       "resetButton": "Reset password",
       "sendingButton":  "Sending ...",
-      "backButton": "Back"
+      "backButton": "Back",
+      "success": "If the account exists, a reset link has been sent",
+      "emailRequired": "Email is required",
+      "sendEmailFailed": "Failed to send email"
+    },
+    "errors": {
+      "auth": {
+        "invalidCredentials": "Invalid email or password",
+        "mfaFailed": "Login error",
+        "emailTaken": "An account with this email already exists",
+        "forgotPasswordFailed": "Sending failed",
+        "resetTokenInvalid": "Token is invalid or expired",
+        "emptyFields": "All fields must be filled in",
+        "invalidCode": "Invalid 2FA code",
+        "invalidEmail": "Invalid email address",
+        "passwordTooShort": "Password must be at least 6 characters",
+        "passwordsNotMatch": "Passwords do not match",
+        "unknown": "An unknown error occurred",
+        "missingToken": "Missing reset token"
+      }
     }
   },
   "sidebar": {

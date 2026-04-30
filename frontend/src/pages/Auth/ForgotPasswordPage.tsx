@@ -28,7 +28,7 @@ const ForgotPasswordPage = () => {
         e.preventDefault();
 
         if (!email.trim()) {
-            setError("Uzupełnij adres email!")
+            setError(formatMessage({ id: 'logins.errors.auth.emailRequired' }))
             setEmailEmptyError(true)
             return;
         }
@@ -38,11 +38,11 @@ const ForgotPasswordPage = () => {
 
             await forgotPassword(email);
 
-            alert("Jeśli konto istnieje, link do resetu został wysłany");
+            alert(formatMessage({ id: 'logins.forgotPassword.success' }));
             navigate("/login");
 
         } catch (err) {
-            setError("Nie udało się wysłać maila")
+            setError(formatMessage({ id: 'logins.errors.auth.sendEmailFailed' }))
         } finally {
             setLoading(false);
         }

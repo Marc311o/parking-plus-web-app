@@ -37,12 +37,12 @@ const ResetPasswordPage = () => {
         setError("");
 
         if (!token) {
-            setError("Brak tokenu resetującego");
+            setError(formatMessage({ id: 'logins.errors.auth.missingToken' }));
             return;
         }
 
         if (!password || !passwordRepeat) {
-            setError("Wszystkie pola są wymagane");
+            setError(formatMessage({ id: 'logins.errors.auth.emptyFields' }));
             if (!password)
                 setPasswordEmptyError(true)
             if (!passwordRepeat)
@@ -51,12 +51,12 @@ const ResetPasswordPage = () => {
         }
 
         if (password.length < 6) {
-            setError("Hasło powinno mieć min. 6 znaków");
+            setError(formatMessage({ id: 'logins.errors.auth.passwordTooShort' }));
             return;
         }
 
         if (password !== passwordRepeat) {
-            setError("Hasła nie są identyczne");
+            setError(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }));
             return;
         }
 
@@ -66,14 +66,14 @@ const ResetPasswordPage = () => {
 
             await resetPassword(token, password);
 
-            alert("Hasło zostało zmienione poprawnie");
+            alert(formatMessage({ id: 'logins.errors.resetPassword.success' }));
             navigate("/login");
 
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
             } else {
-                setError("Wystąpił nieznany błąd");
+                setError(formatMessage({ id: 'logins.errors.auth.unknown' }));
             }
         } finally {
             setLoading(false);

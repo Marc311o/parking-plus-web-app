@@ -125,19 +125,19 @@ const CreateNewAccountPage = () => {
         try {
 
             if (areEmptyFields()) {
-                throw new Error("Wszystkie pola są wymagane");
+                throw new Error(formatMessage({ id: 'logins.errors.auth.emptyFields' }));
             }
 
             if (!isValidEmail(email)) {
-                throw new Error("Niepoprawny adres e-mail!");
+                throw new Error(formatMessage({ id: 'logins.errors.auth.invalidEmail' }));
             }
 
             if (password.length < 6) {
-                throw new Error("Hasło powinno mieć min. 6 znaków!")
+                throw new Error(formatMessage({ id: 'logins.errors.auth.passwordTooShort' }))
             }
 
             if (password !== passwordRepeat) {
-                throw new Error("Hasła nie są identyczne!")
+                throw new Error(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }))
             }
 
             // const result =
@@ -147,9 +147,9 @@ const CreateNewAccountPage = () => {
 
         } catch (err) {
             if (err instanceof Error) {
-                setError(err.message);
+                setError(formatMessage({ id: err.message }));
             } else {
-                setError("Wystąpił nieznany błąd");
+                setError(formatMessage({ id: 'logins.errors.auth.unknown' }));
             }
         } finally {
             setLoading(false);

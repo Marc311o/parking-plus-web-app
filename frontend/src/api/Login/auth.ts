@@ -13,7 +13,7 @@ export async function login(email: string, password: string) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error("Niepoprawny e-mail lub hasło");
+        throw new Error('logins.errors.auth.invalidCredentials');
     }
 
     if (data.mfaRequired) {
@@ -44,7 +44,7 @@ export async function verifyMfa(preAuthToken: string, code: string) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error("Błąd logowania");
+        throw new Error('logins.errors.auth.mfaFailed');
     }
 
     return data;
@@ -66,7 +66,7 @@ export async function createNewAccount(
     });
 
     if (!response.ok) {
-        throw new Error("Na podany e-mail jest już założone inne konto!");
+        throw new Error('logins.errors.auth.emailTaken');
     }
 }
 
@@ -80,7 +80,7 @@ export async function forgotPassword(email: string) {
     });
 
     if (!res.ok) {
-        throw new Error("Błąd wysyłania");
+        throw new Error('logins.errors.auth.forgotPasswordFailed');
     }
 }
 
@@ -98,6 +98,6 @@ export async function resetPassword(token: string, newPassword: string) {
     });
 
     if (!res.ok) {
-        throw new Error("Token jest nieprawidłowy lub wygasł");
+        throw new Error('logins.errors.auth.resetTokenInvalid');
     }
 }

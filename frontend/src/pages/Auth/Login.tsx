@@ -24,7 +24,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [step, setStep] = useState<'login' | '2fa'>('login');
+    const [step, setStep] = useState<'login' | '2fa'>('2fa');
 
     const [preToken, setPreToken] = useState('');
     const [totpCode, setTotpCode] = useState('');
@@ -84,7 +84,7 @@ const Login = () => {
         setError("");
 
         if (areEmptyFields()) {
-            setError("Wszystkie pola muszą być wypełnione")
+            setError(formatMessage({ id: 'logins.errors.auth.emptyFields' }))
             setLoading(false)
             return
         }
@@ -101,7 +101,7 @@ const Login = () => {
             }
 
         } catch (err) {
-            setError("Nieprawidłowy e-mail lub hasło");
+            setError(formatMessage({ id: 'logins.errors.auth.invalidCredentials' }));
         } finally {
             setLoading(false);
         }
@@ -121,7 +121,7 @@ const Login = () => {
             navigate("/");
 
         } catch (err) {
-            setVerifyError("Niepoprawny kod 2FA!");
+            setVerifyError(formatMessage({ id: 'logins.errors.auth.invalidCode' }));
         } finally {
             setVerifyLoading(false);
         }
