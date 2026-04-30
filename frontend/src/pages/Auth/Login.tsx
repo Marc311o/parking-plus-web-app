@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import "./Login.css";
 import {useNavigate, Link} from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
-import { Link as MuiLink } from "@mui/material";
+import {Link as MuiLink, Stack, Typography} from "@mui/material";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress, Button} from "@mui/material";
@@ -188,29 +188,75 @@ const Login = () => {
     if (step === '2fa') {
         return (
             <Box sx={{width: '100%', minHeight: '100%'}}>
-                <div className='container'>
+                <Box
+                    sx={{
+                        width: "100%",
+                        backgroundColor: "white",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        padding: "20px 0",
+                        minHeight: "100vh",
+                        boxSizing: "border-box",
+                    }}
+                >
 
-                    <h1>WERYFIKACJA 2FA</h1>
+                    <Typography
+                        variant="h4"
+                        component="h1"
+                        sx={{
+                            color: "#5E076E",
+                            fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
+                            fontWeight: 600,
+                            letterSpacing: "1px",
+                            textTransform: "uppercase",
+                            mt: 4,
+                        }}
+                    >
+                        WERYFIKACJA 2FA
+                    </Typography>
 
-                    <p>Wpisz kod z aplikacji Authenticator</p>
+                    <Typography sx = {{mt: 3}}>
+                        Wpisz kod z aplikacji Authenticator
+                    </Typography>
 
-                    <form onSubmit={handle2FASubmit}>
+                    <Box component="form"  onSubmit={handle2FASubmit}>
 
                         {verifyError && <Alert severity="error">{verifyError}</Alert>}
 
-                        <div className='inputs'>
-                            <div className='input'>
-                                <input
-                                    type="text"
+                        <Stack
+                            spacing={2}
+                            sx={{
+                                mt: "55px",
+                                alignItems: "flex-start",
+                                width: 350,
+                            }}
+                        >
+
+                                <AuthDefaultField
+                                    name="totpCode"
+                                    label="Kod 2FA"
                                     placeholder="6-cyfrowy kod"
                                     value={totpCode}
-                                    onChange={(e) => setTotpCode(e.target.value)}
-                                    maxLength={6}
-                                />
-                            </div>
-                        </div>
+                                    onChange={(e) =>
+                                        setTotpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                                    }
+                                    disabled={false}
 
-                        <div className='buttons'>
+                                />
+
+                        </Stack>
+
+                        <Stack
+                            direction="row"
+                            spacing={1.25}
+                            alignItems="center"
+                            sx={{
+                                py: "5px",
+                                mt: 4,
+                            }}
+                        >
 
                             <ButtonWhite type="submit" onClick={handle2FASubmit} disabled={verifyLoading || totpCode.length !== 6}>
                                 {verifyLoading ? <CircularProgress size={20}/> : "Weryfikuj"}
@@ -220,11 +266,11 @@ const Login = () => {
                                 Wróć
                             </ButtonWhite>
 
-                        </div>
+                        </Stack>
 
-                    </form>
+                    </Box>
 
-                </div>
+                </Box>
             </Box>
         );
     }
@@ -232,19 +278,51 @@ const Login = () => {
 
     return (
         <Box sx={{width: '100%', minHeight: '100%'}}>
-            <div className='container'>
+            <Box
+                sx={{
+                    width: "100%",
+                    backgroundColor: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    padding: "20px 0",
+                    minHeight: "100vh",
+                    boxSizing: "border-box",
+                }}
+            >
 
-                <h1>ZALOGUJ SIĘ</h1>
+                <Typography
+                    variant="h4"
+                    component="h1"
+                    sx={{
+                        color: "#5E076E",
+                        fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
+                        fontWeight: 600,
+                        letterSpacing: "1px",
+                        textTransform: "uppercase",
+                        mt: 2,
+                    }}
+                >
+                    ZALOGUJ SIĘ
+                </Typography>
 
                 <Box
                     component="img"
                     src={PersonFill}
                     alt="Person Fill"
-                    sx={{width: '100%', maxWidth: 150}}
+                    sx={{width: '100%', maxWidth: 150, mt: 5,}}
                 />
 
-                <form onSubmit={handleLogin}>
-                    <div className='inputs'>
+                <Box component="form" onSubmit={handleLogin}>
+                    <Stack
+                        spacing={2}
+                        sx={{
+                            mt: "55px",
+                            alignItems: "flex-start",
+                            width: 350,
+                        }}
+                    >
 
                         {error && <Alert severity="error">{error}</Alert>}
 
@@ -289,20 +367,29 @@ const Login = () => {
                             Nie pamiętam hasła
                         </MuiLink>
 
-                    </div>
+                    </Stack>
 
-                    <div className='buttons'>
-                        <ButtonPurple type="submit" onClick={handleLogin}>
-                            Login
+
+                    <Stack
+                        direction="row"
+                        spacing={1.25}
+                        alignItems="center"
+                        sx={{
+                            py: "5px",
+                            mt: 1,
+                        }}
+                    >
+                        <ButtonPurple type="submit">
+                            Zaloguj się
                         </ButtonPurple>
 
                         <ButtonWhite type="button" onClick={handleCreateAccount}>
-                            Sign Up
+                            Załóż konto
                         </ButtonWhite>
-                    </div>
-                </form>
+                    </Stack>
+                </Box>
 
-            </div>
+            </Box>
         </Box>
     );
 };
