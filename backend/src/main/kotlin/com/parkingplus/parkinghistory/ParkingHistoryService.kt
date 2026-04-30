@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.DayOfWeek
-import java.time.format.DateTimeFormatter
+import kotlin.math.round
 
 @Service
 class ParkingHistoryService(
@@ -204,5 +204,94 @@ class ParkingHistoryService(
                 )
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    fun getRevenueStatistics(date: LocalDate, period: AggregationPeriod): RevenueStatsResponseDTO {
+        val currentStart: LocalDateTime
+        val currentEnd: LocalDateTime
+        val previousStart: LocalDateTime
+        val previousEnd: LocalDateTime
+
+        when (period) {
+            AggregationPeriod.DAILY -> {
+                currentStart = date.atStartOfDay()
+                currentEnd = date.atTime(LocalTime.MAX)
+                previousStart = currentStart.minusDays(1)
+                previousEnd = currentEnd.minusDays(1)
+            }
+            AggregationPeriod.WEEKLY -> {
+                currentStart = date.with(DayOfWeek.MONDAY).atStartOfDay()
+                currentEnd = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
+                previousStart = currentStart.minusWeeks(1)
+                previousEnd = currentEnd.minusWeeks(1)
+            }
+            AggregationPeriod.YEARLY -> {
+                currentStart = date.withDayOfYear(1).atStartOfDay()
+                currentEnd = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
+                previousStart = currentStart.minusYears(1)
+                previousEnd = currentEnd.minusYears(1)
+            }
+        }
+
+        val currentData = parkingHistoryRepository.findRevenueBetween(currentStart, currentEnd)
+        val previousTotal = parkingHistoryRepository.sumPriceByEndTimeBetween(previousStart, previousEnd) ?: 0.0
+
+        var currentTotal = 0.0
+
+        val pointsMap = when (period) {
+            AggregationPeriod.DAILY -> {
+                val map = linkedMapOf<String, Double>()
+                for (i in 0..22 step 2) map["$i:00"] = 0.0
+                currentData.forEach {
+                    val hour = it.endTime.hour
+                    val bucket = hour - (hour % 2)
+                    map["$bucket:00"] = (map["$bucket:00"] ?: 0.0) + it.price
+                    currentTotal += it.price
+                }
+                map
+            }
+            AggregationPeriod.WEEKLY -> {
+                val map = linkedMapOf("MON" to 0.0, "TUE" to 0.0, "WED" to 0.0, "THU" to 0.0, "FRI" to 0.0, "SAT" to 0.0, "SUN" to 0.0)
+                currentData.forEach {
+                    val day = it.endTime.dayOfWeek.name.substring(0, 3)
+                    map[day] = (map[day] ?: 0.0) + it.price
+                    currentTotal += it.price
+                }
+                map
+            }
+            AggregationPeriod.YEARLY -> {
+                val map = linkedMapOf("JAN" to 0.0, "FEB" to 0.0, "MAR" to 0.0, "APR" to 0.0, "MAY" to 0.0, "JUN" to 0.0, "JUL" to 0.0, "AUG" to 0.0, "SEP" to 0.0, "OCT" to 0.0, "NOV" to 0.0, "DEC" to 0.0)
+                currentData.forEach {
+                    val month = it.endTime.month.name.substring(0, 3)
+                    map[month] = (map[month] ?: 0.0) + it.price
+                    currentTotal += it.price
+                }
+                map
+            }
+        }
+
+        val percentChange = if (previousTotal > 0.0) {
+            ((currentTotal - previousTotal) / previousTotal) * 100.0
+        } else if (currentTotal > 0.0) {
+            100.0
+        } else {
+            0.0
+        }
+
+        val roundedPercentChange = round(percentChange * 10) / 10.0
+        val roundedTotal = round(currentTotal * 100) / 100.0
+
+        return RevenueStatsResponseDTO(
+            period = period,
+            from = currentStart.toLocalDate(),
+            to = currentEnd.toLocalDate(),
+            total = roundedTotal,
+            previousPeriodChangePercent = roundedPercentChange,
+            currency = "PLN", // TODO: Hardcoded for now, consider making it dynamic in the future
+            points = pointsMap.map {
+                RevenuePointDTO(it.key, round(it.value * 100) / 100.0)
+            }
+        )
     }
 }
