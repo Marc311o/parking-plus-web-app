@@ -26,6 +26,7 @@ export function ButtonWhite({
                 color: "#8b1f9e",
                 background: "#ffffff",
                 border: "3px solid #8b1f9e",
+                whiteSpace: "nowrap",
                 "&:hover": {
                     color: "#ffffff",
                     background: "#c22bdd",

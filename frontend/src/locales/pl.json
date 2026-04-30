@@ -1,4 +1,58 @@
 {
+  "logins": {
+    "login": {
+      "title": "ZALOGUJ SIĘ",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "passwordForgot": "Nie pamiętam hasła",
+      "loginButton": "Zaloguj",
+      "newAccButton": "Załóż konto"
+    },
+    "2fa": {
+      "title": "WERYFIKACJA 2FA",
+      "description": "Wpisz kod z aplikacji Authenticator",
+      "codeLabel": "Kod 2FA",
+      "codePlaceholder": "6-cyfrowy kod",
+      "verifyButton": "Weryfikuj",
+      "backButton": "Wróć"
+    },
+    "createNewAccount": {
+      "title": "ZAŁÓŻ KONTO",
+      "firstNameLabel": "Imię",
+      "firstNamePlaceholder": "Imię",
+      "lastNameLabel": "Nazwisko",
+      "lastNamePlaceholder": "Nazwisko",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "createButton": "Utwórz konto",
+      "backButton": "Wróć"
+    },
+    "resetPassword": {
+      "title": "RESET HASŁA",
+      "passwordLabel": "Nowe hasło",
+      "passwordPlaceholder": "Nowe hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "verifyButton": "Weryfikuj",
+      "resetButton": "Resetowanie ...",
+      "backButton": "Wróć"
+    },
+  "forgotPassword": {
+    "title": "RESET HASŁA",
+    "description": "Wpisz swój adres e-mail, aby zresetować hasło",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "E-mail",
+    "resetButton": "Zresetuj hasło",
+    "sendingButton":  "Wysyłanie ...",
+    "backButton": "Wróć"
+  }
+  },
   "sidebar": {
     "sections": {
       "menu": "Menu",
