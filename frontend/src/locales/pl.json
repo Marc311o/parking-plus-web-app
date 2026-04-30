@@ -41,17 +41,37 @@
       "confirmPasswordPlaceholder": "Powtórz hasło",
       "verifyButton": "Weryfikuj",
       "resetButton": "Resetowanie ...",
-      "backButton": "Wróć"
+      "backButton": "Wróć",
+      "success": "Hasło zostało zmienione poprawnie"
     },
-  "forgotPassword": {
-    "title": "RESET HASŁA",
-    "description": "Wpisz swój adres e-mail, aby zresetować hasło",
-    "emailLabel": "E-mail",
-    "emailPlaceholder": "E-mail",
-    "resetButton": "Zresetuj hasło",
-    "sendingButton":  "Wysyłanie ...",
-    "backButton": "Wróć"
-  }
+    "forgotPassword": {
+      "title": "RESET HASŁA",
+      "description": "Wpisz swój adres e-mail, aby zresetować hasło",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "resetButton": "Zresetuj hasło",
+      "sendingButton": "Wysyłanie ...",
+      "backButton": "Wróć",
+      "success": "Jeśli konto istnieje, link do resetu został wysłany"
+    },
+    "errors": {
+      "auth": {
+        "invalidCredentials": "Niepoprawny e-mail lub hasło",
+        "mfaFailed": "Błąd logowania",
+        "emailTaken": "Na podany e-mail jest już założone inne konto!",
+        "forgotPasswordFailed": "Błąd wysyłania",
+        "resetTokenInvalid": "Token jest nieprawidłowy lub wygasł",
+        "emptyFields": "Wszystkie pola muszą być wypełnione",
+        "invalidCode": "Niepoprawny kod 2FA!",
+        "invalidEmail": "Niepoprawny adres e-mail",
+        "passwordTooShort": "Hasło powinno mieć min. 6 znaków",
+        "passwordsNotMatch": "Hasła nie są identyczne",
+        "unknown": "Wystąpił nieznany błąd",
+        "emailRequired": "Uzupełnij adres email",
+        "sendEmailFailed": "Nie udało się wysłać maila",
+        "missingToken": "Brak tokenu resetującego"
+      }
+    }
   },
   "sidebar": {
     "sections": {
