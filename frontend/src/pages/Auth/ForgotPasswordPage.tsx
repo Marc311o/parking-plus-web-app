@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
+import { useIntl } from "react-intl";
 import {Alert, Box, Stack, Typography} from "@mui/material";
 import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
 import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
@@ -8,6 +9,7 @@ import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ForgotPasswordPage = () => {
+    const {formatMessage} = useIntl();
 
     const [error, setError] = useState("");
 
@@ -93,7 +95,7 @@ const ForgotPasswordPage = () => {
                     mt: 2,
                 }}
             >
-                RESET HASŁA
+                {formatMessage({ id: "logins.forgotPassword.title" })}
             </Typography>
 
             <Box
@@ -120,8 +122,7 @@ const ForgotPasswordPage = () => {
                 >
 
                     <Typography sx={{mt: 3}}>
-                        Wprowadź adres e-mail przypisany do Twojego konta.
-                        Na ten adres zostanie wysłany link umożliwiający zresetowanie hasła.
+                        {formatMessage({ id: "logins.forgotPassword.description" })}
                     </Typography>
 
 
@@ -131,8 +132,8 @@ const ForgotPasswordPage = () => {
                     {/* email */}
                     <AuthDefaultField
                         name={"email"}
-                        label={"E-mail"}
-                        placeholder={"E-mail"}
+                        label={formatMessage({ id: "logins.forgotPassword.emailLabel" })}
+                        placeholder={formatMessage({ id: "logins.forgotPassword.emailPlaceholder" })}
                         value={email}
                         onChange={(e) => handleInputChange(e)}
                         disabled={loading}
@@ -152,11 +153,11 @@ const ForgotPasswordPage = () => {
                 >
 
                     <ButtonWhite type="submit" onClick={handleSendEmail} disabled={loading}>
-                        {loading ? "Wysyłanie..." : "Resetuj hasło"}
+                        {loading ? formatMessage({ id: "logins.forgotPassword.sendingButton" }) : formatMessage({ id: "logins.forgotPassword.resetButton" })}
                     </ButtonWhite>
 
                     <ButtonWhite type="button" onClick={handleBack}>
-                        Wróć
+                        {formatMessage({ id: "logins.forgotPassword.backButton" })}
                     </ButtonWhite>
 
                 </Stack>

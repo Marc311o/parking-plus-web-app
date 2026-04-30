@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import renderIcon from "../../utils/RenderIcon";
-
+import { useIntl } from "react-intl";
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Alert, Box, Stack, Typography} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
@@ -13,6 +13,7 @@ import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateNewAccountPage = () => {
+    const {formatMessage} = useIntl();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false);
@@ -217,7 +218,7 @@ const CreateNewAccountPage = () => {
                             mt: 2,
                         }}
                     >
-                        ZAŁÓŻ KONTO
+                        {formatMessage({ id: 'logins.createNewAccount.title' })}
                     </Typography>
 
                     <Box
@@ -241,8 +242,8 @@ const CreateNewAccountPage = () => {
                         {/*name*/}
                         <AuthDefaultField
                             name={"name"}
-                            label={"Imię"}
-                            placeholder={"Imię"}
+                            label={formatMessage({ id: 'logins.createNewAccount.firstNameLabel' })}
+                            placeholder={formatMessage({ id: 'logins.createNewAccount.firstNamePlaceholder' })}
                             value={name}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -252,8 +253,8 @@ const CreateNewAccountPage = () => {
                         {/*surname*/}
                         <AuthDefaultField
                             name={"surname"}
-                            label={"Nazwisko"}
-                            placeholder={"Nazwisko"}
+                            label={formatMessage({ id: 'logins.createNewAccount.lastNameLabel' })}
+                            placeholder={formatMessage({ id: 'logins.createNewAccount.lastNamePlaceholder' })}
                             value={surname}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -263,8 +264,8 @@ const CreateNewAccountPage = () => {
                         {/*mail*/}
                         <AuthDefaultField
                             name={"email"}
-                            label={"E-mail"}
-                            placeholder={"E-mail"}
+                            label={formatMessage({ id: 'logins.createNewAccount.emailLabel' })}
+                            placeholder={formatMessage({ id: 'logins.createNewAccount.emailPlaceholder' })}
                             value={email}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -274,8 +275,8 @@ const CreateNewAccountPage = () => {
                         {/* password */}
                         <AuthPasswordField
                             name="password"
-                            label="Hasło"
-                            placeholder="Hasło"
+                            label={formatMessage({ id: 'logins.createNewAccount.passwordLabel' })}
+                            placeholder={formatMessage({ id: 'logins.createNewAccount.passwordPlaceholder' })}
                             value={password}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -285,8 +286,8 @@ const CreateNewAccountPage = () => {
                         {/* password repeat */}
                         <AuthPasswordField
                             name="passwordRepeat"
-                            label="Powtórz hasło"
-                            placeholder="Powtórz hasło"
+                            label={formatMessage({ id: 'logins.createNewAccount.confirmPasswordLabel' })}
+                            placeholder={formatMessage({ id: 'logins.createNewAccount.confirmPasswordPlaceholder' })}
                             value={passwordRepeat}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -307,11 +308,11 @@ const CreateNewAccountPage = () => {
                     >
 
                         <ButtonWhite type="submit" onClick={handleCreateAccount}>
-                            Utwórz konto
+                            {formatMessage({ id: 'logins.createNewAccount.createButton' })}
                         </ButtonWhite>
 
                         <ButtonWhite type="button" onClick={handleBack}>
-                            Wróć
+                            {formatMessage({ id: 'logins.createNewAccount.backButton' })}
                         </ButtonWhite>
 
                     </Stack>

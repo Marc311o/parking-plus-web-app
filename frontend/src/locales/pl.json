@@ -1,6 +1,57 @@
 {
-  "common": {
-    "lackOfData": "Brak danych"
+  "logins": {
+    "login": {
+      "title": "ZALOGUJ SIĘ",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "passwordForgot": "Nie pamiętam hasła",
+      "loginButton": "Zaloguj",
+      "newAccButton": "Załóż konto"
+    },
+    "2fa": {
+      "title": "WERYFIKACJA 2FA",
+      "description": "Wpisz kod z aplikacji Authenticator",
+      "codeLabel": "Kod 2FA",
+      "codePlaceholder": "6-cyfrowy kod",
+      "verifyButton": "Weryfikuj",
+      "backButton": "Wróć"
+    },
+    "createNewAccount": {
+      "title": "ZAŁÓŻ KONTO",
+      "firstNameLabel": "Imię",
+      "firstNamePlaceholder": "Imię",
+      "lastNameLabel": "Nazwisko",
+      "lastNamePlaceholder": "Nazwisko",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "createButton": "Utwórz konto",
+      "backButton": "Wróć"
+    },
+    "resetPassword": {
+      "title": "RESET HASŁA",
+      "passwordLabel": "Nowe hasło",
+      "passwordPlaceholder": "Nowe hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "verifyButton": "Weryfikuj",
+      "resetButton": "Resetowanie ...",
+      "backButton": "Wróć"
+    },
+  "forgotPassword": {
+    "title": "RESET HASŁA",
+    "description": "Wpisz swój adres e-mail, aby zresetować hasło",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "E-mail",
+    "resetButton": "Zresetuj hasło",
+    "sendingButton":  "Wysyłanie ...",
+    "backButton": "Wróć"
+  }
   },
   "sidebar": {
     "sections": {
@@ -40,8 +91,6 @@
         "options": {
           "nameAsc": "Nazwa A-Z",
           "nameDesc": "Nazwa Z-A",
-          "emailAsc": "Email A-Z",
-          "emailDesc": "Email Z-A",
           "dateNewest": "Najnowsze",
           "dateOldest": "Najstarsze"
         }
@@ -187,28 +236,6 @@
       "reserved": "Zarezerwowane",
       "noSpaceSelectedTitle": "Wybierz miejsce parkingowe",
       "noSpaceSelectedDescription": "Kliknij miejsce na mapie, aby zobaczyć historię zajętości i rezerwacji w wybranym dniu."
-    }
-  },
-  "clients": {
-    "list": {
-      "empty": "Brak klientów",
-      "vehiclesButton": "pojazdy"
-    },
-    "vehiclesDialog": {
-      "title": "Pojazdy",
-      "loading": "Ładowanie pojazdów...",
-      "error": "Nie udało się pobrać pojazdów tego klienta.",
-      "emptyTitle": "Brak pojazdów",
-      "emptyDescription": "Ten klient nie ma jeszcze przypisanych pojazdów.",
-      "vehiclesCount": "{count, plural, one {# pojazd} few {# pojazdy} many {# pojazdów} other {# pojazdu}}",
-      "vehicleId": "ID pojazdu: {id}",
-      "closeButton": "Zamknij",
-      "carTypes": {
-        "REGULAR_ABLEBODIED": "Standardowy",
-        "REGULAR_HANDICAPED": "Standardowy / niepełnosprawni",
-        "EV_ABLEBODIED": "Elektryczny",
-        "EV_HANDICAPED": "Elektryczny / niepełnosprawni"
-      }
     }
   }
 }
