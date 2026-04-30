@@ -52,6 +52,9 @@ class ParkingHistoryService(
             throw IllegalArgumentException("Vehicle with license plate ${vehicle.licensePlate} already has an active parking entry.")
         }
 
+        parkingSpace.status = com.parkingplus.parkingspaces.enums.ParkingSpaceStatus.OCCUPIED
+        parkingSpaceRepository.save(parkingSpace)
+
         val entity = ParkingHistoryEntity(
             vehicle = vehicle,
             parkingSpace = parkingSpace,
@@ -71,6 +74,10 @@ class ParkingHistoryService(
 
         activeParking.endTime = LocalDateTime.now()
         //TODO: Calculate price based on parking tariffs and duration
+
+        val parkingSpace = activeParking.parkingSpace
+        parkingSpace.status = com.parkingplus.parkingspaces.enums.ParkingSpaceStatus.FREE
+        parkingSpaceRepository.save(parkingSpace)
 
         return parkingHistoryRepository.save(activeParking).toDTO()
     }

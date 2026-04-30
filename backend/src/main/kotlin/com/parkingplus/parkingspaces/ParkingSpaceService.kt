@@ -1,14 +1,17 @@
 package com.parkingplus.parkingspaces
 
+import com.parkingplus.parkinghistory.ParkingHistoryRepository
 import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import java.util.NoSuchElementException
 
 @Service
 class ParkingSpaceService(
-    private val parkingSpaceRepository: ParkingSpaceRepository
+    private val parkingSpaceRepository: ParkingSpaceRepository,
+    private val parkingHistoryRepository: ParkingHistoryRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -95,5 +98,44 @@ class ParkingSpaceService(
         val total = free + occupied + reserved
 
         return ParkingSpaceStatsDTO(free, occupied, reserved, total)
+    }
+
+
+    @Transactional(readOnly = true)
+    fun getSpaceDetails(id: String): ParkingSpotDetailsDTO {
+        val space = parkingSpaceRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Parking space with id $id does not exist.") }
+
+        var occupantDto: ParkingSpotOccupantDetailsDTO? = null
+        val activeHistory = parkingHistoryRepository.findByParkingSpaceIdAndEndTimeIsNull(id)
+
+        val actualStatus = if (activeHistory != null) ParkingSpaceStatus.OCCUPIED else space.status
+
+        if (activeHistory != null) {
+            val vehicle = activeHistory.vehicle
+            val owner = vehicle.owner
+
+            val duration = java.time.Duration.between(activeHistory.startTime, LocalDateTime.now())
+
+            occupantDto = ParkingSpotOccupantDetailsDTO(
+                ownerId = owner.id.toString(),
+                ownerName = "${owner.name} ${owner.surname}",
+                ownerEmail = owner.email,
+                ownerPhone = null,
+                vehiclePlate = vehicle.licensePlate,
+                entryTime = activeHistory.startTime,
+                parkingDurationSec = duration.seconds,
+                amountDue = 0.0,
+                imageUrl = activeHistory.photoPath
+            )
+        }
+
+        return ParkingSpotDetailsDTO(
+            id = space.id,
+            type = space.spaceType,
+            status = actualStatus,
+            level = space.level,
+            occupant = occupantDto
+        )
     }
 }
