@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import renderIcon from "../../utils/RenderIcon";
-
+import { useIntl } from "react-intl";
 import {Alert, Box, Stack, Typography} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
@@ -11,6 +11,7 @@ import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ResetPasswordPage = () => {
+    const {formatMessage} = useIntl();
 
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
@@ -138,7 +139,7 @@ const ResetPasswordPage = () => {
                         mt: 4,
                     }}
                 >
-                    RESET HASŁA
+                    {formatMessage({ id: 'logins.resetPassword.title' })}
                 </Typography>
 
                 <Box component="form" onSubmit={handleResetPassword}
@@ -163,8 +164,8 @@ const ResetPasswordPage = () => {
                         {/* password */}
                         <AuthPasswordField
                             name="password"
-                            label="Nowe hasło"
-                            placeholder="Nowe hasło"
+                            label={formatMessage({ id: "logins.resetPassword.passwordLabel" })}
+                            placeholder={formatMessage({ id: "logins.resetPassword.passwordPlaceholder" })}
                             value={password}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -174,8 +175,8 @@ const ResetPasswordPage = () => {
                         {/* password repeat */}
                         <AuthPasswordField
                             name="passwordRepeat"
-                            label="Powtórz nowe hasło"
-                            placeholder="Powtórz nowe hasło"
+                            label={formatMessage({ id: "logins.resetPassword.confirmPasswordLabel" })}
+                            placeholder={formatMessage({ id: "logins.resetPassword.confirmPasswordPlaceholder" })}
                             value={passwordRepeat}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -196,11 +197,11 @@ const ResetPasswordPage = () => {
                     >
 
                         <ButtonWhite type="submit" onClick={handleResetPassword} disabled={loading}>
-                            {loading ? "Resetowanie..." : "Resetuj hasło"}
+                            {loading ? formatMessage({ id: "logins.resetPassword.resetButton" }) : formatMessage({ id: "logins.resetPassword.verifyButton" })}
                         </ButtonWhite>
 
                         <ButtonWhite type="button" onClick={handleBack}>
-                            Wróć
+                            {formatMessage({ id: "logins.resetPassword.backButton" })}
                         </ButtonWhite>
 
                     </Stack>

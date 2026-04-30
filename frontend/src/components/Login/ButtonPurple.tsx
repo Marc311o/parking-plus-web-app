@@ -26,6 +26,7 @@ export function ButtonPurple({
                 color: "#f3f4f6",
                 background: "linear-gradient(135deg, #c22bdd, #8b1f9e)",
                 border: "none",
+                whiteSpace: "nowrap",
                 "&:hover": {
                     color: "#c22bdd",
                     background: "#ffffff",

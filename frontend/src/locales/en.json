@@ -41,9 +41,7 @@
       "confirmPasswordPlaceholder": "Confirm password",
       "verifyButton": "Verify",
       "resetButton": "Resetting...",
-      "backButton": "Back",
-      "success": "Password has been successfully changed"
-
+      "backButton": "Back"
     },
     "forgotPassword": {
       "title": "FORGOT PASSWORD",
@@ -52,26 +50,7 @@
       "emailPlaceholder": "Email",
       "resetButton": "Reset password",
       "sendingButton":  "Sending ...",
-      "backButton": "Back",
-      "success": "If the account exists, a reset link has been sent"
-    },
-    "errors": {
-      "auth": {
-        "invalidCredentials": "Invalid email or password",
-        "mfaFailed": "Login error",
-        "emailTaken": "An account with this email already exists",
-        "forgotPasswordFailed": "Sending failed",
-        "resetTokenInvalid": "Token is invalid or expired",
-        "emptyFields": "All fields must be filled in",
-        "invalidCode": "Invalid 2FA code",
-        "invalidEmail": "Invalid email address",
-        "passwordTooShort": "Password must be at least 6 characters",
-        "passwordsNotMatch": "Passwords do not match",
-        "unknown": "An unknown error occurred",
-        "missingToken": "Missing reset token",
-        "emailRequired": "Email is required",
-        "sendEmailFailed": "Failed to send email"
-      }
+      "backButton": "Back"
     }
   },
   "sidebar": {
@@ -113,8 +92,6 @@
         "options": {
           "nameAsc": "Name A-Z",
           "nameDesc": "Name Z-A",
-          "emailAsc": "Email A-Z",
-          "emailDesc": "Email Z-A",
           "dateNewest": "Newest",
           "dateOldest": "Oldest"
         }
@@ -262,28 +239,6 @@
       "reserved": "Reserved",
       "noSpaceSelectedTitle": "Select a parking space",
       "noSpaceSelectedDescription": "Click a parking space on the map to see occupancy and reservation history for the selected day."
-    }
-  },
-  "clients": {
-    "list": {
-      "empty": "No clients found",
-      "vehiclesButton": "vehicles"
-    },
-    "vehiclesDialog": {
-      "title": "Vehicles",
-      "loading": "Loading vehicles...",
-      "error": "Could not load vehicles for this client.",
-      "emptyTitle": "No vehicles yet",
-      "emptyDescription": "This client does not have any assigned cars.",
-      "vehiclesCount": "{count, plural, one {# vehicle} other {# vehicles}}",
-      "vehicleId": "Vehicle ID: {id}",
-      "closeButton": "Close",
-      "carTypes": {
-        "REGULAR_ABLEBODIED": "Standard",
-        "REGULAR_HANDICAPED": "Standard / disabled",
-        "EV_ABLEBODIED": "Electric",
-        "EV_HANDICAPED": "Electric / disabled"
-      }
     }
   }
 }
