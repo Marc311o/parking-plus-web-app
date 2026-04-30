@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
 import {Alert, Box} from "@mui/material";
 import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
+import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -106,17 +107,15 @@ const ForgotPasswordPage = () => {
                 </div>
 
                 <div className='buttons'>
-                    <button
-                        onClick={handleSendEmail}
-                        className='signupBtn'
-                        disabled={loading}
-                    >
-                        {loading ? "Wysyłanie..." : "Resetuj hasło"}
-                    </button>
 
-                    <button onClick={handleBack} className='signupBtn'>
+                    <ButtonWhite type="submit" onClick={handleSendEmail} disabled={loading}>
+                        {loading ? "Wysyłanie..." : "Resetuj hasło"}
+                    </ButtonWhite>
+
+                    <ButtonWhite type="button" onClick={handleBack}>
                         Wróć
-                    </button>
+                    </ButtonWhite>
+
                 </div>
             </form>
 
