@@ -20,5 +20,9 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         @Param("end") end: LocalDateTime
     ): Double
 
-    fun findAllByStartTimeBetween(start: LocalDateTime, end: LocalDateTime): List<ParkingHistoryEntity>
+    @Query("SELECT p.startTime FROM ParkingHistoryEntity p WHERE p.startTime BETWEEN :start AND :end")
+    fun findStartTimesBetween(
+        @Param("start") start: LocalDateTime,
+        @Param("end") end: LocalDateTime
+    ): List<LocalDateTime>
 }

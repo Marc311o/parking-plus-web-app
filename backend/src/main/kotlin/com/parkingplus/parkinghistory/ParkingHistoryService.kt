@@ -97,13 +97,17 @@ class ParkingHistoryService(
 
     @Transactional(readOnly = true)
     fun getEntriesStatistics(date: LocalDate, period: AggregationPeriod): EntriesResponseDTO {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
 
         return when (period) {
             AggregationPeriod.WEEKLY -> {
-                val startOfWeek = date.with(DayOfWeek.MONDAY).atStartOfDay()
-                val endOfWeek = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
-                val entries = parkingHistoryRepository.findAllByStartTimeBetween(startOfWeek, endOfWeek)
+                val startOfWeek = date.with(DayOfWeek.MONDAY)
+                val endOfWeek = date.with(DayOfWeek.SUNDAY)
+
+
+                val entryTimes = parkingHistoryRepository.findStartTimesBetween(
+                    startOfWeek.atStartOfDay(),
+                    endOfWeek.atTime(LocalTime.MAX)
+                )
 
                 val pointsMap = linkedMapOf(
                     "MON" to 0L,
@@ -114,49 +118,55 @@ class ParkingHistoryService(
                     "SAT" to 0L,
                     "SUN" to 0L
                 )
-                entries.forEach {
-                    val day = it.startTime.dayOfWeek.name.substring(0, 3)
+
+                entryTimes.forEach { time ->
+                    val day = time.dayOfWeek.name.substring(0, 3)
                     pointsMap[day] = pointsMap.getOrDefault(day, 0) + 1
                 }
 
                 EntriesResponseDTO(
                     period = period,
-                    from = startOfWeek.format(formatter),
-                    to = endOfWeek.format(formatter),
-                    total = entries.size.toLong(),
+                    from = startOfWeek,
+                    to = endOfWeek,
+                    total = entryTimes.size.toLong(),
                     points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
                 )
             }
 
             AggregationPeriod.DAILY -> {
-                val startOfDay = date.atStartOfDay()
-                val endOfDay = date.atTime(LocalTime.MAX)
-                val entries = parkingHistoryRepository.findAllByStartTimeBetween(startOfDay, endOfDay)
+                val entryTimes = parkingHistoryRepository.findStartTimesBetween(
+                    date.atStartOfDay(),
+                    date.atTime(LocalTime.MAX)
+                )
 
                 val pointsMap = linkedMapOf<String, Long>()
                 for (i in 0..22 step 2) {
                     pointsMap["$i:00"] = 0L
                 }
 
-                entries.forEach {
-                    val hour = it.startTime.hour
+                entryTimes.forEach { time ->
+                    val hour = time.hour
                     val bucket = hour - (hour % 2)
                     pointsMap["$bucket:00"] = pointsMap.getOrDefault("$bucket:00", 0) + 1
                 }
 
                 EntriesResponseDTO(
                     period = period,
-                    from = startOfDay.format(formatter),
-                    to = endOfDay.format(formatter),
-                    total = entries.size.toLong(),
+                    from = date,
+                    to = date,
+                    total = entryTimes.size.toLong(),
                     points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
                 )
             }
 
             AggregationPeriod.YEARLY -> {
-                val startOfYear = date.withDayOfYear(1).atStartOfDay()
-                val endOfYear = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
-                val entries = parkingHistoryRepository.findAllByStartTimeBetween(startOfYear, endOfYear)
+                val startOfYear = date.withDayOfYear(1)
+                val endOfYear = date.withDayOfYear(date.lengthOfYear())
+
+                val entryTimes = parkingHistoryRepository.findStartTimesBetween(
+                    startOfYear.atStartOfDay(),
+                    endOfYear.atTime(LocalTime.MAX)
+                )
 
                 val pointsMap = linkedMapOf(
                     "JAN" to 0L,
@@ -172,16 +182,17 @@ class ParkingHistoryService(
                     "NOV" to 0L,
                     "DEC" to 0L
                 )
-                entries.forEach {
-                    val month = it.startTime.month.name.substring(0, 3)
+
+                entryTimes.forEach { time ->
+                    val month = time.month.name.substring(0, 3)
                     pointsMap[month] = pointsMap.getOrDefault(month, 0) + 1
                 }
 
                 EntriesResponseDTO(
                     period = period,
-                    from = startOfYear.format(formatter),
-                    to = endOfYear.format(formatter),
-                    total = entries.size.toLong(),
+                    from = startOfYear,
+                    to = endOfYear,
+                    total = entryTimes.size.toLong(),
                     points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
                 )
             }

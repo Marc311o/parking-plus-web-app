@@ -1,5 +1,7 @@
 package com.parkingplus.parkinghistory
 
+import java.time.LocalDate
+
 enum class AggregationPeriod {
     DAILY,
     WEEKLY,
@@ -13,8 +15,8 @@ data class EntriesPointDTO(
 
 data class EntriesResponseDTO(
     val period: AggregationPeriod,
-    val from: String,
-    val to: String,
+    val from: LocalDate,
+    val to: LocalDate,
     val total: Long,
     val points: List<EntriesPointDTO>
 )
