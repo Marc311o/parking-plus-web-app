@@ -4,7 +4,9 @@ import com.parkingplus.parkingspaces.ParkingSpaceRepository
 import com.parkingplus.vehicles.VehicleRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @Service
 class ParkingHistoryService(
@@ -82,5 +84,12 @@ class ParkingHistoryService(
     @Transactional
     fun deleteAllParkingHistory() {
         parkingHistoryRepository.deleteAll()
+    }
+
+    @Transactional(readOnly = true)
+    fun getDailyRevenue(date: LocalDate): Double {
+        val startOfDay = date.atStartOfDay()
+        val endOfDay = date.atTime(LocalTime.MAX)
+        return parkingHistoryRepository.sumPriceByEndTimeBetween(startOfDay, endOfDay)
     }
 }
