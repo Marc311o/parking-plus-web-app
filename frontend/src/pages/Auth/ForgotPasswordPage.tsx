@@ -5,8 +5,8 @@ import { useIntl } from "react-intl";
 import {Alert, Box, Stack, Typography} from "@mui/material";
 import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
 import ButtonWhite from "@components/Login/ButtonWhite.tsx";
+import { forgotPassword  } from "@api/Login/auth";
 
-const API_URL = import.meta.env.VITE_API_URL;
 
 const ForgotPasswordPage = () => {
     const {formatMessage} = useIntl();
@@ -24,7 +24,9 @@ const ForgotPasswordPage = () => {
         navigate("/login");
     };
 
-    const handleSendEmail = async () => {
+    const handleSendEmail = async (e: React.FormEvent) => {
+        e.preventDefault();
+
         if (!email.trim()) {
             setError("Uzupełnij adres email!")
             setEmailEmptyError(true)
@@ -34,17 +36,7 @@ const ForgotPasswordPage = () => {
         try {
             setLoading(true);
 
-            const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({email}),
-            });
-
-            if (!res.ok) {
-                throw new Error("Błąd wysyłania");
-            }
+            await forgotPassword(email);
 
             alert("Jeśli konto istnieje, link do resetu został wysłany");
             navigate("/login");
@@ -152,7 +144,7 @@ const ForgotPasswordPage = () => {
                     }}
                 >
 
-                    <ButtonWhite type="submit" onClick={handleSendEmail} disabled={loading}>
+                    <ButtonWhite type="submit">
                         {loading ? formatMessage({ id: "logins.forgotPassword.sendingButton" }) : formatMessage({ id: "logins.forgotPassword.resetButton" })}
                     </ButtonWhite>
 

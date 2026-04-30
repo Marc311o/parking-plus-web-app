@@ -1,7 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 export async function login(email: string, password: string) {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -13,7 +13,7 @@ export async function login(email: string, password: string) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error('logins.errors.auth.invalidCredentials');
+        throw new Error("Niepoprawny e-mail lub hasło");
     }
 
     if (data.mfaRequired) {
@@ -30,7 +30,7 @@ export async function login(email: string, password: string) {
 }
 
 export async function verifyMfa(preAuthToken: string, code: string) {
-    const response = await fetch(`${API_URL}/auth/verify-mfa`, {
+    const response = await fetch(`${API_URL}/api/auth/verify-mfa`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -44,7 +44,7 @@ export async function verifyMfa(preAuthToken: string, code: string) {
     const data = await response.json();
 
     if (!response.ok) {
-        throw new Error('logins.errors.auth.mfaFailed');
+        throw new Error("Błąd logowania");
     }
 
     return data;
@@ -57,7 +57,7 @@ export async function createNewAccount(
     email: string,
     password: string
 ) {
-    const response = await fetch(`${API_URL}/users`, {
+    const response = await fetch(`${API_URL}/api/users`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -66,12 +66,12 @@ export async function createNewAccount(
     });
 
     if (!response.ok) {
-        throw new Error('logins.errors.auth.emailTaken');
+        throw new Error("Na podany e-mail jest już założone inne konto!");
     }
 }
 
 export async function forgotPassword(email: string) {
-    const res = await fetch(`${API_URL}/auth/forgot-password`, {
+    const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -80,13 +80,13 @@ export async function forgotPassword(email: string) {
     });
 
     if (!res.ok) {
-        throw new Error('logins.errors.auth.forgotPasswordFailed');
+        throw new Error("Błąd wysyłania");
     }
 }
 
 
 export async function resetPassword(token: string, newPassword: string) {
-    const res = await fetch(`${API_URL}/auth/reset-password`, {
+    const res = await fetch(`${API_URL}/api/auth/reset-password`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -98,6 +98,6 @@ export async function resetPassword(token: string, newPassword: string) {
     });
 
     if (!res.ok) {
-        throw new Error('logins.errors.auth.resetTokenInvalid');
+        throw new Error("Token jest nieprawidłowy lub wygasł");
     }
 }
