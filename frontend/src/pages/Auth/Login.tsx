@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 import "./Login.css";
 import {useNavigate, Link} from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+import { Link as MuiLink } from "@mui/material";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress, Button} from "@mui/material";
@@ -266,9 +268,26 @@ const Login = () => {
                             error={passwordEmptyError}
                         />
 
-                        <Link to="/forgotpassword" className="forgotPasswordText">
+                        <MuiLink
+                            component={RouterLink}
+                            to="/forgotpassword"
+                            sx={{
+                                fontSize: "14px",
+                                fontWeight: 500,
+                                color: "#5E076E",
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                textAlign: "right",
+                                width: "100%",
+                                display: "block",
+
+                                "&:hover": {
+                                    textDecoration: "underline",
+                                },
+                            }}
+                        >
                             Nie pamiętam hasła
-                        </Link>
+                        </MuiLink>
 
                     </div>
 
