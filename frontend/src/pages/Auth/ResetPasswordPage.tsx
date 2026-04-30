@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import "./Login.css";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import renderIcon from "../../utils/RenderIcon";
 
