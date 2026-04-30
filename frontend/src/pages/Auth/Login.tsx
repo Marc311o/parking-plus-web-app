@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import "./Login.css";
 import {useNavigate, Link} from "react-router-dom";
 import {Link as RouterLink} from "react-router-dom";
 import {Link as MuiLink, Stack, Typography} from "@mui/material";

@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import "./Login.css";
 import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
 import {Alert, Box, Stack, Typography} from "@mui/material";
