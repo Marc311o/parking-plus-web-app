@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "./Login.css";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import renderIcon from "../../utils/RenderIcon";
 
-import { Alert, Box } from "@mui/material";
+import {Alert, Box, Stack, Typography} from "@mui/material";
 import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
@@ -96,7 +96,7 @@ const ResetPasswordPage = () => {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
 
         switch (name) {
             case "password":
@@ -112,51 +112,101 @@ const ResetPasswordPage = () => {
     };
 
     return (
-        <Box sx={{ width: '100%', minHeight: '100vh' }}>
-            <div className='container'>
+        <Box sx={{width: '100%', minHeight: '100vh'}}>
+            <Box
+                sx={{
+                    width: "100%",
+                    backgroundColor: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    padding: "20px 0",
+                    minHeight: "100vh",
+                    boxSizing: "border-box",
+                }}
+            >
 
-                <h1>RESET HASŁA</h1>
+                <Typography
+                    variant="h4"
+                    component="h1"
+                    sx={{
+                        color: "#5E076E",
+                        fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
+                        fontWeight: 600,
+                        letterSpacing: "1px",
+                        textTransform: "uppercase",
+                        mt: 4,
+                    }}
+                >
+                    RESET HASŁA
+                </Typography>
 
-                <div className='inputs'>
+                <Box component="form" onSubmit={handleResetPassword}
+                     sx={{
+                         display: "flex",
+                         flexDirection: "column",
+                         alignItems: "center",
+                     }}
+                >
 
-                    {error && <Alert severity="error">{error}</Alert>}
+                    <Stack
+                        spacing={2}
+                        sx={{
+                            mt: "55px",
+                            alignItems: "flex-start",
+                            width: 350,
+                        }}
+                    >
 
-                    {/* password */}
-                    <AuthPasswordField
-                        name="password"
-                        label="Nowe hasło"
-                        placeholder="Nowe hasło"
-                        value={password}
-                        onChange={(e) => handleInputChange(e)}
-                        disabled={loading}
-                        error={passwordEmptyError}
-                    />
+                        {error && <Alert severity="error">{error}</Alert>}
 
-                    {/* password repeat */}
-                    <AuthPasswordField
-                        name="passwordRepeat"
-                        label="Powtórz nowe hasło"
-                        placeholder="Powtórz nowe hasło"
-                        value={passwordRepeat}
-                        onChange={(e) => handleInputChange(e)}
-                        disabled={loading}
-                        error={passwordRepeatEmptyError}
-                    />
+                        {/* password */}
+                        <AuthPasswordField
+                            name="password"
+                            label="Nowe hasło"
+                            placeholder="Nowe hasło"
+                            value={password}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={passwordEmptyError}
+                        />
 
-                </div>
+                        {/* password repeat */}
+                        <AuthPasswordField
+                            name="passwordRepeat"
+                            label="Powtórz nowe hasło"
+                            placeholder="Powtórz nowe hasło"
+                            value={passwordRepeat}
+                            onChange={(e) => handleInputChange(e)}
+                            disabled={loading}
+                            error={passwordRepeatEmptyError}
+                        />
 
-                <div className='buttons'>
+                    </Stack>
 
-                    <ButtonWhite type="submit" onClick={handleResetPassword} disabled={loading}>
-                        {loading ? "Resetowanie..." : "Resetuj hasło"}
-                    </ButtonWhite>
 
-                    <ButtonWhite type="button" onClick={handleBack}>
-                        Wróć
-                    </ButtonWhite>
+                    <Stack
+                        direction="row"
+                        spacing={1.25}
+                        alignItems="center"
+                        sx={{
+                            py: "5px",
+                            mt: 4,
+                        }}
+                    >
 
-                </div>
-            </div>
+                        <ButtonWhite type="submit" onClick={handleResetPassword} disabled={loading}>
+                            {loading ? "Resetowanie..." : "Resetuj hasło"}
+                        </ButtonWhite>
+
+                        <ButtonWhite type="button" onClick={handleBack}>
+                            Wróć
+                        </ButtonWhite>
+
+                    </Stack>
+                </Box>
+            </Box>
         </Box>
     );
 };
