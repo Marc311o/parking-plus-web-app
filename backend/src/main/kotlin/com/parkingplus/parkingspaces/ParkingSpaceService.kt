@@ -115,7 +115,6 @@ class ParkingSpaceService(
                 val vehicle = activeHistory.vehicle
                 val owner = vehicle.owner
 
-                // Obliczanie czasu trwania postoju w sekundach
                 val duration = java.time.Duration.between(activeHistory.startTime, LocalDateTime.now())
                 val durationInSeconds = duration.seconds
 
