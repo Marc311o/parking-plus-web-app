@@ -107,37 +107,33 @@ class ParkingSpaceService(
             .orElseThrow { NoSuchElementException("Parking space with id $id does not exist.") }
 
         var occupantDto: ParkingSpotOccupantDetailsDTO? = null
+        val activeHistory = parkingHistoryRepository.findByParkingSpaceIdAndEndTimeIsNull(id)
 
-        if (space.status == ParkingSpaceStatus.OCCUPIED) {
-            val activeHistory = parkingHistoryRepository.findByParkingSpaceIdAndEndTimeIsNull(id)
+        val actualStatus = if (activeHistory != null) ParkingSpaceStatus.OCCUPIED else space.status
 
-            if (activeHistory != null) {
-                val vehicle = activeHistory.vehicle
-                val owner = vehicle.owner
+        if (activeHistory != null) {
+            val vehicle = activeHistory.vehicle
+            val owner = vehicle.owner
 
-                val duration = java.time.Duration.between(activeHistory.startTime, LocalDateTime.now())
-                val durationInSeconds = duration.seconds
+            val duration = java.time.Duration.between(activeHistory.startTime, LocalDateTime.now())
 
-                val formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-
-                occupantDto = ParkingSpotOccupantDetailsDTO(
-                    ownerId = owner.id.toString(),
-                    ownerName = "${owner.name} ${owner.surname}",
-                    ownerEmail = owner.email,
-                    ownerPhone = "",
-                    vehiclePlate = vehicle.licensePlate,
-                    entryTime = activeHistory.startTime.format(formatter),
-                    parkingDurationSec = durationInSeconds,
-                    amountDue = 0.0,
-                    imageUrl = activeHistory.photoPath
-                )
-            }
+            occupantDto = ParkingSpotOccupantDetailsDTO(
+                ownerId = owner.id.toString(),
+                ownerName = "${owner.name} ${owner.surname}",
+                ownerEmail = owner.email,
+                ownerPhone = null,
+                vehiclePlate = vehicle.licensePlate,
+                entryTime = activeHistory.startTime,
+                parkingDurationSec = duration.seconds,
+                amountDue = 0.0,
+                imageUrl = activeHistory.photoPath
+            )
         }
 
         return ParkingSpotDetailsDTO(
             id = space.id,
             type = space.spaceType,
-            status = space.status,
+            status = actualStatus,
             level = space.level,
             occupant = occupantDto
         )

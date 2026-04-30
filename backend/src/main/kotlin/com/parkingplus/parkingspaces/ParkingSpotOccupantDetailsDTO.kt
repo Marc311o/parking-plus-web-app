@@ -2,6 +2,7 @@ package com.parkingplus.parkingspaces
 
 import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
+import java.time.LocalDateTime
 
 data class ParkingSpotOccupantDetailsDTO(
     val ownerId: String,
@@ -9,8 +10,8 @@ data class ParkingSpotOccupantDetailsDTO(
     val ownerEmail: String,
     val ownerPhone: String?,
     val vehiclePlate: String,
-    val entryTime: String,
-    val parkingDurationSec: Long, //sec
+    val entryTime: LocalDateTime,
+    val parkingDurationSec: Long,
     val amountDue: Double,
     val imageUrl: String?
 )
