@@ -9,6 +9,7 @@ import EyeOn from '@assets/eyeOn.svg';
 import EyeOff from '@assets/eyeOff.svg';
 import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
 import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
+import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -262,8 +263,15 @@ const CreateNewAccountPage = () => {
                     </div>
 
                     <div className='buttons'>
-                        <button onClick={handleCreateAccount} className='signupBtn'>Utwórz konto</button>
-                        <button onClick={handleBack} className='signupBtn'>Wróć</button>
+
+                        <ButtonWhite type="submit" onClick={handleCreateAccount}>
+                            Utwórz konto
+                        </ButtonWhite>
+
+                        <ButtonWhite type="button" onClick={handleBack}>
+                            Wróć
+                        </ButtonWhite>
+
                     </div>
                 </div>
             </form>
