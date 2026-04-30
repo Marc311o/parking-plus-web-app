@@ -90,9 +90,6 @@ class ParkingHistoryService(
     fun getDailyRevenue(date: LocalDate): Double {
         val startOfDay = date.atStartOfDay()
         val endOfDay = date.atTime(LocalTime.MAX)
-
-        val parkings = parkingHistoryRepository.findAllByEndTimeBetween(startOfDay, endOfDay)
-
-        return parkings.sumOf { it.price }
+        return parkingHistoryRepository.sumPriceByEndTimeBetween(startOfDay, endOfDay)
     }
 }
