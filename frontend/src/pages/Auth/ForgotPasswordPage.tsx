@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import "./Login.css";
 import {useNavigate} from "react-router-dom";
 import QuestionMark from '@assets/questionMark.svg';
-import {Alert, Box} from "@mui/material";
+import {Alert, Box, Stack, Typography} from "@mui/material";
 import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
 import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
 
@@ -68,27 +68,63 @@ const ForgotPasswordPage = () => {
     };
 
     return (
-        <div className='container'>
+        <Box
+            sx={{
+                width: "100%",
+                backgroundColor: "white",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                padding: "20px 0",
+                minHeight: "100vh",
+                boxSizing: "border-box",
+            }}
+        >
 
-            <h1>RESET HASŁA</h1>
+            <Typography
+                variant="h4"
+                component="h1"
+                sx={{
+                    color: "#5E076E",
+                    fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
+                    fontWeight: 600,
+                    letterSpacing: "1px",
+                    textTransform: "uppercase",
+                    mt: 2,
+                }}
+            >
+                RESET HASŁA
+            </Typography>
 
             <Box
                 component="img"
                 src={QuestionMark}
                 alt="Question Mark"
-                sx={{
-                    width: '100%',
-                    maxWidth: 150,
-                }}
+                sx={{width: '100%', maxWidth: 150, mt: 5,}}
             />
 
-            <form onSubmit={handleSendEmail}>
-                <div className='inputs'>
+            <Box component="form" onSubmit={handleSendEmail}
+                 sx={{
+                     display: "flex",
+                     flexDirection: "column",
+                     alignItems: "center",
+                 }}
+            >
+                <Stack
+                    spacing={2}
+                    sx={{
+                        mt: "55px",
+                        alignItems: "flex-start",
+                        width: 350,
+                    }}
+                >
 
-                    <h3>
+                    <Typography sx={{mt: 3}}>
                         Wprowadź adres e-mail przypisany do Twojego konta.
                         Na ten adres zostanie wysłany link umożliwiający zresetowanie hasła.
-                    </h3>
+                    </Typography>
+
 
                     {error && <Alert severity="error">{error}</Alert>}
 
@@ -104,9 +140,17 @@ const ForgotPasswordPage = () => {
                         error={emailEmptyError}
                     />
 
-                </div>
+                </Stack>
 
-                <div className='buttons'>
+                <Stack
+                    direction="row"
+                    spacing={1.25}
+                    alignItems="center"
+                    sx={{
+                        py: "5px",
+                        mt: 4,
+                    }}
+                >
 
                     <ButtonWhite type="submit" onClick={handleSendEmail} disabled={loading}>
                         {loading ? "Wysyłanie..." : "Resetuj hasło"}
@@ -116,10 +160,10 @@ const ForgotPasswordPage = () => {
                         Wróć
                     </ButtonWhite>
 
-                </div>
-            </form>
+                </Stack>
+            </Box>
 
-        </div>
+        </Box>
     );
 };
 
