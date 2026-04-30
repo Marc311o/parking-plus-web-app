@@ -17,3 +17,10 @@ data class ParkingSpaceDTO (
 
     val level: Int = 0,
 )
+
+data class ParkingSpaceStatsDTO(
+    val free: Long,
+    val occupied: Long,
+    val reserved: Long,
+    val total: Long
+)

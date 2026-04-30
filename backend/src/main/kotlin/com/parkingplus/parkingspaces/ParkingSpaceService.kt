@@ -72,4 +72,28 @@ class ParkingSpaceService(
         }
         parkingSpaceRepository.deleteById(id)
     }
+
+    @Transactional(readOnly = true)
+    fun getDetailedStats(): ParkingSpaceStatsDTO {
+        val groupedCounts = parkingSpaceRepository.countByStatusGrouped()
+
+        var free = 0L
+        var occupied = 0L
+        var reserved = 0L
+
+        groupedCounts.forEach { row ->
+            val status = row[0] as ParkingSpaceStatus
+            val count = (row[1] as Number).toLong()
+
+            when (status) {
+                ParkingSpaceStatus.FREE -> free = count
+                ParkingSpaceStatus.OCCUPIED -> occupied = count
+                ParkingSpaceStatus.RESERVED -> reserved = count
+            }
+        }
+
+        val total = free + occupied + reserved
+
+        return ParkingSpaceStatsDTO(free, occupied, reserved, total)
+    }
 }

@@ -64,4 +64,9 @@ class ParkingSpaceController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteParkingSpace(@PathVariable id: String) =
         parkingSpaceService.deleteParkingSpace(id)
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @GetMapping("/occupancy")
+    fun getParkingStats(): ParkingSpaceStatsDTO =
+        parkingSpaceService.getDetailedStats()
 }
