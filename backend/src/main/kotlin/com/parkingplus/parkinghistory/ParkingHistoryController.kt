@@ -97,4 +97,13 @@ class ParkingHistoryController(
     ): ResponseEntity<EntriesResponseDTO> {
         return ResponseEntity.ok(parkingHistoryService.getEntriesStatistics(date, period))
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/average-stay")
+    fun getAverageStayStats(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
+        @RequestParam period: AggregationPeriod
+    ): ResponseEntity<AverageStayResponseDTO> {
+        return ResponseEntity.ok(parkingHistoryService.getAverageStayStatistics(date, period))
+    }
 }

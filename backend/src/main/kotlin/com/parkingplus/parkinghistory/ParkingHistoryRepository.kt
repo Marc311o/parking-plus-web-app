@@ -1,5 +1,6 @@
 package com.parkingplus.parkinghistory
 
+import com.parkingplus.parkingspaces.enums.SpaceType
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -26,4 +27,18 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         @Param("end") end: LocalDateTime
     ): List<LocalDateTime>
     fun findByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): ParkingHistoryEntity?
+
+
+
+    @Query("SELECT p.startTime as startTime, p.endTime as endTime, p.parkingSpace.spaceType as spaceType FROM ParkingHistoryEntity p WHERE p.endTime BETWEEN :start AND :end AND p.endTime IS NOT NULL")
+    fun findCompletedStaysBetween(
+        @Param("start") start: LocalDateTime,
+        @Param("end") end: LocalDateTime
+    ): List<AverageStayProjection>
+}
+
+interface AverageStayProjection {
+    val startTime: LocalDateTime
+    val endTime: LocalDateTime
+    val spaceType: SpaceType
 }

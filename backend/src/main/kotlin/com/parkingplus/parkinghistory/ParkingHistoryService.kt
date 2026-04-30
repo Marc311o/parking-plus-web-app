@@ -1,6 +1,7 @@
 package com.parkingplus.parkinghistory
 
 import com.parkingplus.parkingspaces.ParkingSpaceRepository
+import com.parkingplus.parkingspaces.enums.SpaceType
 import com.parkingplus.vehicles.VehicleRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -8,6 +9,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.DayOfWeek
+import java.time.Duration
 import java.time.format.DateTimeFormatter
 
 @Service
@@ -204,5 +206,52 @@ class ParkingHistoryService(
                 )
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    fun getAverageStayStatistics(date: LocalDate, period: AggregationPeriod): AverageStayResponseDTO {
+        val currentStart: LocalDateTime
+        val currentEnd: LocalDateTime
+
+        when (period) {
+            AggregationPeriod.DAILY -> {
+                currentStart = date.atStartOfDay()
+                currentEnd = date.atTime(LocalTime.MAX)
+            }
+            AggregationPeriod.WEEKLY -> {
+                currentStart = date.with(DayOfWeek.MONDAY).atStartOfDay()
+                currentEnd = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
+            }
+            AggregationPeriod.YEARLY -> {
+                currentStart = date.withDayOfYear(1).atStartOfDay()
+                currentEnd = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
+            }
+        }
+
+        val stays = parkingHistoryRepository.findCompletedStaysBetween(currentStart, currentEnd)
+
+        var totalMinutesOverall = 0L
+        val typeDurations = mutableMapOf<SpaceType, MutableList<Long>>()
+
+        stays.forEach { stay ->
+            val minutes = Duration.between(stay.startTime, stay.endTime).toMinutes()
+            totalMinutesOverall += minutes
+            typeDurations.computeIfAbsent(stay.spaceType) { mutableListOf() }.add(minutes)
+        }
+
+        val overallAverage = if (stays.isNotEmpty()) totalMinutesOverall / stays.size else 0L
+
+        val categories = typeDurations.map { (spaceType, durations) ->
+            val avg = if (durations.isNotEmpty()) durations.sum() / durations.size else 0L
+            AverageStayCategoryItemDTO(spaceType, avg)
+        }
+
+        return AverageStayResponseDTO(
+            period = period,
+            from = currentStart.toLocalDate(),
+            to = currentEnd.toLocalDate(),
+            overallAverageMinutes = overallAverage,
+            categories = categories
+        )
     }
 }
