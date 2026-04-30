@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.DayOfWeek
+import java.time.format.DateTimeFormatter
 
 @Service
 class ParkingHistoryService(
@@ -91,5 +93,98 @@ class ParkingHistoryService(
         val startOfDay = date.atStartOfDay()
         val endOfDay = date.atTime(LocalTime.MAX)
         return parkingHistoryRepository.sumPriceByEndTimeBetween(startOfDay, endOfDay)
+    }
+
+    @Transactional(readOnly = true)
+    fun getEntriesStatistics(date: LocalDate, period: AggregationPeriod): EntriesResponseDTO {
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+
+        return when (period) {
+            AggregationPeriod.WEEKLY -> {
+                val startOfWeek = date.with(DayOfWeek.MONDAY).atStartOfDay()
+                val endOfWeek = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
+                val entries = parkingHistoryRepository.findAllByStartTimeBetween(startOfWeek, endOfWeek)
+
+                val pointsMap = linkedMapOf(
+                    "MON" to 0L,
+                    "TUE" to 0L,
+                    "WED" to 0L,
+                    "THU" to 0L,
+                    "FRI" to 0L,
+                    "SAT" to 0L,
+                    "SUN" to 0L
+                )
+                entries.forEach {
+                    val day = it.startTime.dayOfWeek.name.substring(0, 3)
+                    pointsMap[day] = pointsMap.getOrDefault(day, 0) + 1
+                }
+
+                EntriesResponseDTO(
+                    period = period,
+                    from = startOfWeek.format(formatter),
+                    to = endOfWeek.format(formatter),
+                    total = entries.size.toLong(),
+                    points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
+                )
+            }
+
+            AggregationPeriod.DAILY -> {
+                val startOfDay = date.atStartOfDay()
+                val endOfDay = date.atTime(LocalTime.MAX)
+                val entries = parkingHistoryRepository.findAllByStartTimeBetween(startOfDay, endOfDay)
+
+                val pointsMap = linkedMapOf<String, Long>()
+                for (i in 0..22 step 2) {
+                    pointsMap["$i:00"] = 0L
+                }
+
+                entries.forEach {
+                    val hour = it.startTime.hour
+                    val bucket = hour - (hour % 2)
+                    pointsMap["$bucket:00"] = pointsMap.getOrDefault("$bucket:00", 0) + 1
+                }
+
+                EntriesResponseDTO(
+                    period = period,
+                    from = startOfDay.format(formatter),
+                    to = endOfDay.format(formatter),
+                    total = entries.size.toLong(),
+                    points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
+                )
+            }
+
+            AggregationPeriod.YEARLY -> {
+                val startOfYear = date.withDayOfYear(1).atStartOfDay()
+                val endOfYear = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
+                val entries = parkingHistoryRepository.findAllByStartTimeBetween(startOfYear, endOfYear)
+
+                val pointsMap = linkedMapOf(
+                    "JAN" to 0L,
+                    "FEB" to 0L,
+                    "MAR" to 0L,
+                    "APR" to 0L,
+                    "MAY" to 0L,
+                    "JUN" to 0L,
+                    "JUL" to 0L,
+                    "AUG" to 0L,
+                    "SEP" to 0L,
+                    "OCT" to 0L,
+                    "NOV" to 0L,
+                    "DEC" to 0L
+                )
+                entries.forEach {
+                    val month = it.startTime.month.name.substring(0, 3)
+                    pointsMap[month] = pointsMap.getOrDefault(month, 0) + 1
+                }
+
+                EntriesResponseDTO(
+                    period = period,
+                    from = startOfYear.format(formatter),
+                    to = endOfYear.format(formatter),
+                    total = entries.size.toLong(),
+                    points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
+                )
+            }
+        }
     }
 }
