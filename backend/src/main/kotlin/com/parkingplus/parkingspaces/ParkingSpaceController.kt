@@ -69,4 +69,9 @@ class ParkingSpaceController(
     @GetMapping("/occupancy")
     fun getParkingStats(): ParkingSpaceStatsDTO =
         parkingSpaceService.getDetailedStats()
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}/details")
+    fun getParkingSpaceDetails(@PathVariable id: String): ParkingSpotDetailsDTO =
+        parkingSpaceService.getSpaceDetails(id)
 }
