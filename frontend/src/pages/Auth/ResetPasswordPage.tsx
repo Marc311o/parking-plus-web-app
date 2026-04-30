@@ -1,12 +1,9 @@
 import React, {useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import renderIcon from "../../utils/RenderIcon";
 import { useIntl } from "react-intl";
 import {Alert, Box, Stack, Typography} from "@mui/material";
-import EyeOn from '@assets/eyeOn.svg';
-import EyeOff from '@assets/eyeOff.svg';
-import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
-import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
+import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
+import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 

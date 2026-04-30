@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, Link} from "react-router-dom";
+import React, {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import {Link as RouterLink} from "react-router-dom";
 import {Link as MuiLink, Stack, Typography} from "@mui/material";
 import { useIntl } from "react-intl";
 
 import PersonFill from '@assets/PersonFillPurple.svg';
-import {Box, Alert, CircularProgress, Button} from "@mui/material";
-import {useAuthStore} from "../../store/useAuthStore";
-import AuthPasswordField from "../../components/Login/AuthPasswordField.tsx";
-import AuthDefaultField from "../../components/Login/AuthDefaultField.tsx";
-import ButtonPurple from "../../components/Login/ButtonPurple.tsx";
-import ButtonWhite from "../../components/Login/ButtonWhite.tsx";
+import {Box, Alert, CircularProgress} from "@mui/material";
+import {useAuthStore} from "@store/useAuthStore";
+import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
+import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
+import ButtonPurple from "@components/Login/ButtonPurple.tsx";
+import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 
 const API_URL = (() => {
     const apiUrl = import.meta.env.VITE_API_URL;
