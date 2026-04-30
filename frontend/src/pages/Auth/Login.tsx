@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {Link as RouterLink} from "react-router-dom";
 import {Link as MuiLink, Stack, Typography} from "@mui/material";
 import { useIntl } from "react-intl";
-
+import { login, verifyMfa } from "@api/Login/auth";
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress} from "@mui/material";
 import {useAuthStore} from "@store/useAuthStore";
@@ -12,15 +12,7 @@ import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
 import ButtonPurple from "@components/Login/ButtonPurple.tsx";
 import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 
-const API_URL = (() => {
-    const apiUrl = import.meta.env.VITE_API_URL;
 
-    if (typeof apiUrl !== "string" || apiUrl.trim() === "") {
-        throw new Error("Missing required environment variable: VITE_API_URL");
-    }
-
-    return apiUrl;
-})();
 const Login = () => {
     const {formatMessage} = useIntl();
 
@@ -102,7 +94,7 @@ const Login = () => {
 
             if (result.mfa) {
                 setPreToken(result.preAuthToken);
-                setStep('2fa');
+                setStep("2fa");
             } else {
                 setToken(result.token);
                 navigate("/dashboard");
@@ -123,22 +115,7 @@ const Login = () => {
         setVerifyError("");
 
         try {
-            const response = await fetch(`${API_URL}/auth/verify-mfa`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    preAuthToken: preToken,
-                    code: totpCode
-                })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error("Błąd logowania");
-            }
+            const data = await verifyMfa(preToken, totpCode);
 
             setToken(data.token);
             navigate("/");
@@ -153,36 +130,6 @@ const Login = () => {
     const handleCreateAccount = () => {
         navigate("/createnewaccount");
     };
-
-
-    async function login(email: string, password: string) {
-        const response = await fetch(`${API_URL}/auth/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({email, password})
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error("Niepoprawny e-mail lub hasło");
-        }
-
-        if (data.mfaRequired) {
-            return {
-                mfa: true,
-                preAuthToken: data.preAuthToken
-            };
-        }
-
-        return {
-            mfa: false,
-            token: data.token
-        };
-    }
 
 
     if (step === '2fa') {

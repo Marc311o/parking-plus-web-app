@@ -6,8 +6,8 @@ import {Alert, Box, Stack, Typography} from "@mui/material";
 import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
 import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
 import ButtonWhite from "@components/Login/ButtonWhite.tsx";
+import { createNewAccount } from "@api/Login/auth";
 
-const API_URL = import.meta.env.VITE_API_URL;
 
 const CreateNewAccountPage = () => {
     const {formatMessage} = useIntl();
@@ -141,7 +141,7 @@ const CreateNewAccountPage = () => {
             }
 
             // const result =
-            await createNewAcc(name, surname, email, password);
+            await createNewAccount(name, surname, email, password);
 
             navigate("/login");
 
@@ -156,20 +156,6 @@ const CreateNewAccountPage = () => {
         }
 
     };
-
-    async function createNewAcc(name: string, surname: string, email: string, password: string) {
-        const response = await fetch(`${API_URL}/api/users`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({name, surname, email, password})
-        });
-
-        if (!response.ok) {
-            throw new Error("Na podany e-mail jest już założone inne konto!");
-        }
-    }
 
 
     return (
