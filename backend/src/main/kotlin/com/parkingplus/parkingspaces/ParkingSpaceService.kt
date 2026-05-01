@@ -5,7 +5,10 @@ import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.NoSuchElementException
 
 @Service
@@ -136,6 +139,43 @@ class ParkingSpaceService(
             status = actualStatus,
             level = space.level,
             occupant = occupantDto
+        )
+    }
+
+    @Transactional(readOnly = true)
+    fun getSpaceTimeline(spaceId: String, date: LocalDate): ParkingSpaceTimelineResponseDTO {
+        val startOfDay = date.atStartOfDay()
+        val endOfDay = date.atTime(LocalTime.MAX)
+
+        val histories = parkingHistoryRepository.findTimelineForSpaceAndDate(spaceId, startOfDay, endOfDay)
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+        val items = histories.map { history ->
+            val fromStr = if (history.startTime.isBefore(startOfDay)) {
+                "00:00"
+            } else {
+                history.startTime.format(timeFormatter)
+            }
+
+            val toStr = if (history.endTime == null || history.endTime!!.isAfter(endOfDay)) {
+                "23:59"
+            } else {
+                history.endTime!!.format(timeFormatter)
+            }
+
+            ParkingSpaceTimelineItemDTO(
+                status = ParkingSpaceTimelineStatus.OCCUPIED,
+                from = fromStr,
+                to = toStr
+            )
+        }
+
+        // TODO: Fetch reservation -> map to RESERVED and add to `items`
+
+        return ParkingSpaceTimelineResponseDTO(
+            spaceId = spaceId,
+            date = date,
+            items = items.sortedBy { it.from }
         )
     }
 }

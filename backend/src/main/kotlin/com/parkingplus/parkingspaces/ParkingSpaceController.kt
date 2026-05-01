@@ -6,6 +6,9 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
+import org.springframework.format.annotation.DateTimeFormat
+import java.time.LocalDate
+import org.springframework.http.ResponseEntity
 
 @RestController
 @RequestMapping("/api/parking-spaces")
@@ -74,4 +77,13 @@ class ParkingSpaceController(
     @GetMapping("/{id}/details")
     fun getParkingSpaceDetails(@PathVariable id: String): ParkingSpotDetailsDTO =
         parkingSpaceService.getSpaceDetails(id)
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}/timeline")
+    fun getSpaceTimeline(
+        @PathVariable id: String,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate
+    ): ResponseEntity<ParkingSpaceTimelineResponseDTO> {
+        return ResponseEntity.ok(parkingSpaceService.getSpaceTimeline(id, date))
+    }
 }
