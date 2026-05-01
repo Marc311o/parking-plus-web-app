@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 
 @Service
 class UserService(
@@ -17,9 +18,23 @@ class UserService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getAllUsers(page: Int, size: Int, search: String?): Page<UserDTO> {
-        val pageable = PageRequest.of(page, size)
-        return userRepository.findAllWithSearch(search, pageable).map { it.toDTO() }
+    fun getAllUsers(
+        page: Int,
+        size: Int,
+        search: String?,
+        clientsOnly: Boolean,
+        sortBy: String,
+        sortDir: String
+    ): Page<UserDTO> {
+        val direction = if (sortDir.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
+
+        val validSortFields = listOf("name", "surname", "email")
+        val actualSortBy = if (validSortFields.contains(sortBy.lowercase())) sortBy else "name"
+
+        val sort = Sort.by(direction, actualSortBy)
+        val pageable = PageRequest.of(page, size, sort)
+
+        return userRepository.findAllWithSearch(search, clientsOnly, pageable).map { it.toDTO() }
     }
 
     @Transactional
