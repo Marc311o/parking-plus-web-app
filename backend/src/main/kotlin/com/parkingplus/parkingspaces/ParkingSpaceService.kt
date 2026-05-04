@@ -144,6 +144,10 @@ class ParkingSpaceService(
 
     @Transactional(readOnly = true)
     fun getSpaceTimeline(spaceId: String, date: LocalDate): ParkingSpaceTimelineResponseDTO {
+        if (!parkingSpaceRepository.existsById(spaceId)) {
+            throw NoSuchElementException("Parking space with id $spaceId does not exist.")
+        }
+
         val startOfDay = date.atStartOfDay()
         val endOfDay = date.atTime(LocalTime.MAX)
 
@@ -164,13 +168,12 @@ class ParkingSpaceService(
             }
 
             ParkingSpaceTimelineItemDTO(
-                status = ParkingSpaceTimelineStatus.OCCUPIED,
+                status = com.parkingplus.parkingspaces.enums.ParkingSpaceTimelineStatus.OCCUPIED,
                 from = fromStr,
                 to = toStr
             )
         }
-
-        // TODO: Fetch reservation -> map to RESERVED and add to `items`
+            .filter { it.from != it.to }
 
         return ParkingSpaceTimelineResponseDTO(
             spaceId = spaceId,

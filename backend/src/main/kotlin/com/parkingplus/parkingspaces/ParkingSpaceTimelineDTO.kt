@@ -1,11 +1,8 @@
 package com.parkingplus.parkingspaces
 
+import com.parkingplus.parkingspaces.enums.ParkingSpaceTimelineStatus
 import java.time.LocalDate
 
-enum class ParkingSpaceTimelineStatus {
-    OCCUPIED,
-    RESERVED
-}
 
 data class ParkingSpaceTimelineItemDTO(
     val status: ParkingSpaceTimelineStatus,

@@ -32,7 +32,7 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         "SELECT p FROM ParkingHistoryEntity p " +
                 "WHERE p.parkingSpace.id = :spaceId " +
                 "AND p.startTime <= :endOfDay " +
-                "AND (p.endTime >= :startOfDay OR p.endTime IS NULL)"
+                "AND (p.endTime > :startOfDay OR p.endTime IS NULL)"
     )
     fun findTimelineForSpaceAndDate(
         @Param("spaceId") spaceId: String,
