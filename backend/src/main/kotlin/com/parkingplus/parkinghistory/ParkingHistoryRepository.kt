@@ -26,11 +26,11 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         @Param("start") start: LocalDateTime,
         @Param("end") end: LocalDateTime
     ): List<LocalDateTime>
+
     fun findByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): ParkingHistoryEntity?
 
 
-
-    @Query("SELECT p.startTime as startTime, p.endTime as endTime, p.parkingSpace.spaceType as spaceType FROM ParkingHistoryEntity p WHERE p.endTime BETWEEN :start AND :end AND p.endTime IS NOT NULL")
+    @Query("SELECT p.startTime as startTime, p.endTime as endTime, p.parkingSpace.spaceType as spaceType FROM ParkingHistoryEntity p WHERE p.endTime BETWEEN :start AND :end")
     fun findCompletedStaysBetween(
         @Param("start") start: LocalDateTime,
         @Param("end") end: LocalDateTime
