@@ -14,27 +14,16 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     fun findByEmail(email: String): java.util.Optional<UserEntity>
     fun existsByEmail(email: String): Boolean
     fun findBySurnameContainingIgnoreCase(surname: String): List<UserEntity>
-    fun findAllByIsOperatorTrue(): List<UserEntity>     // fetches operators
-    fun findAllByIsOperatorFalse(): List<UserEntity>    // fethces users
+    fun findAllByIsOperatorTrue(): List<UserEntity>
+    fun findAllByIsOperatorFalse(): List<UserEntity>
     fun findByNameAndSurname(name: String, surname: String): List<UserEntity>
 
-    @Query(
-        "SELECT u FROM UserEntity u WHERE " +
-                "(:search IS NULL OR :search = '' OR " +
-                "LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-                "LOWER(u.surname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-                "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))"
-    )
-    fun findAllWithSearch(@Param("search") search: String?, pageable: Pageable): Page<UserEntity>
-
-    @Query(
-        "SELECT u FROM UserEntity u WHERE " +
-                "(:clientsOnly = false OR u.isOperator = false) AND " +
-                "(:search IS NULL OR :search = '' OR " +
-                "LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-                "LOWER(u.surname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-                "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))"
-    )
+    @Query("SELECT u FROM UserEntity u WHERE " +
+            "(:clientsOnly = false OR u.isOperator = false) AND " +
+            "(:search IS NULL OR :search = '' OR " +
+            "LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(u.surname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))")
     fun findAllWithSearch(
         @Param("search") search: String?,
         @Param("clientsOnly") clientsOnly: Boolean,

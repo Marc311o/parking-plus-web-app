@@ -29,7 +29,8 @@ class UserService(
         val direction = if (sortDir.equals("desc", ignoreCase = true)) Sort.Direction.DESC else Sort.Direction.ASC
 
         val validSortFields = listOf("name", "surname", "email")
-        val actualSortBy = if (validSortFields.contains(sortBy.lowercase())) sortBy else "name"
+        val normalizedSortBy = sortBy.lowercase()
+        val actualSortBy = if (validSortFields.contains(normalizedSortBy)) normalizedSortBy else "name"
 
         val sort = Sort.by(direction, actualSortBy)
         val pageable = PageRequest.of(page, size, sort)
