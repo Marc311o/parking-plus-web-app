@@ -235,8 +235,7 @@ class ParkingHistoryService(
         }
 
         val currentData = parkingHistoryRepository.findRevenueBetween(currentStart, currentEnd)
-        val previousTotal = parkingHistoryRepository.sumPriceByEndTimeBetween(previousStart, previousEnd) ?: 0.0
-
+        val previousTotal = parkingHistoryRepository.sumPriceByEndTimeBetween(previousStart, previousEnd)
         var currentTotal = 0.0
 
         val pointsMap = when (period) {

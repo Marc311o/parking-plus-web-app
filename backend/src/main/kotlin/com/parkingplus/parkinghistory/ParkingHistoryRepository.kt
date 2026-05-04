@@ -25,6 +25,7 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         @Param("start") start: LocalDateTime,
         @Param("end") end: LocalDateTime
     ): List<LocalDateTime>
+
     fun findByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): ParkingHistoryEntity?
 
     interface RevenueProjection {
@@ -32,7 +33,7 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         val price: Double
     }
 
-    @Query("SELECT p.endTime as endTime, p.price as price FROM ParkingHistoryEntity p WHERE p.endTime BETWEEN :start AND :end AND p.price IS NOT NULL")
+    @Query("SELECT p.endTime as endTime, p.price as price FROM ParkingHistoryEntity p WHERE p.endTime BETWEEN :start AND :end")
     fun findRevenueBetween(
         @Param("start") start: LocalDateTime,
         @Param("end") end: LocalDateTime
