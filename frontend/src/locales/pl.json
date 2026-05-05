@@ -1,4 +1,7 @@
 {
+  "common": {
+    "lackOfData": "Brak danych"
+  },
   "sidebar": {
     "sections": {
       "menu": "Menu",
@@ -190,6 +193,22 @@
     "list": {
       "empty": "Brak klientów",
       "vehiclesButton": "pojazdy"
+    },
+    "vehiclesDialog": {
+      "title": "Pojazdy",
+      "loading": "Ładowanie pojazdów...",
+      "error": "Nie udało się pobrać pojazdów tego klienta.",
+      "emptyTitle": "Brak pojazdów",
+      "emptyDescription": "Ten klient nie ma jeszcze przypisanych pojazdów.",
+      "vehiclesCount": "{count, plural, one {# pojazd} few {# pojazdy} many {# pojazdów} other {# pojazdu}}",
+      "vehicleId": "ID pojazdu: {id}",
+      "closeButton": "Zamknij",
+      "carTypes": {
+        "REGULAR_ABLEBODIED": "Standardowy",
+        "REGULAR_HANDICAPED": "Standardowy / niepełnosprawni",
+        "EV_ABLEBODIED": "Elektryczny",
+        "EV_HANDICAPED": "Elektryczny / niepełnosprawni"
+      }
     }
   }
 }

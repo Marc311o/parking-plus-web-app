@@ -193,6 +193,22 @@
     "list": {
       "empty": "No clients found",
       "vehiclesButton": "vehicles"
+    },
+    "vehiclesDialog": {
+      "title": "Vehicles",
+      "loading": "Loading vehicles...",
+      "error": "Could not load vehicles for this client.",
+      "emptyTitle": "No vehicles yet",
+      "emptyDescription": "This client does not have any assigned cars.",
+      "vehiclesCount": "{count, plural, one {# vehicle} other {# vehicles}}",
+      "vehicleId": "Vehicle ID: {id}",
+      "closeButton": "Close",
+      "carTypes": {
+        "REGULAR_ABLEBODIED": "Standard",
+        "REGULAR_HANDICAPED": "Standard / disabled",
+        "EV_ABLEBODIED": "Electric",
+        "EV_HANDICAPED": "Electric / disabled"
+      }
     }
   }
 }

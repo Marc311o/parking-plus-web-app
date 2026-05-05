@@ -1,7 +1,8 @@
-import {API_URL, getHeaders} from '@api/core';
-import type {ClientDTO, GetClientsParams, PageResponse} from './types';
+import {API_URL, getHeaders} from '../core';
+import type {ClientDTO, VehicleDTO, GetClientsParams, PageResponse} from './types';
 
 const USERS_URL = `${API_URL}/users`;
+const VEHICLES_URL = `${API_URL}/vehicles`;
 
 //TODO: BACKEND WILL AD SORTING
 export const getClients = async ({
@@ -25,6 +26,19 @@ export const getClients = async ({
 
     if (!response.ok) {
         throw new Error('Failed to fetch clients');
+    }
+
+    return response.json();
+};
+
+export const getClientVehicles = async (ownerId: number): Promise<VehicleDTO[]> => {
+    const response = await fetch(`${VEHICLES_URL}/owner/${ownerId}`, {
+        method: 'GET',
+        headers: getHeaders(),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch client vehicles');
     }
 
     return response.json();

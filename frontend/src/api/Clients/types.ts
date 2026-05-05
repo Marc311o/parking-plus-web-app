@@ -20,3 +20,16 @@ export interface GetClientsParams {
     size: number;
     search?: string;
 }
+
+export type CarType =
+    | 'REGULAR_ABLEBODIED'
+    | 'REGULAR_HANDICAPED'
+    | 'EV_ABLEBODIED'
+    | 'EV_HANDICAPED';
+
+export interface VehicleDTO {
+    id: number | null;
+    licensePlate: string;
+    ownerId: number;
+    carType: CarType;
+}

@@ -8,7 +8,8 @@ import {useSearchParams} from 'react-router-dom';
 import {useIntl} from 'react-intl';
 
 import ListView, {type ListViewColumn} from '@components/Common/ListView';
-import {getClients, type ClientDTO} from '@api/Clients';
+import ClientVehiclesDialog from '@components/Clients/ClientVehiclesDialog';
+import {getClientVehicles, getClients, type ClientDTO, type VehicleDTO} from '@api/Clients';
 
 export default function ClientsPage() {
     const {formatMessage} = useIntl();
@@ -22,6 +23,11 @@ export default function ClientsPage() {
     const [size] = useState(10);
     const [totalElements, setTotalElements] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+
+    const [selectedClient, setSelectedClient] = useState<ClientDTO | null>(null);
+    const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
+    const [isVehiclesLoading, setIsVehiclesLoading] = useState(false);
+    const [vehiclesError, setVehiclesError] = useState<string | null>(null);
 
     const totalPages = Math.max(Math.ceil(totalElements / size), 1);
 
@@ -84,10 +90,26 @@ export default function ClientsPage() {
         setSearchParams(nextParams);
     };
 
-    const handleVehiclesClick = (client: ClientDTO) => {
-        // TODO: navigate to client vehicles page when route is ready
-        // navigate(`/clients/${client.id}/vehicles`);
-        console.log('Vehicles clicked:', client.id);
+    const handleVehiclesClick = async (client: ClientDTO) => {
+        setSelectedClient(client);
+        setVehicles([]);
+        setVehiclesError(null);
+        setIsVehiclesLoading(true);
+
+        try {
+            const result = await getClientVehicles(client.id);
+            setVehicles(result);
+        } catch {
+            setVehiclesError(formatMessage({id: 'clients.vehiclesDialog.error'}));
+        } finally {
+            setIsVehiclesLoading(false);
+        }
+    };
+
+    const handleCloseVehiclesDialog = () => {
+        setSelectedClient(null);
+        setVehicles([]);
+        setVehiclesError(null);
     };
 
     return (
@@ -126,6 +148,15 @@ export default function ClientsPage() {
                     totalPages,
                     onPageChange: setPage,
                 }}
+            />
+
+            <ClientVehiclesDialog
+                open={Boolean(selectedClient)}
+                client={selectedClient}
+                vehicles={vehicles}
+                isLoading={isVehiclesLoading}
+                error={vehiclesError}
+                onClose={handleCloseVehiclesDialog}
             />
         </Box>
     );

@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
+import {useIntl} from "react-intl";
 
 export interface ListViewColumn<T> {
     key: string;
@@ -45,8 +46,10 @@ export default function ListView<T extends { id: number | string }>({
                                                                         action,
                                                                         pagination,
                                                                         isLoading = false,
-                                                                        emptyMessage = 'Brak danych',
+                                                                        emptyMessage,
                                                                     }: ListViewProps<T>) {
+    const intl = useIntl();
+
     const currentPage = pagination?.page ?? 0;
     const totalPages = Math.max(pagination?.totalPages ?? 1, 1);
 
@@ -175,7 +178,7 @@ export default function ListView<T extends { id: number | string }>({
                     }}
                 >
                     <Typography sx={{fontSize: 15, color: '#8A8A8A'}}>
-                        {emptyMessage}
+                        {emptyMessage ?? intl.formatMessage({id: 'common.lackOfData'})}
                     </Typography>
                 </Box>
 
