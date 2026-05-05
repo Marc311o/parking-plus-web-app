@@ -2,14 +2,37 @@ import {Box, Button, MenuItem, Paper, TextField} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import {useIntl} from 'react-intl';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
-const ClientsFilterCard = () => {
+// TODO: BACKEND WILL ADD SORTING AND OPTION TO CHOOSE ONLY CLIENTS!!
+
+interface ClientsFilterCardProps {
+    search: string;
+    sortBy: string;
+    onSearchChange: (value: string) => void;
+    onSortChange: (value: string) => void;
+}
+
+const ClientsFilterCard = ({
+                               search,
+                               sortBy,
+                               onSearchChange,
+                               onSortChange,
+                           }: ClientsFilterCardProps) => {
     const {formatMessage} = useIntl();
+    const [localSearch, setLocalSearch] = useState(search);
 
-    //TODO: implement search and sort functionality
-    const [search, setSearch] = useState('');
-    const [sortBy, setSortBy] = useState('');
+    useEffect(() => {
+        setLocalSearch(search);
+    }, [search]);
+
+    const handleSearchSubmit = () => {
+        onSearchChange(localSearch);
+    };
+
+    const handleSortSubmit = () => {
+        onSortChange(sortBy || 'nameAsc');
+    };
 
     return (
         <Paper
@@ -40,8 +63,13 @@ const ClientsFilterCard = () => {
                     fullWidth
                     size="small"
                     placeholder={formatMessage({id: 'navbar.clients.filters.searchPlaceholder'})}
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    value={localSearch}
+                    onChange={(event) => setLocalSearch(event.target.value)}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                            handleSearchSubmit();
+                        }
+                    }}
                     variant="outlined"
                     sx={{
                         '& .MuiOutlinedInput-root': {
@@ -68,6 +96,7 @@ const ClientsFilterCard = () => {
                 <Button
                     variant="contained"
                     startIcon={<SearchIcon/>}
+                    onClick={handleSearchSubmit}
                     sx={{
                         minWidth: 120,
                         height: 34,
@@ -91,8 +120,8 @@ const ClientsFilterCard = () => {
                     fullWidth
                     size="small"
                     label={formatMessage({id: 'navbar.clients.filters.sortLabel'})}
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
+                    value={sortBy || 'nameAsc'}
+                    onChange={(event) => onSortChange(event.target.value)}
                     variant="outlined"
                     sx={{
                         '& .MuiOutlinedInput-root': {
@@ -124,17 +153,18 @@ const ClientsFilterCard = () => {
                     <MenuItem value="nameDesc">
                         {formatMessage({id: 'navbar.clients.filters.options.nameDesc'})}
                     </MenuItem>
-                    <MenuItem value="dateNewest">
-                        {formatMessage({id: 'navbar.clients.filters.options.dateNewest'})}
+                    <MenuItem value="emailAsc">
+                        {formatMessage({id: 'navbar.clients.filters.options.emailAsc'})}
                     </MenuItem>
-                    <MenuItem value="dateOldest">
-                        {formatMessage({id: 'navbar.clients.filters.options.dateOldest'})}
+                    <MenuItem value="emailDesc">
+                        {formatMessage({id: 'navbar.clients.filters.options.emailDesc'})}
                     </MenuItem>
                 </TextField>
 
                 <Button
                     variant="contained"
                     startIcon={<FilterAltOutlinedIcon/>}
+                    onClick={handleSortSubmit}
                     sx={{
                         minWidth: 120,
                         height: 34,
