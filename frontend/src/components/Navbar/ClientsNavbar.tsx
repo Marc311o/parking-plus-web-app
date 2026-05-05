@@ -7,6 +7,7 @@ import UserCard from '../NavbarCard/UserCard.tsx';
 
 const ALLOWED_SORT_BY_VALUES = ['nameAsc', 'nameDesc', 'emailAsc', 'emailDesc'] as const;
 
+//ADD SORTING FROM BACKEND
 const ClientsNavbar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
