@@ -38,6 +38,8 @@
         "options": {
           "nameAsc": "Name A-Z",
           "nameDesc": "Name Z-A",
+          "emailAsc": "Email A-Z",
+          "emailDesc": "Email Z-A",
           "dateNewest": "Newest",
           "dateOldest": "Oldest"
         }
@@ -185,6 +187,28 @@
       "reserved": "Reserved",
       "noSpaceSelectedTitle": "Select a parking space",
       "noSpaceSelectedDescription": "Click a parking space on the map to see occupancy and reservation history for the selected day."
+    }
+  },
+  "clients": {
+    "list": {
+      "empty": "No clients found",
+      "vehiclesButton": "vehicles"
+    },
+    "vehiclesDialog": {
+      "title": "Vehicles",
+      "loading": "Loading vehicles...",
+      "error": "Could not load vehicles for this client.",
+      "emptyTitle": "No vehicles yet",
+      "emptyDescription": "This client does not have any assigned cars.",
+      "vehiclesCount": "{count, plural, one {# vehicle} other {# vehicles}}",
+      "vehicleId": "Vehicle ID: {id}",
+      "closeButton": "Close",
+      "carTypes": {
+        "REGULAR_ABLEBODIED": "Standard",
+        "REGULAR_HANDICAPED": "Standard / disabled",
+        "EV_ABLEBODIED": "Electric",
+        "EV_HANDICAPED": "Electric / disabled"
+      }
     }
   }
 }
