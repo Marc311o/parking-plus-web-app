@@ -1,5 +1,6 @@
 import {useEffect, useMemo, useState} from 'react';
 import {
+    Alert,
     Avatar,
     Box,
 } from '@mui/material';
@@ -23,6 +24,7 @@ export default function ClientsPage() {
     const [size] = useState(10);
     const [totalElements, setTotalElements] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [clientsError, setClientsError] = useState<string | null>(null);
 
     const [selectedClient, setSelectedClient] = useState<ClientDTO | null>(null);
     const [vehicles, setVehicles] = useState<VehicleDTO[]>([]);
@@ -63,26 +65,47 @@ export default function ClientsPage() {
         });
     }, [clients, sortBy]);
 
-    const fetchClients = async () => {
-        setIsLoading(true);
-
-        try {
-            const result = await getClients({
-                page,
-                size,
-                search,
-            });
-
-            setClients(result.content);
-            setTotalElements(result.totalElements);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     useEffect(() => {
+        let isMounted = true;
+
+        const fetchClients = async () => {
+            setIsLoading(true);
+            setClientsError(null);
+
+            try {
+                const result = await getClients({
+                    page,
+                    size,
+                    search,
+                });
+
+                if (!isMounted) {
+                    return;
+                }
+
+                setClients(result.content);
+                setTotalElements(result.totalElements);
+            } catch {
+                if (!isMounted) {
+                    return;
+                }
+
+                setClients([]);
+                setTotalElements(0);
+                setClientsError(formatMessage({id: 'clients.list.error'}));
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
         void fetchClients();
-    }, [page, size, search]);
+
+        return () => {
+            isMounted = false;
+        };
+    }, [page, size, search, formatMessage]);
 
     const setPage = (nextPage: number) => {
         const nextParams = new URLSearchParams(searchParams);
@@ -122,6 +145,17 @@ export default function ClientsPage() {
                 gap: 2.5,
             }}
         >
+            {clientsError && (
+                <Alert
+                    severity="error"
+                    sx={{
+                        borderRadius: '14px',
+                    }}
+                >
+                    {clientsError}
+                </Alert>
+            )}
+
             <ListView
                 items={sortedClients}
                 isLoading={isLoading}
