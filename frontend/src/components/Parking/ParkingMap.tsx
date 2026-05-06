@@ -1,14 +1,16 @@
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {Box} from '@mui/material';
-import type {ParkingLevel, ParkingSpotDetails} from '@api/types';
+import type {
+    ParkingLevel,
+    ParkingSpaceDto,
+    ParkingSpaceStatus,
+    ParkingSpotDetails,
+} from '@api/Dashboard/types';
+import {getParkingSpacesByLevel, getParkingSpotDetails} from '@api/Dashboard/parkingSpaces';
 import ParkingSpot from './ParkingSpot';
 import ParkingLevelSwitch from './ParkingLevelSwitch';
 import ParkingSpotDetailsPanel from './ParkingSpotDetailsPanel';
-import {
-    mockParkingSpotsByLevel,
-    parkingLayoutByLevel,
-} from './ParkingData';
-import {mockParkingSpotDetailsById} from '../../mocks/mockParkingSpotDetails';
+import {parkingLayoutByLevel} from './ParkingData';
 
 type ParkingMapVariant = 'dashboard' | 'statistics';
 
@@ -18,6 +20,31 @@ type ParkingMapProps = {
     showDetailsPanel?: boolean;
     onSpotSelect?: (spotId: string | null) => void;
     onLevelChange?: (level: ParkingLevel) => void;
+};
+
+type ParkingSpotUiStatus = 'available' | 'occupied' | 'reserved';
+
+const levelToBackendLevel = (level: ParkingLevel): number => {
+    switch (level) {
+        case 'A':
+            return 0;
+        case 'B':
+            return 1;
+        default:
+            return 0;
+    }
+};
+
+const mapStatusToUiStatus = (status?: ParkingSpaceStatus): ParkingSpotUiStatus => {
+    switch (status) {
+        case 'OCCUPIED':
+            return 'occupied';
+        case 'RESERVED':
+            return 'reserved';
+        case 'FREE':
+        default:
+            return 'available';
+    }
 };
 
 export const ParkingMap = ({
@@ -30,29 +57,102 @@ export const ParkingMap = ({
     const [activeLevel, setActiveLevel] = useState<ParkingLevel>('A');
     const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
 
+    const [parkingSpaces, setParkingSpaces] = useState<ParkingSpaceDto[]>([]);
+    const [selectedSpotDetails, setSelectedSpotDetails] = useState<ParkingSpotDetails | null>(null);
+
+    const [isParkingSpacesLoading, setIsParkingSpacesLoading] = useState(false);
+    const [isDetailsLoading, setIsDetailsLoading] = useState(false);
+
     const isStatisticsVariant = variant === 'statistics';
 
-    const spotsFromBackend = mockParkingSpotsByLevel[activeLevel];
+    useEffect(() => {
+        let isMounted = true;
 
-    const selectedSpotDetails: ParkingSpotDetails | null = selectedSpotId
-        ? mockParkingSpotDetailsById[selectedSpotId] ?? null
-        : null;
+        const fetchParkingSpaces = async () => {
+            setIsParkingSpacesLoading(true);
+
+            try {
+                const backendLevel = levelToBackendLevel(activeLevel);
+                const result = await getParkingSpacesByLevel(backendLevel);
+                if (!isMounted) {
+                    return;
+                }
+
+                setParkingSpaces(result);
+            } catch (error) {
+                console.error('Failed to fetch parking spaces:', error);
+
+                if (isMounted) {
+                    setParkingSpaces([]);
+                }
+            } finally {
+                if (isMounted) {
+                    setIsParkingSpacesLoading(false);
+                }
+            }
+        };
+
+        void fetchParkingSpaces();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [activeLevel]);
+
+    useEffect(() => {
+        if (!selectedSpotId || !interactive || !showDetailsPanel) {
+            setSelectedSpotDetails(null);
+            return;
+        }
+
+        let isMounted = true;
+
+        const fetchSpotDetails = async () => {
+            setIsDetailsLoading(true);
+
+            try {
+                const result = await getParkingSpotDetails(selectedSpotId);
+
+                if (!isMounted) {
+                    return;
+                }
+
+                setSelectedSpotDetails(result);
+            } catch (error) {
+                console.error('Failed to fetch parking spot details:', error);
+
+                if (isMounted) {
+                    setSelectedSpotDetails(null);
+                }
+            } finally {
+                if (isMounted) {
+                    setIsDetailsLoading(false);
+                }
+            }
+        };
+
+        void fetchSpotDetails();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [selectedSpotId, interactive, showDetailsPanel]);
 
     const mappedSpots = useMemo(() => {
         const layout = parkingLayoutByLevel[activeLevel];
 
         return layout.map((layoutSpot) => {
-            const spot = spotsFromBackend.find((item) => item.id === layoutSpot.id);
+            const spot = parkingSpaces.find((item) => item.id === layoutSpot.id);
 
             return {
                 ...layoutSpot,
                 id: spot?.id ?? layoutSpot.id,
-                label: spot?.label ?? layoutSpot.id,
-                status: spot?.status,
+                label: spot?.id ?? layoutSpot.id,
+                status: mapStatusToUiStatus(spot?.status),
                 spaceType: spot?.spaceType ?? 'REGULAR_ABLEBODIED',
             };
         });
-    }, [activeLevel, spotsFromBackend]);
+    }, [activeLevel, parkingSpaces]);
 
     const handleSpotClick = (spotId: string) => {
         if (!interactive) {
@@ -66,6 +166,7 @@ export const ParkingMap = ({
     const handleLevelChange = (level: ParkingLevel) => {
         setActiveLevel(level);
         setSelectedSpotId(null);
+        setSelectedSpotDetails(null);
         onSpotSelect?.(null);
         onLevelChange?.(level);
     };
@@ -77,6 +178,7 @@ export const ParkingMap = ({
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2,
+                opacity: isParkingSpacesLoading ? 0.7 : 1,
             }}
         >
             <Box
@@ -147,7 +249,7 @@ export const ParkingMap = ({
                 />
             </Box>
 
-            {interactive && showDetailsPanel && (
+            {interactive && showDetailsPanel && !isDetailsLoading && (
                 <ParkingSpotDetailsPanel details={selectedSpotDetails}/>
             )}
         </Box>

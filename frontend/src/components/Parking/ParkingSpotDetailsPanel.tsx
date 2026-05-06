@@ -19,12 +19,14 @@ const valueCellSx = {
     color: '#7D7D7D',
     textAlign: 'right',
     lineHeight: 1.2,
+    wordBreak: 'break-word',
 };
 
 const rowSx = {
     display: 'grid',
     gridTemplateColumns: '1fr auto',
     alignItems: 'center',
+    gap: 2,
     px: 2,
     py: 1.8,
     backgroundColor: '#E9DCEA',
@@ -56,12 +58,67 @@ const cardTitleSx = {
     mb: 2.5,
 };
 
+const fallback = '-';
+
+const formatDateTime = (value?: string | null) => {
+    if (!value) {
+        return fallback;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return date.toLocaleString('pl-PL', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
+
+const formatDuration = (seconds?: number | null) => {
+    if (seconds === undefined || seconds === null) {
+        return fallback;
+    }
+
+    const totalMinutes = Math.floor(seconds / 60);
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours <= 0) {
+        return `${minutes} min`;
+    }
+
+    return `${hours} h ${minutes} min`;
+};
+
+const formatAmount = (value?: number | null) => {
+    if (value === undefined || value === null) {
+        return fallback;
+    }
+
+    return `${value.toFixed(2).replace('.', ',')} zł`;
+};
+
 const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
     const intl = useIntl();
 
-    if (!details) return null;
+    if (!details) {
+        return null;
+    }
 
-    const isOccupied = details.status === 'OCCUPIED' && details.occupant;
+    const occupant = details.occupant;
+    const isOccupied = details.status === 'OCCUPIED' && Boolean(occupant);
+
+    const ownerPhone = occupant?.ownerPhone ?? fallback;
+    const imageUrl = occupant?.imageUrl ?? null;
+    const entryTime = occupant?.entryTime ?? null;
+    const parkingDuration = formatDuration(occupant?.parkingDurationSec);
+    const amountDue = formatAmount(occupant?.amountDue);
 
     return (
         <Box
@@ -139,13 +196,13 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                     </Box>
                 </Paper>
 
-                {isOccupied && (
+                {isOccupied && occupant && (
                     <>
                         <Paper elevation={0} sx={bigCardSx}>
                             <Typography sx={cardTitleSx}>
                                 {intl.formatMessage(
                                     {id: 'parking.details.ownerCardTitle'},
-                                    {id: details.occupant.ownerId}
+                                    {id: occupant.ownerId}
                                 )}
                             </Typography>
 
@@ -154,7 +211,7 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                                     {intl.formatMessage({id: 'parking.details.labels.ownerData'})}
                                 </Typography>
                                 <Typography sx={valueCellSx}>
-                                    {details.occupant.ownerName}
+                                    {occupant.ownerName}
                                 </Typography>
                             </Box>
 
@@ -165,7 +222,7 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                                     {intl.formatMessage({id: 'parking.details.labels.email'})}
                                 </Typography>
                                 <Typography sx={valueCellSx}>
-                                    {details.occupant.ownerEmail}
+                                    {occupant.ownerEmail}
                                 </Typography>
                             </Box>
 
@@ -176,7 +233,7 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                                     {intl.formatMessage({id: 'parking.details.labels.phone'})}
                                 </Typography>
                                 <Typography sx={valueCellSx}>
-                                    {details.occupant.ownerPhone}
+                                    {ownerPhone}
                                 </Typography>
                             </Box>
                         </Paper>
@@ -199,11 +256,11 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                                         mb: 1.5,
                                     }}
                                 >
-                                    {details.occupant.imageUrl && (
+                                    {imageUrl && (
                                         <Box
                                             component="img"
-                                            src={details.occupant.imageUrl}
-                                            alt={details.occupant.vehiclePlate}
+                                            src={imageUrl}
+                                            alt={occupant.vehiclePlate}
                                             sx={{
                                                 width: '100%',
                                                 height: '100%',
@@ -225,14 +282,14 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                                         {intl.formatMessage({id: 'parking.details.labels.entry'})}
                                     </Typography>
                                     <Typography sx={valueCellSx}>
-                                        {details.occupant.entryTime}
+                                        {formatDateTime(entryTime)}
                                     </Typography>
 
                                     <Typography sx={labelCellSx}>
                                         {intl.formatMessage({id: 'parking.details.labels.plate'})}
                                     </Typography>
                                     <Typography sx={valueCellSx}>
-                                        {details.occupant.vehiclePlate}
+                                        {occupant.vehiclePlate}
                                     </Typography>
                                 </Box>
                             </Paper>
@@ -248,11 +305,11 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                                         mb: 1.5,
                                     }}
                                 >
-                                    {details.occupant.imageUrl && (
+                                    {imageUrl && (
                                         <Box
                                             component="img"
-                                            src={details.occupant.imageUrl}
-                                            alt={details.occupant.vehiclePlate}
+                                            src={imageUrl}
+                                            alt={occupant.vehiclePlate}
                                             sx={{
                                                 width: '100%',
                                                 height: '100%',
@@ -274,14 +331,14 @@ const ParkingSpotDetailsPanel = ({details}: ParkingSpotDetailsPanelProps) => {
                                         {intl.formatMessage({id: 'parking.details.labels.parkingTime'})}
                                     </Typography>
                                     <Typography sx={valueCellSx}>
-                                        {details.occupant.parkingDuration}
+                                        {parkingDuration}
                                     </Typography>
 
                                     <Typography sx={labelCellSx}>
                                         {intl.formatMessage({id: 'parking.details.labels.amountDue'})}
                                     </Typography>
                                     <Typography sx={valueCellSx}>
-                                        {details.occupant.amountDue}
+                                        {amountDue}
                                     </Typography>
                                 </Box>
                             </Paper>

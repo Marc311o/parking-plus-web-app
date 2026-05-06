@@ -1,37 +1,59 @@
-import type {ParkingSpaceDto} from './types.ts';
+import {API_URL, getHeaders} from '../core';
+import type {ParkingSpaceDto, ParkingSpotDetails} from './types.ts';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+export const getParkingSpacesByLevel = async (
+    level: number
+): Promise<ParkingSpaceDto[]> => {
+    const response = await fetch(`${API_URL}/parking-spaces/level/${level}`, {
+        method: 'GET',
+        headers: getHeaders(),
+    });
 
-export const parkingSpacesApi = {
-    async getByLevel(level: number): Promise<ParkingSpaceDto[]> {
-        const response = await fetch(`${API_BASE_URL}/parking-spaces/level/${level}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+    if (!response.ok) {
+        const body = await response.text();
 
-        if (!response.ok) {
-            throw new Error(`Failed to fetch parking spaces for level ${level}`);
-        }
+        throw new Error(
+            `Failed to fetch parking spaces for level ${level}. Status: ${response.status}. Body: ${body}`
+        );
+    }
 
-        return response.json();
-    },
+    return response.json();
+};
 
-    async getById(id: string): Promise<ParkingSpaceDto> {
-        const response = await fetch(`${API_BASE_URL}/parking-spaces/${id}`, {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+export const getParkingSpaceById = async (
+    id: string
+): Promise<ParkingSpaceDto> => {
+    const response = await fetch(`${API_URL}/parking-spaces/${id}`, {
+        method: 'GET',
+        headers: getHeaders(),
+    });
 
-        if (!response.ok) {
-            throw new Error(`Failed to fetch parking space ${id}`);
-        }
+    if (!response.ok) {
+        const body = await response.text();
 
-        return response.json();
-    },
+        throw new Error(
+            `Failed to fetch parking space ${id}. Status: ${response.status}. Body: ${body}`
+        );
+    }
+
+    return response.json();
+};
+
+export const getParkingSpotDetails = async (
+    id: string
+): Promise<ParkingSpotDetails> => {
+    const response = await fetch(`${API_URL}/parking-spaces/${id}/details`, {
+        method: 'GET',
+        headers: getHeaders(),
+    });
+
+    if (!response.ok) {
+        const body = await response.text();
+
+        throw new Error(
+            `Failed to fetch parking space details ${id}. Status: ${response.status}. Body: ${body}`
+        );
+    }
+
+    return response.json();
 };

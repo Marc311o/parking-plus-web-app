@@ -20,10 +20,17 @@ interface ParkingSpotProps {
 }
 
 const DASHBOARD_SPOT_COLOR = '#BFC0C5';
+const DASHBOARD_OCCUPIED_COLOR = '#E53935';
+const DASHBOARD_RESERVED_COLOR = '#FB8C00';
+
 const STATISTICS_SPOT_COLOR = '#8E24AA';
 const SELECTED_SPOT_COLOR = '#A93BFF';
 
-const getMainColor = (variant: ParkingSpotVariant, selected?: boolean) => {
+const getMainColor = (
+    variant: ParkingSpotVariant,
+    status?: ParkingSpotStatus,
+    selected?: boolean
+) => {
     if (selected) {
         return SELECTED_SPOT_COLOR;
     }
@@ -32,7 +39,15 @@ const getMainColor = (variant: ParkingSpotVariant, selected?: boolean) => {
         return STATISTICS_SPOT_COLOR;
     }
 
-    return DASHBOARD_SPOT_COLOR;
+    switch (status) {
+        case 'occupied':
+            return DASHBOARD_OCCUPIED_COLOR;
+        case 'reserved':
+            return DASHBOARD_RESERVED_COLOR;
+        case 'available':
+        default:
+            return DASHBOARD_SPOT_COLOR;
+    }
 };
 
 const renderSpaceIcons = (spaceType: SpaceType, color: string) => {
@@ -62,13 +77,14 @@ const ParkingSpot = ({
                          x,
                          y,
                          orientation,
+                         status,
                          spaceType,
                          selected = false,
                          variant = 'dashboard',
                          interactive = true,
                          onClick,
                      }: ParkingSpotProps) => {
-    const color = getMainColor(variant, selected);
+    const color = getMainColor(variant, status, selected);
     const icons = renderSpaceIcons(spaceType, color);
 
     const isLeft = orientation === 'left';
