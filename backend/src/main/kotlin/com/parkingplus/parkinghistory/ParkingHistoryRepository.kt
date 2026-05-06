@@ -25,5 +25,18 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         @Param("start") start: LocalDateTime,
         @Param("end") end: LocalDateTime
     ): List<LocalDateTime>
+
     fun findByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): ParkingHistoryEntity?
+
+    @Query(
+        "SELECT p FROM ParkingHistoryEntity p " +
+                "WHERE p.parkingSpace.id = :spaceId " +
+                "AND p.startTime <= :endOfDay " +
+                "AND (p.endTime > :startOfDay OR p.endTime IS NULL)"
+    )
+    fun findTimelineForSpaceAndDate(
+        @Param("spaceId") spaceId: String,
+        @Param("startOfDay") startOfDay: LocalDateTime,
+        @Param("endOfDay") endOfDay: LocalDateTime
+    ): List<ParkingHistoryEntity>
 }
