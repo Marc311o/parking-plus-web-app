@@ -267,6 +267,29 @@ class ParkingHistoryService(
             to = currentEnd.toLocalDate(),
             overallAverageMinutes = overallAverage,
             categories = categories
+    fun getSpaceRanking(date: LocalDate, floor: ParkingFloor): ParkingSpaceRankingResponseDTO {
+        val startOfDay = date.atStartOfDay()
+        val endOfDay = date.atTime(LocalTime.MAX)
+
+        val rankingData = parkingHistoryRepository.findSpaceRankingForLevelAndDate(
+            level = floor.level,
+            start = startOfDay,
+            end = endOfDay
+        )
+
+        val totalEntries = rankingData.sumOf { it.usageCount }
+
+        val points = rankingData.map {
+            ParkingSpaceRankingPointDTO(
+                spaceId = it.spaceId,
+                value = it.usageCount
+            )
+        }
+
+        return ParkingSpaceRankingResponseDTO(
+            floor = floor,
+            total = totalEntries,
+            points = points
         )
     }
 }

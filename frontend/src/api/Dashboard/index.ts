@@ -1,2 +1,2 @@
 export * from './types.ts';
-export * from './parkingSpaces.tsx';
+export * from './parkingSpaces.ts';
