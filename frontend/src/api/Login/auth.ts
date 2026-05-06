@@ -1,7 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const API_URL = import.meta.env.VITE_API_URL
 
 export async function login(email: string, password: string) {
-    const response = await fetch(`${API_URL}/api/auth/login`, {
+    const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -30,7 +30,7 @@ export async function login(email: string, password: string) {
 }
 
 export async function verifyMfa(preAuthToken: string, code: string) {
-    const response = await fetch(`${API_URL}/api/auth/verify-mfa`, {
+    const response = await fetch(`${API_URL}/auth/verify-mfa`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -57,7 +57,7 @@ export async function createNewAccount(
     email: string,
     password: string
 ) {
-    const response = await fetch(`${API_URL}/api/users`, {
+    const response = await fetch(`${API_URL}/users`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -71,7 +71,7 @@ export async function createNewAccount(
 }
 
 export async function forgotPassword(email: string) {
-    const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
+    const res = await fetch(`${API_URL}/auth/forgot-password`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export async function forgotPassword(email: string) {
 
 
 export async function resetPassword(token: string, newPassword: string) {
-    const res = await fetch(`${API_URL}/api/auth/reset-password`, {
+    const res = await fetch(`${API_URL}/auth/reset-password`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
