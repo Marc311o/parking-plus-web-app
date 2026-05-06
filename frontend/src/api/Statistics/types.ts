@@ -33,6 +33,30 @@ export type RevenueResponse = {
     points: RevenuePoint[];
 };
 
+//AVARAGE STAY
+export type AverageStayPeriod = 'DAILY' | 'WEEKLY' | 'YEARLY';
+
+export type ParkingSpaceType =
+    | 'REGULAR_ABLEBODIED'
+    | 'REGULAR_HANDICAPED'
+    | 'EV_ABLEBODIED'
+    | 'EV_HANDICAPED'
+    | 'REGULAR_BOTH'
+    | 'EV_BOTH';
+
+export type AverageStayCategoryItem = {
+    spaceType: ParkingSpaceType;
+    averageMinutes: number;
+};
+
+export type AverageStayResponse = {
+    period: AverageStayPeriod;
+    from: string;
+    to: string;
+    overallAverageMinutes: number;
+    categories: AverageStayCategoryItem[];
+};
+
 //SPACE RANKING
 export type ParkingFloor = 'A' | 'B';
 

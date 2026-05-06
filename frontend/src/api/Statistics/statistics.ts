@@ -1,5 +1,7 @@
 import {API_URL, getHeaders} from '../core';
 import type {
+    AverageStayPeriod,
+    AverageStayResponse,
     EntriesPeriod,
     EntriesResponse,
     RevenuePeriod,
@@ -56,6 +58,34 @@ export const getRevenueStats = async (
 
         throw new Error(
             `Failed to fetch revenue stats. Status: ${response.status}. Body: ${body}`
+        );
+    }
+
+    return response.json();
+};
+
+export const getAverageStayStats = async (
+    date: string,
+    period: AverageStayPeriod
+): Promise<AverageStayResponse> => {
+    const params = new URLSearchParams();
+
+    params.set('date', date);
+    params.set('period', period);
+
+    const response = await fetch(
+        `${API_URL}/parking-history/average-stay?${params.toString()}`,
+        {
+            method: 'GET',
+            headers: getHeaders(),
+        }
+    );
+
+    if (!response.ok) {
+        const body = await response.text();
+
+        throw new Error(
+            `Failed to fetch average stay stats. Status: ${response.status}. Body: ${body}`
         );
     }
 

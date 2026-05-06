@@ -11,6 +11,7 @@ import {
 import {
     type AverageStayPeriod,
     type AverageStayResponse,
+    getAverageStayStats,
     type EntriesPeriod,
     type EntriesResponse,
     getEntriesStats,
@@ -42,14 +43,6 @@ const getDateFromIso = (date: string) => {
     return new Date(year, month - 1, day, 12, 0, 0, 0);
 };
 
-const addDays = (date: Date, days: number) => {
-    const copiedDate = new Date(date);
-
-    copiedDate.setDate(copiedDate.getDate() + days);
-    copiedDate.setHours(12, 0, 0, 0);
-
-    return copiedDate;
-};
 
 const getStartOfCurrentWeek = () => {
     const today = new Date();
@@ -72,65 +65,6 @@ const getStartOfCurrentMonth = () => {
     const today = new Date();
 
     return new Date(today.getFullYear(), today.getMonth(), 1, 12, 0, 0, 0);
-};
-
-
-const createMockAverageStay = (
-    period: AverageStayPeriod,
-    fromDate: Date
-): AverageStayResponse => {
-    const year = fromDate.getFullYear();
-
-    if (period === 'YEARLY') {
-        return {
-            period: 'YEARLY',
-            from: `${year}-01-01`,
-            to: `${year}-12-31`,
-            overallAverageMinutes: 142,
-            categories: [
-                {spaceType: 'REGULAR_ABLEBODIED', averageMinutes: 156},
-                {spaceType: 'REGULAR_HANDICAPED', averageMinutes: 118},
-                {spaceType: 'EV_ABLEBODIED', averageMinutes: 132},
-                {spaceType: 'EV_HANDICAPED', averageMinutes: 96},
-                {spaceType: 'REGULAR_BOTH', averageMinutes: 144},
-                {spaceType: 'EV_BOTH', averageMinutes: 105},
-            ],
-        };
-    }
-
-    if (period === 'WEEKLY') {
-        const weekEnd = addDays(fromDate, 6);
-
-        return {
-            period: 'WEEKLY',
-            from: toIsoDate(fromDate),
-            to: toIsoDate(weekEnd),
-            overallAverageMinutes: 151,
-            categories: [
-                {spaceType: 'REGULAR_ABLEBODIED', averageMinutes: 164},
-                {spaceType: 'REGULAR_HANDICAPED', averageMinutes: 126},
-                {spaceType: 'EV_ABLEBODIED', averageMinutes: 138},
-                {spaceType: 'EV_HANDICAPED', averageMinutes: 101},
-                {spaceType: 'REGULAR_BOTH', averageMinutes: 150},
-                {spaceType: 'EV_BOTH', averageMinutes: 112},
-            ],
-        };
-    }
-
-    return {
-        period: 'DAILY',
-        from: toIsoDate(fromDate),
-        to: toIsoDate(fromDate),
-        overallAverageMinutes: 156,
-        categories: [
-            {spaceType: 'REGULAR_ABLEBODIED', averageMinutes: 156},
-            {spaceType: 'REGULAR_HANDICAPED', averageMinutes: 112},
-            {spaceType: 'EV_ABLEBODIED', averageMinutes: 128},
-            {spaceType: 'EV_HANDICAPED', averageMinutes: 84},
-            {spaceType: 'REGULAR_BOTH', averageMinutes: 139},
-            {spaceType: 'EV_BOTH', averageMinutes: 64},
-        ],
-    };
 };
 
 const createMockSpaceRanking = (
@@ -281,40 +215,34 @@ const ParkingStatisticsPage = () => {
             return;
         }
 
-        // Docelowo backend:
-        //
-        // const fetchAverageStay = async () => {
-        //     try {
-        //         const response = await fetch(
-        //             `/api/statistics/parking/average-stay?period=${selectedAverageStayPeriod}&from=${selectedAverageStayDate}`
-        //         );
-        //
-        //         if (!response.ok) {
-        //             throw new Error('Failed to fetch average stay statistics');
-        //         }
-        //
-        //         const data: AverageStayResponse = await response.json();
-        //
-        //         setAverageStayData(data);
-        //     } catch (error) {
-        //         console.error(error);
-        //         setAverageStayData(
-        //             createMockAverageStay(
-        //                 selectedAverageStayPeriod,
-        //                 getDateFromIso(selectedAverageStayDate)
-        //             )
-        //         );
-        //     }
-        // };
-        //
-        // fetchAverageStay();
+        let isMounted = true;
 
-        setAverageStayData(
-            createMockAverageStay(
-                selectedAverageStayPeriod,
-                getDateFromIso(selectedAverageStayDate)
-            )
-        );
+        const fetchAverageStay = async () => {
+            try {
+                const data = await getAverageStayStats(
+                    selectedAverageStayDate,
+                    selectedAverageStayPeriod
+                );
+
+                if (!isMounted) {
+                    return;
+                }
+
+                setAverageStayData(data);
+            } catch (error) {
+                console.error('Failed to fetch average stay statistics:', error);
+
+                if (!isMounted) {
+                    return;
+                }
+            }
+        };
+
+        void fetchAverageStay();
+
+        return () => {
+            isMounted = false;
+        };
     }, [expandedStatistic, selectedAverageStayPeriod, selectedAverageStayDate]);
 
     useEffect(() => {

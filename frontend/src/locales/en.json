@@ -150,6 +150,7 @@
     "averageStay": {
       "tileTitle": "Average stay time",
       "tileDescription": "Average parking stay time in the selected period",
+      "totalDescription": "Average stay time for the selected period",
       "title": "Average stay time",
       "description": "Average stay time by parking space type",
       "periods": {

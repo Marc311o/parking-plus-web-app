@@ -150,6 +150,7 @@
     "averageStay": {
       "tileTitle": "Średni czas postoju",
       "tileDescription": "Średni czas postoju w wybranym okresie",
+      "totalDescription": "Średni czas postoju w wybranym okresie",
       "title": "Średni czas postoju",
       "description": "Średni czas postoju z podziałem na typ miejsca",
       "periods": {
