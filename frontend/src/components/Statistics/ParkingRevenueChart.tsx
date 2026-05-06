@@ -18,6 +18,7 @@ type ParkingRevenueChartProps = {
     onPeriodChange: (period: RevenuePeriod) => void;
     onDateChange: (date: string) => void;
 };
+
 type ChartPoint = {
     x: number;
     y: number;
@@ -32,13 +33,116 @@ const paddingRight = 48;
 const paddingTop = 30;
 const paddingBottom = 42;
 
+const monthLabels = [
+    'JAN',
+    'FEB',
+    'MAR',
+    'APR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AUG',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DEC',
+];
 
-const getRoundedMax = (value: number) => {
-    if (value <= 1000) {
-        return 1000;
+const weekLabels = [
+    'SUN',
+    'MON',
+    'TUE',
+    'WED',
+    'THU',
+    'FRI',
+    'SAT',
+];
+
+const getNiceRoundedMax = (value: number) => {
+    if (value <= 0) {
+        return 10;
     }
 
-    return Math.ceil(value / 1000) * 1000;
+    const exponent = Math.floor(Math.log10(value));
+    const magnitude = Math.pow(10, exponent);
+    const normalized = value / magnitude;
+
+    let niceNormalized: number;
+
+    if (normalized <= 1) {
+        niceNormalized = 1;
+    } else if (normalized <= 2) {
+        niceNormalized = 2;
+    } else if (normalized <= 5) {
+        niceNormalized = 5;
+    } else {
+        niceNormalized = 10;
+    }
+
+    return niceNormalized * magnitude;
+};
+
+const getPointHour = (label: string) => {
+    const hour = Number(label.split(':')[0]);
+
+    return Number.isNaN(hour) ? null : hour;
+};
+
+const getDefaultSelectedPointIndex = (
+    points: RevenueResponse['points'],
+    period: RevenuePeriod
+) => {
+    if (points.length === 0) {
+        return 0;
+    }
+
+    const now = new Date();
+
+    if (period === 'DAILY') {
+        const currentHour = now.getHours();
+
+        let bestIndex = 0;
+        let bestDiff = Number.POSITIVE_INFINITY;
+
+        points.forEach((point, index) => {
+            const pointHour = getPointHour(point.label);
+
+            if (pointHour === null) {
+                return;
+            }
+
+            const diff = Math.abs(pointHour - currentHour);
+
+            if (diff < bestDiff) {
+                bestDiff = diff;
+                bestIndex = index;
+            }
+        });
+
+        return bestIndex;
+    }
+
+    if (period === 'WEEKLY') {
+        const currentDayLabel = weekLabels[now.getDay()];
+
+        const index = points.findIndex(
+            (point) => point.label.toUpperCase() === currentDayLabel
+        );
+
+        return index >= 0 ? index : 0;
+    }
+
+    if (period === 'YEARLY') {
+        const currentMonthLabel = monthLabels[now.getMonth()];
+
+        const index = points.findIndex(
+            (point) => point.label.toUpperCase() === currentMonthLabel
+        );
+
+        return index >= 0 ? index : 0;
+    }
+
+    return 0;
 };
 
 const buildLinePath = (points: ChartPoint[]) => {
@@ -86,12 +190,12 @@ export const ParkingRevenueChart = ({
     const {formatMessage, locale} = useIntl();
 
     const [selectedPointIndex, setSelectedPointIndex] = useState(
-        Math.max(data.points.length - 4, 0)
+        getDefaultSelectedPointIndex(data.points, selectedPeriod)
     );
 
     useEffect(() => {
-        setSelectedPointIndex(Math.max(data.points.length - 4, 0));
-    }, [data.points]);
+        setSelectedPointIndex(getDefaultSelectedPointIndex(data.points, selectedPeriod));
+    }, [data.points, selectedPeriod]);
 
     const periods = [
         {
@@ -128,7 +232,9 @@ export const ParkingRevenueChart = ({
     };
 
     const maxValue = useMemo(() => {
-        return getRoundedMax(Math.max(...data.points.map((point) => point.value), 1));
+        const biggestValue = Math.max(...data.points.map((point) => point.value), 0);
+
+        return getNiceRoundedMax(biggestValue);
     }, [data.points]);
 
     const chartPoints = useMemo<ChartPoint[]>(() => {
@@ -249,6 +355,7 @@ export const ParkingRevenueChart = ({
                     onDateChange={onDateChange}
                 />
             </Box>
+
             <Box
                 sx={{
                     display: 'grid',

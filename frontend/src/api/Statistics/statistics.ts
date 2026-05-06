@@ -1,5 +1,10 @@
 import {API_URL, getHeaders} from '../core';
-import type {EntriesPeriod, EntriesResponse} from './types';
+import type {
+    EntriesPeriod,
+    EntriesResponse,
+    RevenuePeriod,
+    RevenueResponse,
+} from './types';
 
 export const getEntriesStats = async (
     date: string,
@@ -23,6 +28,34 @@ export const getEntriesStats = async (
 
         throw new Error(
             `Failed to fetch entries stats. Status: ${response.status}. Body: ${body}`
+        );
+    }
+
+    return response.json();
+};
+
+export const getRevenueStats = async (
+    date: string,
+    period: RevenuePeriod
+): Promise<RevenueResponse> => {
+    const params = new URLSearchParams();
+
+    params.set('date', date);
+    params.set('period', period);
+
+    const response = await fetch(
+        `${API_URL}/parking-history/revenue-stats?${params.toString()}`,
+        {
+            method: 'GET',
+            headers: getHeaders(),
+        }
+    );
+
+    if (!response.ok) {
+        const body = await response.text();
+
+        throw new Error(
+            `Failed to fetch revenue stats. Status: ${response.status}. Body: ${body}`
         );
     }
 
