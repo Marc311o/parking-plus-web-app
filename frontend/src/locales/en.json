@@ -53,7 +53,7 @@
       "resetButton": "Reset password",
       "sendingButton":  "Sending ...",
       "backButton": "Back",
-      "success": "If the account exists, a reset link has been sent",
+      "success": "If the account exists, a reset link has been sent"
     },
     "errors": {
       "auth": {
