@@ -13,9 +13,6 @@ const ResetPasswordPage = () => {
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-
     const [password, setPassword] = useState("");
     const [passwordRepeat, setPasswordRepeat] = useState("");
 

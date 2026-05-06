@@ -16,10 +16,9 @@ import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 const Login = () => {
     const {formatMessage} = useIntl();
 
-    const setToken = useAuthStore((state) => state.setToken);
-    const logout = useAuthStore((state) => state.logout);
+    const navigate = useNavigate();
 
-    const [showPassword, setShowPassword] = useState(false);
+    const setToken = useAuthStore((state: { setToken: any; }) => state.setToken);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -39,6 +38,7 @@ const Login = () => {
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
 
 
+    // empty fields control
     const areEmptyFields = () => {
         let hasError = false;
 
@@ -56,7 +56,6 @@ const Login = () => {
     };
 
     // input control
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
 
@@ -72,9 +71,6 @@ const Login = () => {
                 break;
         }
     };
-
-
-    const navigate = useNavigate();
 
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -301,7 +297,7 @@ const Login = () => {
                             label={formatMessage({ id: 'logins.login.passwordLabel' })}
                             placeholder={formatMessage({ id: 'logins.login.passwordPlaceholder' })}
                             value={password}
-                            onChange={(e) => handleInputChange(e)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
                             disabled={loading}
                             error={passwordEmptyError}
                         />

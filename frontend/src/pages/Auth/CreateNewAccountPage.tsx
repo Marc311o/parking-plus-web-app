@@ -12,8 +12,7 @@ import { createNewAccount } from "@api/Login/auth";
 const CreateNewAccountPage = () => {
     const {formatMessage} = useIntl();
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+    const navigate = useNavigate();
 
     const [error, setError] = useState("");
 
@@ -30,8 +29,6 @@ const CreateNewAccountPage = () => {
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
     const [passwordRepeatEmptyError, setPasswordRepeatEmptyError] = useState(false);
 
-
-    const navigate = useNavigate();
 
     const handleBack = () => {
         navigate("/login");
@@ -140,7 +137,6 @@ const CreateNewAccountPage = () => {
                 throw new Error(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }))
             }
 
-            // const result =
             await createNewAccount(name, surname, email, password);
 
             navigate("/login");
@@ -228,7 +224,7 @@ const CreateNewAccountPage = () => {
                             label={formatMessage({ id: 'logins.createNewAccount.firstNameLabel' })}
                             placeholder={formatMessage({ id: 'logins.createNewAccount.firstNamePlaceholder' })}
                             value={name}
-                            onChange={(e) => handleInputChange(e)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
                             disabled={loading}
                             error={nameEmptyError}
                         />
@@ -239,7 +235,7 @@ const CreateNewAccountPage = () => {
                             label={formatMessage({ id: 'logins.createNewAccount.lastNameLabel' })}
                             placeholder={formatMessage({ id: 'logins.createNewAccount.lastNamePlaceholder' })}
                             value={surname}
-                            onChange={(e) => handleInputChange(e)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
                             disabled={loading}
                             error={surnameEmptyError}
                         />
@@ -250,7 +246,7 @@ const CreateNewAccountPage = () => {
                             label={formatMessage({ id: 'logins.createNewAccount.emailLabel' })}
                             placeholder={formatMessage({ id: 'logins.createNewAccount.emailPlaceholder' })}
                             value={email}
-                            onChange={(e) => handleInputChange(e)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
                             disabled={loading}
                             error={emailEmptyError}
                         />
@@ -261,7 +257,7 @@ const CreateNewAccountPage = () => {
                             label={formatMessage({ id: 'logins.createNewAccount.passwordLabel' })}
                             placeholder={formatMessage({ id: 'logins.createNewAccount.passwordPlaceholder' })}
                             value={password}
-                            onChange={(e) => handleInputChange(e)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
                             disabled={loading}
                             error={passwordEmptyError}
                         />
@@ -272,7 +268,7 @@ const CreateNewAccountPage = () => {
                             label={formatMessage({ id: 'logins.createNewAccount.confirmPasswordLabel' })}
                             placeholder={formatMessage({ id: 'logins.createNewAccount.confirmPasswordPlaceholder' })}
                             value={passwordRepeat}
-                            onChange={(e) => handleInputChange(e)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement, Element>) => handleInputChange(e)}
                             disabled={loading}
                             error={passwordRepeatEmptyError}
                         />
