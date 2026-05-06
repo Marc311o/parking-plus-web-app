@@ -13,6 +13,7 @@ import {
     type AverageStayResponse,
     type EntriesPeriod,
     type EntriesResponse,
+    getEntriesStats,
     type ParkingFloor,
     type ParkingSpaceRankingResponse,
     type RevenuePeriod,
@@ -72,76 +73,6 @@ const getStartOfCurrentMonth = () => {
     return new Date(today.getFullYear(), today.getMonth(), 1, 12, 0, 0, 0);
 };
 
-const createMockEntries = (
-    period: EntriesPeriod,
-    fromDate: Date
-): EntriesResponse => {
-    if (period === 'DAILY') {
-        return {
-            period: 'DAILY',
-            from: toIsoDate(fromDate),
-            to: toIsoDate(fromDate),
-            total: 84,
-            points: [
-                {label: '00:00', value: 2},
-                {label: '02:00', value: 1},
-                {label: '04:00', value: 0},
-                {label: '06:00', value: 5},
-                {label: '08:00', value: 14},
-                {label: '10:00', value: 11},
-                {label: '12:00', value: 9},
-                {label: '14:00', value: 12},
-                {label: '16:00', value: 13},
-                {label: '18:00', value: 10},
-                {label: '20:00', value: 5},
-                {label: '22:00', value: 2},
-            ],
-        };
-    }
-
-    if (period === 'YEARLY') {
-        const year = fromDate.getFullYear();
-
-        return {
-            period: 'YEARLY',
-            from: `${year}-01-01`,
-            to: `${year}-12-31`,
-            total: 2304,
-            points: [
-                {label: 'JAN', value: 180},
-                {label: 'FEB', value: 210},
-                {label: 'MAR', value: 195},
-                {label: 'APR', value: 220},
-                {label: 'MAY', value: 240},
-                {label: 'JUN', value: 205},
-                {label: 'JUL', value: 190},
-                {label: 'AUG', value: 215},
-                {label: 'SEP', value: 175},
-                {label: 'OCT', value: 185},
-                {label: 'NOV', value: 160},
-                {label: 'DEC', value: 129},
-            ],
-        };
-    }
-
-    const weekEnd = addDays(fromDate, 6);
-
-    return {
-        period: 'WEEKLY',
-        from: toIsoDate(fromDate),
-        to: toIsoDate(weekEnd),
-        total: 193,
-        points: [
-            {label: 'MON', value: 33},
-            {label: 'TUE', value: 13},
-            {label: 'WED', value: 35},
-            {label: 'THU', value: 20},
-            {label: 'FRI', value: 50},
-            {label: 'SAT', value: 10},
-            {label: 'SUN', value: 30},
-        ],
-    };
-};
 
 const createMockRevenue = (
     period: RevenuePeriod,
@@ -354,37 +285,34 @@ const ParkingStatisticsPage = () => {
             return;
         }
 
-        // Docelowo backend:
-        //
-        // const fetchEntries = async () => {
-        //     try {
-        //         const response = await fetch(
-        //             `/api/statistics/parking/entries?period=${selectedEntriesPeriod}&from=${selectedEntriesDate}`
-        //         );
-        //
-        //         if (!response.ok) {
-        //             throw new Error('Failed to fetch parking entries statistics');
-        //         }
-        //
-        //         const data: EntriesResponse = await response.json();
-        //
-        //         setEntriesData(data);
-        //     } catch (error) {
-        //         console.error(error);
-        //         setEntriesData(
-        //             createMockEntries(
-        //                 selectedEntriesPeriod,
-        //                 getDateFromIso(selectedEntriesDate)
-        //             )
-        //         );
-        //     }
-        // };
-        //
-        // fetchEntries();
+        let isMounted = true;
 
-        setEntriesData(
-            createMockEntries(selectedEntriesPeriod, getDateFromIso(selectedEntriesDate))
-        );
+        const fetchEntries = async () => {
+            try {
+                const data = await getEntriesStats(
+                    selectedEntriesDate,
+                    selectedEntriesPeriod
+                );
+
+                if (!isMounted) {
+                    return;
+                }
+
+                setEntriesData(data);
+            } catch (error) {
+                console.error('Failed to fetch parking entries statistics:', error);
+
+                if (!isMounted) {
+                    return;
+                }
+            }
+        };
+
+        void fetchEntries();
+
+        return () => {
+            isMounted = false;
+        };
     }, [expandedStatistic, selectedEntriesPeriod, selectedEntriesDate]);
 
     useEffect(() => {
