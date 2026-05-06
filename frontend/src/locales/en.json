@@ -54,8 +54,6 @@
       "sendingButton":  "Sending ...",
       "backButton": "Back",
       "success": "If the account exists, a reset link has been sent",
-      "emailRequired": "Email is required",
-      "sendEmailFailed": "Failed to send email"
     },
     "errors": {
       "auth": {
@@ -70,7 +68,9 @@
         "passwordTooShort": "Password must be at least 6 characters",
         "passwordsNotMatch": "Passwords do not match",
         "unknown": "An unknown error occurred",
-        "missingToken": "Missing reset token"
+        "missingToken": "Missing reset token",
+        "emailRequired": "Email is required",
+        "sendEmailFailed": "Failed to send email"
       }
     }
   },
