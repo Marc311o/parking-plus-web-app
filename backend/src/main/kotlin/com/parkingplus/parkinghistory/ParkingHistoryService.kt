@@ -1,6 +1,7 @@
 package com.parkingplus.parkinghistory
 
 import com.parkingplus.parkingspaces.ParkingSpaceRepository
+import com.parkingplus.parkingspaces.enums.SpaceType
 import com.parkingplus.vehicles.VehicleRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -8,6 +9,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.DayOfWeek
+import java.time.Duration
+import java.time.format.DateTimeFormatter
 import kotlin.math.round
 
 @Service
@@ -291,6 +294,92 @@ class ParkingHistoryService(
             points = pointsMap.map {
                 RevenuePointDTO(it.key, round(it.value * 100) / 100.0)
             }
+        )
+    }
+
+    @Transactional(readOnly = true)
+    fun getAverageStayStatistics(date: LocalDate, period: AggregationPeriod): AverageStayResponseDTO {
+        val currentStart: LocalDateTime
+        val currentEnd: LocalDateTime
+
+        when (period) {
+            AggregationPeriod.DAILY -> {
+                currentStart = date.atStartOfDay()
+                currentEnd = date.atTime(LocalTime.MAX)
+            }
+            AggregationPeriod.WEEKLY -> {
+                currentStart = date.with(DayOfWeek.MONDAY).atStartOfDay()
+                currentEnd = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
+            }
+            AggregationPeriod.YEARLY -> {
+                currentStart = date.withDayOfYear(1).atStartOfDay()
+                currentEnd = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
+            }
+        }
+
+        val stays = parkingHistoryRepository.findCompletedStaysBetween(currentStart, currentEnd)
+
+        var totalMinutesOverall = 0L
+        var validStayCount = 0L
+
+        val typeTotalMinutes = mutableMapOf<SpaceType, Long>()
+        val typeCounts = mutableMapOf<SpaceType, Int>()
+
+        stays.forEach { stay ->
+            if (stay.endTime.isAfter(stay.startTime)) {
+                val minutes = Duration.between(stay.startTime, stay.endTime).toMinutes()
+
+                totalMinutesOverall += minutes
+                validStayCount++
+
+                typeTotalMinutes[stay.spaceType] = (typeTotalMinutes[stay.spaceType] ?: 0L) + minutes
+                typeCounts[stay.spaceType] = (typeCounts[stay.spaceType] ?: 0) + 1
+            }
+        }
+
+        val overallAverage = if (validStayCount > 0) totalMinutesOverall / validStayCount else 0L
+
+        val categories = typeTotalMinutes.entries
+            .sortedBy { it.key.name }
+            .map { (spaceType, totalMinutes) ->
+                val count = typeCounts[spaceType] ?: 0
+                val avg = if (count > 0) totalMinutes / count else 0L
+                AverageStayCategoryItemDTO(spaceType, avg)
+            }
+
+        return AverageStayResponseDTO(
+            period = period,
+            from = currentStart.toLocalDate(),
+            to = currentEnd.toLocalDate(),
+            overallAverageMinutes = overallAverage,
+            categories = categories
+        )
+    }
+
+    @Transactional(readOnly = true)
+    fun getSpaceRanking(date: LocalDate, floor: ParkingFloor): ParkingSpaceRankingResponseDTO {
+        val startOfDay = date.atStartOfDay()
+        val endOfDay = date.atTime(LocalTime.MAX)
+
+        val rankingData = parkingHistoryRepository.findSpaceRankingForLevelAndDate(
+            level = floor.level,
+            start = startOfDay,
+            end = endOfDay
+        )
+
+        val totalEntries = rankingData.sumOf { it.usageCount }
+
+        val points = rankingData.map {
+            ParkingSpaceRankingPointDTO(
+                spaceId = it.spaceId,
+                value = it.usageCount
+            )
+        }
+
+        return ParkingSpaceRankingResponseDTO(
+            floor = floor,
+            total = totalEntries,
+            points = points
         )
     }
 }

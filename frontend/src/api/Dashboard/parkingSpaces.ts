@@ -1,8 +1,6 @@
 import type {ParkingSpaceDto} from './types.ts';
 
-//TODO: TAKE BACK FROM ENV
-
-const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const parkingSpacesApi = {
     async getByLevel(level: number): Promise<ParkingSpaceDto[]> {

@@ -19,9 +19,14 @@ class UserController(private val userService: UserService) {
     fun getAll(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int,
-        @RequestParam(required = false) search: String?
+        @RequestParam(required = false) search: String?,
+        @RequestParam(defaultValue = "false") clientsOnly: Boolean,
+        @RequestParam(defaultValue = "name") sortBy: String,
+        @RequestParam(defaultValue = "asc") sortDir: String
     ): ResponseEntity<Page<UserDTO>> {
-        return ResponseEntity.ok(userService.getAllUsers(page, size, search))
+        return ResponseEntity.ok(
+            userService.getAllUsers(page, size, search, clientsOnly, sortBy, sortDir)
+        )
     }
 
 
@@ -65,7 +70,11 @@ class UserController(private val userService: UserService) {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping("/{id}/mfa-confirm")
-    fun confirmMfa(@PathVariable id: Long, @RequestBody request: com.parkingplus.auth.MfaConfirmRequest, authentication: Authentication): ResponseEntity<String> {
+    fun confirmMfa(
+        @PathVariable id: Long,
+        @RequestBody request: com.parkingplus.auth.MfaConfirmRequest,
+        authentication: Authentication
+    ): ResponseEntity<String> {
         val authUserId = authentication.details as? Long
         if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } && authUserId != id) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()

@@ -105,5 +105,18 @@ class ParkingHistoryController(
         @RequestParam period: AggregationPeriod
     ): ResponseEntity<RevenueStatsResponseDTO> {
         return ResponseEntity.ok(parkingHistoryService.getRevenueStatistics(date, period))
+    @GetMapping("/average-stay")
+    fun getAverageStayStats(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
+        @RequestParam period: AggregationPeriod
+    ): ResponseEntity<AverageStayResponseDTO> {
+        return ResponseEntity.ok(parkingHistoryService.getAverageStayStatistics(date, period))
+    }
+    @GetMapping("/ranking")
+    fun getSpaceRanking(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
+        @RequestParam floor: ParkingFloor
+    ): ResponseEntity<ParkingSpaceRankingResponseDTO> {
+        return ResponseEntity.ok(parkingHistoryService.getSpaceRanking(date, floor))
     }
 }

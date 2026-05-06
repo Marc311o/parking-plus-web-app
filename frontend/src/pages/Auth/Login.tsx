@@ -121,7 +121,7 @@ const Login = () => {
         setVerifyError("");
 
         try {
-            const response = await fetch(`${API_URL}/api/auth/verify-mfa`, {
+            const response = await fetch(`${API_URL}/auth/verify-mfa`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -154,7 +154,7 @@ const Login = () => {
 
 
     async function login(email: string, password: string) {
-        const response = await fetch(`${API_URL}/api/auth/login`, {
+        const response = await fetch(`${API_URL}/auth/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
