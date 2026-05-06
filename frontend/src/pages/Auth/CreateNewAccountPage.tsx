@@ -41,7 +41,6 @@ const CreateNewAccountPage = () => {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
 
-        // ustawianie wartości
         switch (name) {
             case "name":
                 setName(value);
