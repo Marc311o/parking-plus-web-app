@@ -99,6 +99,12 @@ class ParkingHistoryController(
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/revenue-stats")
+    fun getRevenueStats(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
+        @RequestParam period: AggregationPeriod
+    ): ResponseEntity<RevenueStatsResponseDTO> {
+        return ResponseEntity.ok(parkingHistoryService.getRevenueStatistics(date, period))
     @GetMapping("/average-stay")
     fun getAverageStayStats(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
