@@ -1,10 +1,22 @@
+export type CarType =
+    | 'REGULAR_ABLEBODIED'
+    | 'REGULAR_HANDICAPED'
+    | 'EV_ABLEBODIED'
+    | 'EV_HANDICAPED';
+
+
 export interface ClientDTO {
     id: number;
     name: string;
     surname: string;
     email: string;
-    isOperator: boolean;
-    isMfaEnabled: boolean;
+}
+
+export interface VehicleDTO {
+    id: number;
+    licensePlate: string;
+    carType: string;
+    ownerId: number;
 }
 
 export interface PageResponse<T> {
@@ -19,17 +31,6 @@ export interface GetClientsParams {
     page: number;
     size: number;
     search?: string;
-}
-
-export type CarType =
-    | 'REGULAR_ABLEBODIED'
-    | 'REGULAR_HANDICAPED'
-    | 'EV_ABLEBODIED'
-    | 'EV_HANDICAPED';
-
-export interface VehicleDTO {
-    id: number | null;
-    licensePlate: string;
-    ownerId: number;
-    carType: CarType;
+    sortBy?: string;
+    sortDir?: 'asc' | 'desc';
 }

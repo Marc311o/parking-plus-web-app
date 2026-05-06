@@ -4,8 +4,6 @@ import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import {useIntl} from 'react-intl';
 import {useEffect, useState} from 'react';
 
-// TODO: BACKEND WILL ADD SORTING AND OPTION TO CHOOSE ONLY CLIENTS!!
-
 interface ClientsFilterCardProps {
     search: string;
     sortBy: string;
@@ -20,18 +18,24 @@ const ClientsFilterCard = ({
                                onSortChange,
                            }: ClientsFilterCardProps) => {
     const {formatMessage} = useIntl();
+
     const [localSearch, setLocalSearch] = useState(search);
+    const [localSortBy, setLocalSortBy] = useState(sortBy || 'nameAsc');
 
     useEffect(() => {
         setLocalSearch(search);
     }, [search]);
+
+    useEffect(() => {
+        setLocalSortBy(sortBy || 'nameAsc');
+    }, [sortBy]);
 
     const handleSearchSubmit = () => {
         onSearchChange(localSearch);
     };
 
     const handleSortSubmit = () => {
-        onSortChange(sortBy || 'nameAsc');
+        onSortChange(localSortBy);
     };
 
     return (
@@ -120,8 +124,8 @@ const ClientsFilterCard = ({
                     fullWidth
                     size="small"
                     label={formatMessage({id: 'navbar.clients.filters.sortLabel'})}
-                    value={sortBy || 'nameAsc'}
-                    onChange={(event) => onSortChange(event.target.value)}
+                    value={localSortBy}
+                    onChange={(event) => setLocalSortBy(event.target.value)}
                     variant="outlined"
                     sx={{
                         '& .MuiOutlinedInput-root': {

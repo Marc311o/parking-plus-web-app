@@ -12,13 +12,27 @@ import ListView, {type ListViewColumn} from '@components/Common/ListView';
 import ClientVehiclesDialog from '@components/Clients/ClientVehiclesDialog';
 import {getClientVehicles, getClients, type ClientDTO, type VehicleDTO} from '@api/Clients';
 
+const mapSortOption = (sortBy: string): {sortBy: string; sortDir: 'asc' | 'desc'} => {
+    switch (sortBy) {
+        case 'nameDesc':
+            return {sortBy: 'name', sortDir: 'desc'};
+        case 'emailAsc':
+            return {sortBy: 'email', sortDir: 'asc'};
+        case 'emailDesc':
+            return {sortBy: 'email', sortDir: 'desc'};
+        case 'nameAsc':
+        default:
+            return {sortBy: 'name', sortDir: 'asc'};
+    }
+};
+
 export default function ClientsPage() {
     const {formatMessage} = useIntl();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const page = Number(searchParams.get('page') ?? 0);
     const search = searchParams.get('search') ?? '';
-    const sortBy = searchParams.get('sortBy') ?? 'nameAsc';
+    const sortOption = searchParams.get('sortBy') ?? 'nameAsc';
 
     const [clients, setClients] = useState<ClientDTO[]>([]);
     const [size] = useState(10);
@@ -46,25 +60,6 @@ export default function ClientsPage() {
         },
     ], []);
 
-    const sortedClients = useMemo(() => {
-        return [...clients].sort((a, b) => {
-            const fullNameA = `${a.name} ${a.surname}`;
-            const fullNameB = `${b.name} ${b.surname}`;
-
-            switch (sortBy) {
-                case 'nameDesc':
-                    return fullNameB.localeCompare(fullNameA);
-                case 'emailAsc':
-                    return a.email.localeCompare(b.email);
-                case 'emailDesc':
-                    return b.email.localeCompare(a.email);
-                case 'nameAsc':
-                default:
-                    return fullNameA.localeCompare(fullNameB);
-            }
-        });
-    }, [clients, sortBy]);
-
     useEffect(() => {
         let isMounted = true;
 
@@ -72,11 +67,23 @@ export default function ClientsPage() {
             setIsLoading(true);
             setClientsError(null);
 
+            const mappedSort = mapSortOption(sortOption);
+
+            console.log('fetch clients params:', {
+                page,
+                size,
+                search,
+                sortOption,
+                mappedSort,
+            });
+
             try {
                 const result = await getClients({
                     page,
                     size,
                     search,
+                    sortBy: mappedSort.sortBy,
+                    sortDir: mappedSort.sortDir,
                 });
 
                 if (!isMounted) {
@@ -105,7 +112,7 @@ export default function ClientsPage() {
         return () => {
             isMounted = false;
         };
-    }, [page, size, search, formatMessage]);
+    }, [page, size, search, sortOption, formatMessage]);
 
     const setPage = (nextPage: number) => {
         const nextParams = new URLSearchParams(searchParams);
@@ -157,7 +164,7 @@ export default function ClientsPage() {
             )}
 
             <ListView
-                items={sortedClients}
+                items={clients}
                 isLoading={isLoading}
                 emptyMessage={formatMessage({id: 'clients.list.empty'})}
                 getIcon={() => (
