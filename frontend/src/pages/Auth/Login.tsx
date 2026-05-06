@@ -17,9 +17,6 @@ const Login = () => {
     const {formatMessage} = useIntl();
 
     const setToken = useAuthStore((state) => state.setToken);
-    const logout = useAuthStore((state) => state.logout);
-
-    const [showPassword, setShowPassword] = useState(false);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

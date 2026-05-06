@@ -12,9 +12,6 @@ import { createNewAccount } from "@api/Login/auth";
 const CreateNewAccountPage = () => {
     const {formatMessage} = useIntl();
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-
     const [error, setError] = useState("");
 
     const [loading, setLoading] = useState(false);
