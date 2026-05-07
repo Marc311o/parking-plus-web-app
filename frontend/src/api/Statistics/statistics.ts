@@ -8,6 +8,7 @@ import type {
     ParkingSpaceRankingResponse,
     RevenuePeriod,
     RevenueResponse,
+    ParkingSpaceTimelineResponse
 } from './types';
 
 export const getEntriesStats = async (
@@ -116,6 +117,33 @@ export const getParkingSpaceRanking = async (
 
         throw new Error(
             `Failed to fetch parking space ranking. Status: ${response.status}. Body: ${body}`
+        );
+    }
+
+    return response.json();
+};
+
+export const getParkingSpaceTimeline = async (
+    id: string,
+    date: string
+): Promise<ParkingSpaceTimelineResponse> => {
+    const params = new URLSearchParams();
+
+    params.set('date', date);
+
+    const response = await fetch(
+        `${API_URL}/parking-spaces/${id}/timeline?${params.toString()}`,
+        {
+            method: 'GET',
+            headers: getHeaders(),
+        }
+    );
+
+    if (!response.ok) {
+        const body = await response.text();
+
+        throw new Error(
+            `Failed to fetch parking space timeline ${id}. Status: ${response.status}. Body: ${body}`
         );
     }
 

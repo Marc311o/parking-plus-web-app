@@ -68,30 +68,6 @@ const getStartOfCurrentMonth = () => {
     return new Date(today.getFullYear(), today.getMonth(), 1, 12, 0, 0, 0);
 };
 
-const createMockSpaceRanking = (
-    date: string,
-    floor: ParkingFloor
-): ParkingSpaceRankingResponse => {
-    const dateSeed = Number(date.replaceAll('-', '')) % 7;
-
-    const points = Array.from({length: 28}, (_, index) => {
-        const spaceNumber = index + 1;
-        const baseValue = 34 - index;
-        const randomLikeOffset = (index * 7 + dateSeed) % 9;
-
-        return {
-            spaceId: `${floor}${spaceNumber}`,
-            value: Math.max(3, baseValue + randomLikeOffset),
-        };
-    }).sort((firstPoint, secondPoint) => secondPoint.value - firstPoint.value);
-
-    return {
-        floor,
-        total: points.reduce((sum, point) => sum + point.value, 0),
-        points,
-    };
-};
-
 const ParkingStatisticsPage = () => {
     const {formatMessage} = useIntl();
 
