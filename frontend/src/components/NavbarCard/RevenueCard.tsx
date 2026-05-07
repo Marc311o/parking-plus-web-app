@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Paper, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
-import {getDailyRevenue} from '@api/parkingHistory';
+import {getDailyRevenue} from '@api/ParkingHistory';
 
 const getLocalDate = () => {
     const now = new Date();
