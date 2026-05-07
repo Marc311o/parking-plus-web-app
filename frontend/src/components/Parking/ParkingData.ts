@@ -1,4 +1,4 @@
-import type {ParkingLevel, ParkingSpot} from '@api/types.ts';
+import type {ParkingLevel, ParkingSpot} from '@api/Dashboard/types.ts';
 
 export type SpotOrientation = 'left' | 'bottom' | 'middleTop' | 'middleBottom';
 const middleStartX = 250;
@@ -46,39 +46,4 @@ const createLevelLayout = (level: ParkingLevel): ParkingSpotLayout[] => {
 export const parkingLayoutByLevel: Record<ParkingLevel, ParkingSpotLayout[]> = {
     A: createLevelLayout('A'),
     B: createLevelLayout('B'),
-};
-
-const createMockParkingSpots = (level: ParkingLevel): ParkingSpot[] => {
-    const specialConfig: Partial<Record<string, Partial<ParkingSpot>>> = {
-        [`${level}01`]: {spaceType: 'REGULAR_HANDICAPED'},
-        [`${level}02`]: {spaceType: 'REGULAR_HANDICAPED'},
-        [`${level}07`]: {spaceType: 'EV_ABLEBODIED'},
-        [`${level}08`]: {spaceType: 'EV_ABLEBODIED'},
-        [`${level}13`]: {spaceType: 'REGULAR_HANDICAPED'},
-        [`${level}14`]: {spaceType: 'REGULAR_HANDICAPED'},
-        [`${level}18`]: {spaceType: 'EV_HANDICAPED'},
-        [`${level}19`]: {spaceType: 'EV_ABLEBODIED'},
-        [`${level}24`]: {spaceType: 'REGULAR_BOTH'},
-        [`${level}27`]: {spaceType: 'EV_BOTH'},
-
-        [`${level}03`]: {status: 'occupied'},
-        [`${level}05`]: {status: 'reserved'},
-        [`${level}09`]: {status: 'occupied'},
-        [`${level}17`]: {status: 'occupied'},
-        [`${level}21`]: {status: 'reserved'},
-        [`${level}25`]: {status: 'occupied'},
-    };
-
-    return parkingLayoutByLevel[level].map(({id}) => ({
-        id,
-        label: id,
-        status: 'available',
-        spaceType: 'REGULAR_ABLEBODIED',
-        ...specialConfig[id],
-    }));
-};
-
-export const mockParkingSpotsByLevel: Record<ParkingLevel, ParkingSpot[]> = {
-    A: createMockParkingSpots('A'),
-    B: createMockParkingSpots('B'),
 };

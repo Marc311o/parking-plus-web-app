@@ -1,7 +1,7 @@
 import {Box, ButtonBase, Stack, Typography} from '@mui/material';
 import AccessibleRoundedIcon from '@mui/icons-material/AccessibleRounded';
 import ElectricBoltRoundedIcon from '@mui/icons-material/ElectricBoltRounded';
-import type {ParkingSpotStatus, SpaceType} from '@api/types.ts';
+import type {ParkingSpotStatus, SpaceType} from '@api/Dashboard/types.ts';
 import type {SpotOrientation} from './ParkingData';
 
 type ParkingSpotVariant = 'dashboard' | 'statistics';

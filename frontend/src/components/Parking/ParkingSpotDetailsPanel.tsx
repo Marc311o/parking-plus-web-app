@@ -1,6 +1,6 @@
 import {Box, Paper, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
-import type {ParkingSpotDetails} from '@api/types';
+import type {ParkingSpotDetails} from '@api/Dashboard/types';
 
 interface ParkingSpotDetailsPanelProps {
     details: ParkingSpotDetails | null;
