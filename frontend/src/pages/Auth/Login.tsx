@@ -173,7 +173,6 @@ const Login = () => {
                          }}
                     >
 
-                        {verifyError && <Alert severity="error">{verifyError}</Alert>}
 
                         <Stack
                             spacing={2}
@@ -183,6 +182,12 @@ const Login = () => {
                                 width: 350,
                             }}
                         >
+
+                            {verifyError && (
+                                <Alert severity="error" sx={{ width: "100%" }}>
+                                    {error}
+                                </Alert>
+                            )}
 
                             <AuthDefaultField
                                 name="totpCode"
@@ -281,7 +286,11 @@ const Login = () => {
                         }}
                     >
 
-                        {error && <Alert severity="error">{error}</Alert>}
+                        {error && (
+                            <Alert severity="error" sx={{ width: "100%" }}>
+                                {error}
+                            </Alert>
+                        )}
 
                         <AuthDefaultField
                             name={"email"}
