@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Box, Paper, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
-import type {ParkingLevel} from '@api/types';
+import type {ParkingLevel} from '@api/Dashboard/types';
 import {getParkingSpaceTimeline} from '@api/Statistics';
 import type {ParkingSpaceTimelineResponse} from '@api/Statistics';
 import {ParkingMap} from '@components/Parking';
