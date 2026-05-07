@@ -15,7 +15,7 @@ export interface ClientDTO {
 export interface VehicleDTO {
     id: number;
     licensePlate: string;
-    carType: string;
+    carType: CarType;
     ownerId: number;
 }
 
