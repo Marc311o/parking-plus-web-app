@@ -1,4 +1,78 @@
 {
+  "logins": {
+    "login": {
+      "title": "ZALOGUJ SIĘ",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "passwordForgot": "Nie pamiętam hasła",
+      "loginButton": "Zaloguj",
+      "newAccButton": "Załóż konto"
+    },
+    "2fa": {
+      "title": "WERYFIKACJA 2FA",
+      "description": "Wpisz kod z aplikacji Authenticator",
+      "codeLabel": "Kod 2FA",
+      "codePlaceholder": "6-cyfrowy kod",
+      "verifyButton": "Weryfikuj",
+      "backButton": "Wróć"
+    },
+    "createNewAccount": {
+      "title": "ZAŁÓŻ KONTO",
+      "firstNameLabel": "Imię",
+      "firstNamePlaceholder": "Imię",
+      "lastNameLabel": "Nazwisko",
+      "lastNamePlaceholder": "Nazwisko",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "createButton": "Utwórz konto",
+      "backButton": "Wróć"
+    },
+    "resetPassword": {
+      "title": "RESET HASŁA",
+      "passwordLabel": "Nowe hasło",
+      "passwordPlaceholder": "Nowe hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "verifyButton": "Weryfikuj",
+      "resetButton": "Resetowanie ...",
+      "backButton": "Wróć",
+      "success": "Hasło zostało zmienione poprawnie"
+    },
+    "forgotPassword": {
+      "title": "RESET HASŁA",
+      "description": "Wpisz swój adres e-mail, aby zresetować hasło",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "resetButton": "Zresetuj hasło",
+      "sendingButton": "Wysyłanie ...",
+      "backButton": "Wróć",
+      "success": "Jeśli konto istnieje, link do resetu został wysłany"
+    },
+    "errors": {
+      "auth": {
+        "invalidCredentials": "Niepoprawny e-mail lub hasło",
+        "mfaFailed": "Błąd logowania",
+        "emailTaken": "Na podany e-mail jest już założone inne konto!",
+        "forgotPasswordFailed": "Błąd wysyłania",
+        "resetTokenInvalid": "Token jest nieprawidłowy lub wygasł",
+        "emptyFields": "Wszystkie pola muszą być wypełnione",
+        "invalidCode": "Niepoprawny kod 2FA!",
+        "invalidEmail": "Niepoprawny adres e-mail",
+        "passwordTooShort": "Hasło powinno mieć min. 6 znaków",
+        "passwordsNotMatch": "Hasła nie są identyczne",
+        "unknown": "Wystąpił nieznany błąd",
+        "emailRequired": "Uzupełnij adres email",
+        "sendEmailFailed": "Nie udało się wysłać maila",
+        "missingToken": "Brak tokenu resetującego"
+      }
+    }
+  },
   "common": {
     "lackOfData": "Brak danych"
   },

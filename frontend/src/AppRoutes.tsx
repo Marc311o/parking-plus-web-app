@@ -13,10 +13,14 @@ import CreateNewAccount from '@pages/Auth/CreateNewAccountPage';
 import ForgotPassword from '@pages/Auth/ForgotPasswordPage';
 import ResetPassword from '@pages/Auth/ResetPasswordPage';
 import {ProtectedRoute} from "./login/ProtectedRoute.tsx";
+import {useAuthStore} from "@store/useAuthStore.tsx";
 
 
 const AppRoutes = () => {
     //TODO: Implement separate pages and layouts depending on user role (admin, client)
+
+    const isAuthenticated = useAuthStore((state) => state.token !== null);
+
     return (
         <Routes>
 
@@ -45,6 +49,16 @@ const AppRoutes = () => {
                     <Route path="settings" element={<SettingsPage/>}/>
                 </Route>
             </Route>
+
+            {/*DEFAULT*/}
+            <Route
+                path="/"
+                element={
+                    <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
+                }
+            />
+            <Route path="*" element={<Navigate to="/" replace/>}/>
+
         </Routes>
     );
 };
