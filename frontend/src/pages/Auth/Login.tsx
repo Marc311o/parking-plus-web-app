@@ -185,7 +185,7 @@ const Login = () => {
 
                             {verifyError && (
                                 <Alert severity="error" sx={{ width: "100%" }}>
-                                    {error}
+                                    {verifyError}
                                 </Alert>
                             )}
 
