@@ -1,4 +1,4 @@
-import type {ParkingLevel, ParkingSpot} from '@api/Dashboard/types.ts';
+import type {ParkingLevel} from '@api/Dashboard/types.ts';
 
 export type SpotOrientation = 'left' | 'bottom' | 'middleTop' | 'middleBottom';
 const middleStartX = 250;
