@@ -69,14 +69,6 @@ export default function ClientsPage() {
 
             const mappedSort = mapSortOption(sortOption);
 
-            console.log('fetch clients params:', {
-                page,
-                size,
-                search,
-                sortOption,
-                mappedSort,
-            });
-
             try {
                 const result = await getClients({
                     page,

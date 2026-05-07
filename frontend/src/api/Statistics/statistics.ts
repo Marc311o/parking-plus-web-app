@@ -4,6 +4,8 @@ import type {
     AverageStayResponse,
     EntriesPeriod,
     EntriesResponse,
+    ParkingFloor,
+    ParkingSpaceRankingResponse,
     RevenuePeriod,
     RevenueResponse,
 } from './types';
@@ -86,6 +88,34 @@ export const getAverageStayStats = async (
 
         throw new Error(
             `Failed to fetch average stay stats. Status: ${response.status}. Body: ${body}`
+        );
+    }
+
+    return response.json();
+};
+
+export const getParkingSpaceRanking = async (
+    date: string,
+    floor: ParkingFloor
+): Promise<ParkingSpaceRankingResponse> => {
+    const params = new URLSearchParams();
+
+    params.set('date', date);
+    params.set('floor', floor);
+
+    const response = await fetch(
+        `${API_URL}/parking-history/ranking?${params.toString()}`,
+        {
+            method: 'GET',
+            headers: getHeaders(),
+        }
+    );
+
+    if (!response.ok) {
+        const body = await response.text();
+
+        throw new Error(
+            `Failed to fetch parking space ranking. Status: ${response.status}. Body: ${body}`
         );
     }
 

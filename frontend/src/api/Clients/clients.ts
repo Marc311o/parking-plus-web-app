@@ -34,7 +34,7 @@ export const getClients = async ({
 };
 
 export const getClientVehicles = async (clientId: number): Promise<VehicleDTO[]> => {
-    const response = await fetch(`${API_URL}/vehicles/user/${clientId}`, {
+    const response = await fetch(`${API_URL}/vehicles/owner/${clientId}`, {
         method: 'GET',
         headers: getHeaders(),
     });

@@ -17,6 +17,7 @@ import {
     getEntriesStats,
     type ParkingFloor,
     type ParkingSpaceRankingResponse,
+    getParkingSpaceRanking,
     type RevenuePeriod,
     getRevenueStats,
     type RevenueResponse,
@@ -250,37 +251,34 @@ const ParkingStatisticsPage = () => {
             return;
         }
 
-        // Docelowo backend:
-        //
-        // const fetchSpaceRanking = async () => {
-        //     try {
-        //         const response = await fetch(
-        //             `/api/statistics/parking/space-ranking?date=${selectedSpaceRankingDate}&floor=${selectedSpaceRankingFloor}`
-        //         );
-        //
-        //         if (!response.ok) {
-        //             throw new Error('Failed to fetch parking space ranking');
-        //         }
-        //
-        //         const data: ParkingSpaceRankingResponse = await response.json();
-        //
-        //         setSpaceRankingData(data);
-        //     } catch (error) {
-        //         console.error(error);
-        //         setSpaceRankingData(
-        //             createMockSpaceRanking(
-        //                 selectedSpaceRankingDate,
-        //                 selectedSpaceRankingFloor
-        //             )
-        //         );
-        //     }
-        // };
-        //
-        // fetchSpaceRanking();
+        let isMounted = true;
 
-        setSpaceRankingData(
-            createMockSpaceRanking(selectedSpaceRankingDate, selectedSpaceRankingFloor)
-        );
+        const fetchSpaceRanking = async () => {
+            try {
+                const data = await getParkingSpaceRanking(
+                    selectedSpaceRankingDate,
+                    selectedSpaceRankingFloor
+                );
+
+                if (!isMounted) {
+                    return;
+                }
+
+                setSpaceRankingData(data);
+            } catch (error) {
+                console.error('Failed to fetch parking space ranking:', error);
+
+                if (!isMounted) {
+                    return;
+                }
+            }
+        };
+
+        void fetchSpaceRanking();
+
+        return () => {
+            isMounted = false;
+        };
     }, [expandedStatistic, selectedSpaceRankingDate, selectedSpaceRankingFloor]);
 
     const handleEntriesPeriodChange = (period: EntriesPeriod) => {
