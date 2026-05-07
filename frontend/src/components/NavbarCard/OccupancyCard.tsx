@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {Box, Paper, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
-import {getParkingSpaceOccupancy} from '@api/parkingSpaces';
+import {getParkingSpaceOccupancy} from '@api/ParkingSpaces';
 
 const OccupancyCard = () => {
     const {formatMessage} = useIntl();
