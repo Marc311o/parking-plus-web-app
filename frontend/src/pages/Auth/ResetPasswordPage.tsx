@@ -23,6 +23,8 @@ const ResetPasswordPage = () => {
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
     const [passwordRepeatEmptyError, setPasswordRepeatEmptyError] = useState(false);
 
+    const [success, setSuccess] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -64,8 +66,12 @@ const ResetPasswordPage = () => {
 
             await resetPassword(token, password);
 
-            alert(formatMessage({ id: 'logins.resetPassword.success' }));
-            navigate("/login");
+            setSuccess(true);
+            setError("");
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
 
         } catch (err) {
             if (err instanceof Error) {
@@ -152,6 +158,12 @@ const ResetPasswordPage = () => {
                         {error && (
                             <Alert severity="error" sx={{ width: "100%" }}>
                                 {error}
+                            </Alert>
+                        )}
+
+                        {success && (
+                            <Alert severity="success" sx={{ width: "100%" }}>
+                                {formatMessage({ id: 'logins.resetPassword.success' })}
                             </Alert>
                         )}
 
