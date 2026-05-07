@@ -5,6 +5,7 @@ import {Alert, Box, Stack, Typography} from "@mui/material";
 import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
 import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 import { resetPassword  } from "@api/Login/auth";
+import QuestionMark from '@assets/questionMark.svg';
 
 
 const ResetPasswordPage = () => {
@@ -123,6 +124,13 @@ const ResetPasswordPage = () => {
                 >
                     {formatMessage({ id: 'logins.resetPassword.title' })}
                 </Typography>
+
+                <Box
+                    component="img"
+                    src={QuestionMark}
+                    alt="Question Mark"
+                    sx={{width: '100%', maxWidth: 150, mt: 5,}}
+                />
 
                 <Box component="form" onSubmit={handleResetPassword}
                      sx={{
