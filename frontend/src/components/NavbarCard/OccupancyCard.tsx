@@ -1,13 +1,37 @@
-import { Box, Paper, Typography } from '@mui/material';
-import { useIntl } from 'react-intl';
+import {useEffect, useState} from 'react';
+import {Box, Paper, Typography} from '@mui/material';
+import {useIntl} from 'react-intl';
+import {getParkingSpaceOccupancy} from '@api/ParkingSpaces';
 
 const OccupancyCard = () => {
-    const { formatMessage } = useIntl();
+    const {formatMessage} = useIntl();
 
-    //TODO: replace with real data from API
-    const occupied = 32;
-    const total = 50;
-    const progress = occupied / total;
+    const [occupied, setOccupied] = useState(0);
+    const [total, setTotal] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchOccupancy = async () => {
+            try {
+                setIsLoading(true);
+
+                const stats = await getParkingSpaceOccupancy();
+
+                setOccupied(stats.occupied);
+                setTotal(stats.total);
+            } catch (error) {
+                console.error('Failed to fetch parking occupancy:', error);
+                setOccupied(0);
+                setTotal(0);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchOccupancy();
+    }, []);
+
+    const progress = total > 0 ? occupied / total : 0;
     const progressPercent = Math.max(0, Math.min(progress * 100, 100));
 
     return (
@@ -85,7 +109,7 @@ const OccupancyCard = () => {
                             mb: 0.4,
                         }}
                     >
-                        {occupied}/{total}
+                        {isLoading ? '...' : `${occupied}/${total}`}
                     </Typography>
 
                     <Typography
@@ -96,7 +120,7 @@ const OccupancyCard = () => {
                             lineHeight: 1.1,
                         }}
                     >
-                        {formatMessage({ id: 'navbar.occupancy.label' })}
+                        {formatMessage({id: 'navbar.occupancy.label'})}
                     </Typography>
                 </Box>
             </Box>

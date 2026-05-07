@@ -1,5 +1,5 @@
 import {Box, ButtonBase, Typography} from '@mui/material';
-import type {ParkingLevel} from '@api/types.ts';
+import type {ParkingLevel} from '@api/Dashboard/types.ts';
 
 type ParkingLevelSwitchVariant = 'dashboard' | 'statistics';
 

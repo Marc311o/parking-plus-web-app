@@ -1,8 +1,8 @@
 package com.parkingplus.parkinghistory
 
 enum class ParkingFloor(val level: Int) {
-    A(1),
-    B(2)
+    A(0),
+    B(1)
 }
 
 data class ParkingSpaceRankingPointDTO(
