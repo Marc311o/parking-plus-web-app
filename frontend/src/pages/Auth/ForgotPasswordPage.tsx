@@ -18,6 +18,8 @@ const ForgotPasswordPage = () => {
 
     const [emailEmptyError, setEmailEmptyError] = useState(false);
 
+    const [success, setSuccess] = useState(false);
+
     const navigate = useNavigate();
 
     const handleBack = () => {
@@ -26,6 +28,10 @@ const ForgotPasswordPage = () => {
 
     const handleSendEmail = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        setEmailEmptyError(false);
+        setError("");
+        setSuccess(false);
 
         if (!email.trim()) {
             setError(formatMessage({ id: 'logins.errors.auth.emailRequired' }))
@@ -38,8 +44,12 @@ const ForgotPasswordPage = () => {
 
             await forgotPassword(email);
 
-            alert(formatMessage({ id: 'logins.forgotPassword.success' }));
-            navigate("/login");
+            setSuccess(true);
+            setError("");
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
 
         } catch (err) {
             setError(formatMessage({ id: 'logins.errors.auth.sendEmailFailed' }))
@@ -121,6 +131,12 @@ const ForgotPasswordPage = () => {
                     {error && (
                         <Alert severity="error" sx={{ width: "100%" }}>
                             {error}
+                        </Alert>
+                    )}
+
+                    {success && (
+                        <Alert severity="success" sx={{ width: "100%" }}>
+                            {formatMessage({ id: "logins.forgotPassword.success" })}
                         </Alert>
                     )}
 
