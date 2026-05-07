@@ -64,7 +64,7 @@ const ResetPasswordPage = () => {
 
             await resetPassword(token, password);
 
-            alert(formatMessage({ id: 'logins.errors.resetPassword.success' }));
+            alert(formatMessage({ id: 'logins.resetPassword.success' }));
             navigate("/login");
 
         } catch (err) {
