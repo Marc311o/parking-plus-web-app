@@ -149,7 +149,11 @@ const ResetPasswordPage = () => {
                         }}
                     >
 
-                        {error && <Alert severity="error">{error}</Alert>}
+                        {error && (
+                            <Alert severity="error" sx={{ width: "100%" }}>
+                                {error}
+                            </Alert>
+                        )}
 
                         {/* password */}
                         <AuthPasswordField
