@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react';
 import {Box, Paper, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
-import type {ParkingLevel} from '@api/types';
+import type {ParkingLevel} from '@api/Dashboard/types';
+import {getParkingSpaceTimeline} from '@api/Statistics';
+import type {ParkingSpaceTimelineResponse} from '@api/Statistics';
 import {ParkingMap} from '@components/Parking';
 import {
     ParkingSpaceTimeline,
-    type ParkingSpaceTimelineResponse,
 } from '@components/Statistics';
 
 const toIsoDate = (date: Date) => {
@@ -16,28 +17,6 @@ const toIsoDate = (date: Date) => {
     return `${year}-${month}-${day}`;
 };
 
-const createMockSpaceTimeline = (
-    spaceId: string,
-    date: string
-): ParkingSpaceTimelineResponse => {
-    return {
-        spaceId,
-        date,
-        items: [
-            {
-                status: 'OCCUPIED',
-                from: '07:10',
-                to: '09:25',
-            },
-            {
-                status: 'RESERVED',
-                from: '19:05',
-                to: '20:55',
-            },
-        ],
-    };
-};
-
 const ParkingSpacesStatisticsPage = () => {
     const {formatMessage} = useIntl();
 
@@ -46,6 +25,7 @@ const ParkingSpacesStatisticsPage = () => {
     const [selectedSpaceId, setSelectedSpaceId] = useState<string | null>(null);
     const [timelineData, setTimelineData] =
         useState<ParkingSpaceTimelineResponse | null>(null);
+    const [isTimelineLoading, setIsTimelineLoading] = useState(false);
 
     useEffect(() => {
         if (!selectedSpaceId) {
@@ -53,30 +33,40 @@ const ParkingSpacesStatisticsPage = () => {
             return;
         }
 
-        // TUTAJ BĘDZIE FETCH DO BACKENDU:
-        //
-        // const fetchSpaceTimeline = async () => {
-        //     try {
-        //         const response = await fetch(
-        //             `/api/statistics/parking/spaces/${selectedSpaceId}/timeline?date=${selectedDate}`
-        //         );
-        //
-        //         if (!response.ok) {
-        //             throw new Error('Failed to fetch parking space timeline');
-        //         }
-        //
-        //         const data: ParkingSpaceTimelineResponse = await response.json();
-        //
-        //         setTimelineData(data);
-        //     } catch (error) {
-        //         console.error(error);
-        //         setTimelineData(createMockSpaceTimeline(selectedSpaceId, selectedDate));
-        //     }
-        // };
-        //
-        // fetchSpaceTimeline();
+        let isMounted = true;
 
-        setTimelineData(createMockSpaceTimeline(selectedSpaceId, selectedDate));
+        const fetchSpaceTimeline = async () => {
+            setIsTimelineLoading(true);
+
+            try {
+                const data = await getParkingSpaceTimeline(
+                    selectedSpaceId,
+                    selectedDate
+                );
+
+                if (!isMounted) {
+                    return;
+                }
+
+                setTimelineData(data);
+            } catch (error) {
+                console.error('Failed to fetch parking space timeline:', error);
+
+                if (isMounted) {
+                    setTimelineData(null);
+                }
+            } finally {
+                if (isMounted) {
+                    setIsTimelineLoading(false);
+                }
+            }
+        };
+
+        void fetchSpaceTimeline();
+
+        return () => {
+            isMounted = false;
+        };
     }, [selectedSpaceId, selectedDate]);
 
     return (
@@ -109,12 +99,19 @@ const ParkingSpacesStatisticsPage = () => {
                     }}
                 />
             </Box>
+
             {selectedSpaceId && timelineData ? (
-                <ParkingSpaceTimeline
-                    data={timelineData}
-                    selectedDate={selectedDate}
-                    onDateChange={setSelectedDate}
-                />
+                <Box
+                    sx={{
+                        opacity: isTimelineLoading ? 0.7 : 1,
+                    }}
+                >
+                    <ParkingSpaceTimeline
+                        data={timelineData}
+                        selectedDate={selectedDate}
+                        onDateChange={setSelectedDate}
+                    />
+                </Box>
             ) : (
                 <Paper
                     elevation={0}
@@ -135,7 +132,9 @@ const ParkingSpacesStatisticsPage = () => {
                             mb: 0.6,
                         }}
                     >
-                        {formatMessage({id: 'statistics.parkingSpaces.noSpaceSelectedTitle'})}
+                        {selectedSpaceId && isTimelineLoading
+                            ? 'Ładowanie danych miejsca...'
+                            : formatMessage({id: 'statistics.parkingSpaces.noSpaceSelectedTitle'})}
                     </Typography>
 
                     <Typography
@@ -145,7 +144,9 @@ const ParkingSpacesStatisticsPage = () => {
                             fontWeight: 600,
                         }}
                     >
-                        {formatMessage({id: 'statistics.parkingSpaces.noSpaceSelectedDescription'})}
+                        {selectedSpaceId && isTimelineLoading
+                            ? 'Pobieram oś czasu dla wybranego miejsca parkingowego.'
+                            : formatMessage({id: 'statistics.parkingSpaces.noSpaceSelectedDescription'})}
                     </Typography>
                 </Paper>
             )}

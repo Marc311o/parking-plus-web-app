@@ -21,12 +21,12 @@ export interface ParkingSpotOccupantDetails {
     ownerId: string;
     ownerName: string;
     ownerEmail: string;
-    ownerPhone: string;
+    ownerPhone: string | null;
     vehiclePlate: string;
     entryTime: string;
-    parkingDuration: string;
-    amountDue: string;
-    imageUrl?: string;
+    parkingDurationSec: number;
+    amountDue: number;
+    imageUrl: string | null;
 }
 
 export interface ParkingSpotDetails {
@@ -34,5 +34,5 @@ export interface ParkingSpotDetails {
     type: SpaceType;
     status: ParkingSpaceStatus;
     level: number;
-    occupant?: ParkingSpotOccupantDetails;
+    occupant: ParkingSpotOccupantDetails | null;
 }

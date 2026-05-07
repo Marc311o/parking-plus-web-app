@@ -1,2 +1,2 @@
-export * from './types.ts';
-export * from './parkingSpaces.ts';
+export * from './types';
+export * from './parkingSpaces';

@@ -1,10 +1,40 @@
+import {useEffect, useState} from 'react';
 import {Paper, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
+import {getDailyRevenue} from '@api/ParkingHistory';
+
+const getLocalDate = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
 
 const RevenueCard = () => {
     const {formatMessage} = useIntl();
+    const [value, setValue] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const value = 650;
+    useEffect(() => {
+        const fetchDailyRevenue = async () => {
+            try {
+                setIsLoading(true);
+                const today = getLocalDate();
+                const revenue = await getDailyRevenue(today);
+
+                setValue(revenue);
+            } catch (error) {
+                console.error('Failed to fetch daily revenue:', error);
+                setValue(0);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDailyRevenue();
+    }, []);
 
     return (
         <Paper
@@ -32,10 +62,12 @@ const RevenueCard = () => {
                     mb: 1.1,
                 }}
             >
-                {formatMessage(
-                    {id: 'navbar.revenue.value'},
-                    {value: value.toFixed(2).replace('.', ',')}
-                )}
+                {isLoading
+                    ? '...'
+                    : formatMessage(
+                        {id: 'navbar.revenue.value'},
+                        {value: value.toFixed(2).replace('.', ',')}
+                    )}
             </Typography>
 
             <Typography

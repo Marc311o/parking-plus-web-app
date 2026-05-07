@@ -6,29 +6,32 @@ import ClockCard from '../NavbarCard/ClockCard.tsx';
 import UserCard from '../NavbarCard/UserCard.tsx';
 
 const ALLOWED_SORT_BY_VALUES = ['nameAsc', 'nameDesc', 'emailAsc', 'emailDesc'] as const;
+type SortByValue = (typeof ALLOWED_SORT_BY_VALUES)[number];
 
-//ADD SORTING FROM BACKEND
+const isAllowedSortBy = (value: string | null): value is SortByValue => {
+    return ALLOWED_SORT_BY_VALUES.includes(value as SortByValue);
+};
+
 const ClientsNavbar = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const search = searchParams.get('search') ?? '';
     const sortByParam = searchParams.get('sortBy');
-    const sortBy = sortByParam && ALLOWED_SORT_BY_VALUES.includes(sortByParam as (typeof ALLOWED_SORT_BY_VALUES)[number])
-        ? sortByParam
-        : 'nameAsc';
+    const sortBy = isAllowedSortBy(sortByParam) ? sortByParam : 'nameAsc';
 
     const updateParams = (nextValues: Record<string, string>) => {
         const nextParams = new URLSearchParams(searchParams);
 
         Object.entries(nextValues).forEach(([key, value]) => {
             if (value.trim()) {
-                nextParams.set(key, value);
+                nextParams.set(key, value.trim());
             } else {
                 nextParams.delete(key);
             }
         });
 
         nextParams.set('page', '0');
+
         setSearchParams(nextParams);
     };
 
