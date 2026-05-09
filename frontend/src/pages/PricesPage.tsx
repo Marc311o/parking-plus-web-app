@@ -81,12 +81,12 @@ const buildVisualBlocks = (blocks: TariffBlock[]): TariffVisualBlock[] => {
                 previousBlock.nextHourTariffs.push(block.nextHourTariff);
             }
 
-            previousBlock.key = `${previousBlock.key}-${block.dayOfWeek}`;
+            previousBlock.key = `${previousBlock.days[0]}-${block.dayOfWeek}-${block.startHour}-${block.endHour}`;
             return;
         }
 
         visualBlocks.push({
-            key: `${block.dayOfWeek}-${block.startHour}-${block.endHour}-${firstHourPrice}-${nextHourPrice}`,
+            key: `${block.dayOfWeek}-${block.startHour}-${block.endHour}`,
             days: [block.dayOfWeek],
             startHour: block.startHour,
             endHour: block.endHour,
