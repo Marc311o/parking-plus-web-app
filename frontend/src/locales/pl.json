@@ -211,5 +211,39 @@
         "EV_HANDICAPED": "Elektryczny / niepełnosprawni"
       }
     }
+  },
+  "prices": {
+    "schedule": {
+      "days": {
+        "mondayShort": "Pn",
+        "tuesdayShort": "Wt",
+        "wednesdayShort": "Śr",
+        "thursdayShort": "Cz",
+        "fridayShort": "Pt",
+        "saturdayShort": "Sb",
+        "sundayShort": "Nd"
+      }
+    },
+    "tile": {
+      "priceValue": "{value} zł",
+      "firstHour": "Pierwsza godzina: {price}",
+      "nextHour": "Kolejna godzina: {price}",
+      "firstHourShort": "1h: {price}",
+      "nextHourShort": "2h+: {price}"
+    },
+    "editor": {
+      "editing": "Edytujesz: {days}, {startHour}:00 – {endHour}:00",
+      "firstHourLabel": "Pierwsza godzina",
+      "nextHourLabel": "Kolejna godzina",
+      "currencyShort": "zł",
+      "saveButton": "Zapisz",
+      "savingButton": "Zapisywanie...",
+      "helper": "Kliknij dowolny kafelek z ceną, aby edytować taryfę."
+    },
+    "errors": {
+      "fetchTariffs": "Nie udało się pobrać taryf.",
+      "invalidPrices": "Podaj poprawne ceny.",
+      "saveTariff": "Nie udało się zapisać ceny."
+    }
   }
 }
