@@ -1,3 +1,4 @@
+import {useMemo, useState} from 'react';
 import {Box, CircularProgress, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
 import type {TariffVisualBlock} from './TariffScheduleTile';
@@ -15,6 +16,12 @@ const DAYS = [
 
 const HOURS = Array.from({length: 24}, (_, index) => index);
 
+const getCurrentDayOfWeek = () => {
+    const day = new Date().getDay();
+
+    return day === 0 ? 7 : day;
+};
+
 type TariffScheduleProps = {
     blocks: TariffVisualBlock[];
     selectedBlockKey?: string;
@@ -29,6 +36,21 @@ const TariffSchedule = ({
                             onBlockClick,
                         }: TariffScheduleProps) => {
     const intl = useIntl();
+
+    const [highlightedDay, setHighlightedDay] = useState(getCurrentDayOfWeek);
+    const [highlightedHour, setHighlightedHour] = useState(() => new Date().getHours());
+
+    const highlightedBlockKey = useMemo(() => {
+        const highlightedBlock = blocks.find((block) =>
+            block.days.includes(highlightedDay) &&
+            highlightedHour >= block.startHour &&
+            highlightedHour < block.endHour
+        );
+
+        return highlightedBlock?.key;
+    }, [blocks, highlightedDay, highlightedHour]);
+
+    const highlightedRowTop = `${(highlightedHour / 24) * 100}%`;
 
     return (
         <Box
@@ -47,20 +69,35 @@ const TariffSchedule = ({
             >
                 <Box/>
 
-                {DAYS.map((day) => (
-                    <Typography
-                        key={day.value}
-                        sx={{
-                            color: '#6B007B',
-                            textAlign: 'center',
-                            fontSize: 15,
-                            fontWeight: 500,
-                            lineHeight: 1,
-                        }}
-                    >
-                        {intl.formatMessage({id: day.id})}
-                    </Typography>
-                ))}
+                {DAYS.map((day) => {
+                    const active = day.value === highlightedDay;
+
+                    return (
+                        <Typography
+                            key={day.value}
+                            onClick={() => setHighlightedDay(day.value)}
+                            sx={{
+                                color: active ? '#DC2626' : '#6B007B',
+                                textAlign: 'center',
+                                fontSize: 15,
+                                fontWeight: active ? 700 : 500,
+                                lineHeight: 1,
+                                cursor: 'pointer',
+                                borderRadius: '8px',
+                                py: 0.5,
+                                bgcolor: active ? 'rgba(220, 38, 38, 0.10)' : 'transparent',
+                                transition: '0.15s ease',
+                                '&:hover': {
+                                    bgcolor: active
+                                        ? 'rgba(220, 38, 38, 0.14)'
+                                        : 'rgba(142, 36, 170, 0.08)',
+                                },
+                            }}
+                        >
+                            {intl.formatMessage({id: day.id})}
+                        </Typography>
+                    );
+                })}
             </Box>
 
             <Box
@@ -78,20 +115,35 @@ const TariffSchedule = ({
                         mr: 2,
                     }}
                 >
-                    {HOURS.map((hour) => (
-                        <Typography
-                            key={hour}
-                            sx={{
-                                color: '#6B007B',
-                                fontSize: 15,
-                                lineHeight: 1,
-                                textAlign: 'right',
-                                pr: 0.8,
-                            }}
-                        >
-                            {String(hour).padStart(2, '0')}
-                        </Typography>
-                    ))}
+                    {HOURS.map((hour) => {
+                        const active = hour === highlightedHour;
+
+                        return (
+                            <Typography
+                                key={hour}
+                                onClick={() => setHighlightedHour(hour)}
+                                sx={{
+                                    color: active ? '#DC2626' : '#6B007B',
+                                    fontSize: 15,
+                                    lineHeight: 1,
+                                    textAlign: 'right',
+                                    pr: 0.8,
+                                    cursor: 'pointer',
+                                    fontWeight: active ? 700 : 400,
+                                    borderRadius: '6px',
+                                    bgcolor: active ? 'rgba(220, 38, 38, 0.10)' : 'transparent',
+                                    transition: '0.15s ease',
+                                    '&:hover': {
+                                        bgcolor: active
+                                            ? 'rgba(220, 38, 38, 0.14)'
+                                            : 'rgba(142, 36, 170, 0.08)',
+                                    },
+                                }}
+                            >
+                                {String(hour).padStart(2, '0')}
+                            </Typography>
+                        );
+                    })}
                 </Box>
 
                 <Box
@@ -107,6 +159,31 @@ const TariffSchedule = ({
                         overflow: 'hidden',
                     }}
                 >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: 0,
+                            right: 0,
+                            top: highlightedRowTop,
+                            height: 'calc(100% / 24)',
+                            bgcolor: 'rgba(220, 38, 38, 0.06)',
+                            pointerEvents: 'none',
+                            zIndex: 0,
+                        }}
+                    />
+
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: 0,
+                            right: 0,
+                            top: highlightedRowTop,
+                            borderTop: '2px solid rgba(220, 38, 38, 0.75)',
+                            pointerEvents: 'none',
+                            zIndex: 2,
+                        }}
+                    />
+
                     {isLoading && (
                         <Box
                             sx={{
@@ -128,6 +205,7 @@ const TariffSchedule = ({
                             key={block.key}
                             block={block}
                             selected={selectedBlockKey === block.key}
+                            highlighted={highlightedBlockKey === block.key}
                             onClick={() => onBlockClick(block)}
                         />
                     ))}

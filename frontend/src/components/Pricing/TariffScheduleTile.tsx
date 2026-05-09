@@ -17,12 +17,14 @@ export type TariffVisualBlock = {
 type TariffScheduleTileProps = {
     block: TariffVisualBlock;
     selected: boolean;
+    highlighted: boolean;
     onClick: () => void;
 };
 
 const TariffScheduleTile = ({
                                 block,
                                 selected,
+                                highlighted,
                                 onClick,
                             }: TariffScheduleTileProps) => {
     const intl = useIntl();
@@ -72,6 +74,7 @@ const TariffScheduleTile = ({
                 p: isVeryCompact ? '1px' : '2px',
                 boxSizing: 'border-box',
                 cursor: 'pointer',
+                zIndex: 1,
             }}
         >
             <Box
@@ -80,19 +83,34 @@ const TariffScheduleTile = ({
                     height: '100%',
                     position: 'relative',
                     borderRadius: '5px',
-                    bgcolor: selected ? '#D5A6DE' : '#D8B0DE',
-                    border: selected ? '2px solid #8E24AA' : '1px solid #B84BC8',
+                    bgcolor: selected
+                        ? '#D5A6DE'
+                        : highlighted
+                            ? '#C17DCC'
+                            : '#D8B0DE',
+                    border: selected
+                        ? '2px solid #8E24AA'
+                        : highlighted
+                            ? '2px solid #7B158F'
+                            : '1px solid #B84BC8',
+                    boxShadow: highlighted && !selected
+                        ? '0 0 0 2px rgba(123, 21, 143, 0.22)'
+                        : 'none',
                     boxSizing: 'border-box',
                     display: 'flex',
                     alignItems: 'flex-end',
                     justifyContent: 'flex-end',
                     px: isVeryCompact ? 0.3 : isCompact ? 0.45 : 0.7,
-                    py: isVeryCompact ? 0.15 : isCompact ? 0.25 : 0.45,
+                    py: 0,
                     overflow: 'hidden',
                     color: '#6B007B',
                     transition: '0.15s ease',
                     '&:hover': {
-                        bgcolor: '#D2A2DC',
+                        bgcolor: selected
+                            ? '#D5A6DE'
+                            : highlighted
+                                ? '#B96AC7'
+                                : '#D2A2DC',
                         borderColor: '#8E24AA',
                     },
                 }}
@@ -125,17 +143,8 @@ const TariffScheduleTile = ({
                                 width: '100%',
                                 minWidth: 0,
                                 color: '#6B007B',
-                                fontSize: isVeryCompact
-                                    ? 'clamp(6px, 0.46vw, 8px)'
-                                    : isCompact
-                                        ? 'clamp(7px, 0.58vw, 10px)'
-                                        : {
-                                            xs: 10,
-                                            md: 12,
-                                            xl: 14,
-                                        },
+                                fontSize: isVeryCompact ? 10 : isCompact ? 11 : 13,
                                 fontWeight: 500,
-                                lineHeight: isVeryCompact ? 0.95 : isCompact ? 1 : 1.08,
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
