@@ -210,9 +210,15 @@ const PricesPage = () => {
                 updatedTariffs.push(updated);
             }
 
+            const updatedTariffsById = new Map(
+                updatedTariffs
+                    .filter((tariff) => tariff.id !== undefined)
+                    .map((tariff) => [tariff.id, tariff] as const)
+            );
+
             setTariffs((current) =>
                 current.map((tariff) => {
-                    const updated = updatedTariffs.find((item) => item.id === tariff.id);
+                    const updated = tariff.id !== undefined ? updatedTariffsById.get(tariff.id) : undefined;
 
                     return updated ?? tariff;
                 })
