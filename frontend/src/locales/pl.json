@@ -258,7 +258,10 @@
       "plate": "Rejestracja",
       "date": "Data",
       "type": "Typ",
-      "id": "ID"
+      "id": "ID",
+      "ownerName": "Imię właściciela",
+      "ownerSurname": "Nazwisko właściciela",
+      "ownerEmail": "E-mail właściciela"
     }
   }
 }

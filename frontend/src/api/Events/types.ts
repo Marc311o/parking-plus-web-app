@@ -5,6 +5,10 @@ export type ParkingEventDTO = {
     plateNumber: string;
     eventType: ParkingEventType;
     eventDate: string;
+
+    ownerName: string;
+    ownerSurname: string;
+    ownerEmail: string;
 };
 
 export type GetEventsParams = {

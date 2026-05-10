@@ -13,15 +13,7 @@ import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 
 import {useIntl} from 'react-intl';
 
-import type {ParkingEventType} from '@api/Events';
-
-
-export type ParkingEventDTO = {
-    id: number;
-    plateNumber: string;
-    eventType: ParkingEventType;
-    eventDate: string;
-};
+import type {ParkingEventType, ParkingEventDTO} from '@api/Events';
 
 interface Props {
     open: boolean;
@@ -58,7 +50,7 @@ export default function EventDetailsDialog({
                     },
                 }}
             >
-                <CloseRoundedIcon />
+                <CloseRoundedIcon/>
             </IconButton>
 
             <DialogTitle
@@ -85,7 +77,7 @@ export default function EventDetailsDialog({
                             color: '#FFFFFF',
                         }}
                     >
-                        <DirectionsCarRoundedIcon />
+                        <DirectionsCarRoundedIcon/>
                     </Avatar>
 
                     <Box>
@@ -124,9 +116,21 @@ export default function EventDetailsDialog({
                             <b>{formatMessage({id: 'events.details.date'})}:</b> {event.eventDate}
                         </Typography>
 
-                        <Typography sx={{fontSize: 14}}>
-                            <b>{formatMessage({id: 'events.details.id'})}:</b> {event.id}
+                        <Typography sx={{fontSize: 14, mb: 1}}>
+                            <b>{formatMessage({id: 'events.details.ownerName'})}:</b> {event.ownerName}
                         </Typography>
+
+                        <Typography sx={{fontSize: 14, mb: 1}}>
+                            <b>{formatMessage({id: 'events.details.ownerSurname'})}:</b> {event.ownerSurname}
+                        </Typography>
+
+                        <Typography sx={{fontSize: 14, mb: 1}}>
+                            <b>{formatMessage({id: 'events.details.ownerEmail'})}:</b> {event.ownerEmail}
+                        </Typography>
+
+                        {/*<Typography sx={{fontSize: 14}}>*/}
+                        {/*    <b>{formatMessage({id: 'events.details.id'})}:</b> {event.id}*/}
+                        {/*</Typography>*/}
                     </Paper>
                 </Box>
             </DialogContent>

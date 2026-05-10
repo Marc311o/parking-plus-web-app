@@ -258,7 +258,10 @@
       "plate": "Plate number",
       "date": "Date",
       "type": "Type",
-      "id": "ID"
+      "id": "ID",
+      "ownerName": "Owner name",
+      "ownerSurname": "Owner surname",
+      "ownerEmail": "Owner e-mail"
     }
   }
 }
