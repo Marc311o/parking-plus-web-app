@@ -211,5 +211,39 @@
         "EV_HANDICAPED": "Electric / disabled"
       }
     }
+  },
+  "prices": {
+    "schedule": {
+      "days": {
+        "mondayShort": "Mon",
+        "tuesdayShort": "Tue",
+        "wednesdayShort": "Wed",
+        "thursdayShort": "Thu",
+        "fridayShort": "Fri",
+        "saturdayShort": "Sat",
+        "sundayShort": "Sun"
+      }
+    },
+    "tile": {
+      "priceValue": "{value} PLN",
+      "firstHour": "First hour: {price}",
+      "nextHour": "Next hour: {price}",
+      "firstHourShort": "1h: {price}",
+      "nextHourShort": "2h+: {price}"
+    },
+    "editor": {
+      "editing": "Editing: {days}, {startHour}:00 – {endHour}:00",
+      "firstHourLabel": "First hour",
+      "nextHourLabel": "Next hour",
+      "currencyShort": "PLN",
+      "saveButton": "Save",
+      "savingButton": "Saving...",
+      "helper": "Click any price tile to edit the tariff."
+    },
+    "errors": {
+      "fetchTariffs": "Could not fetch tariffs.",
+      "invalidPrices": "Enter valid prices.",
+      "saveTariff": "Could not save the price."
+    }
   }
 }
