@@ -20,6 +20,9 @@ const parsePrice = (value: string) => Number(value.replace(',', '.'));
 const isFirstHourTariff = (tariff: TariffDTO) =>
     tariff.isFirstHour ?? tariff.firstHour ?? false;
 
+const getVisualBlockKey = (days: number[], startHour: number, endHour: number) =>
+    `${days[0]}-${days[days.length - 1]}-${startHour}-${endHour}`;
+
 const buildTariffBlocks = (tariffs: TariffDTO[]): TariffBlock[] => {
     const grouped = new Map<string, TariffBlock>();
 
@@ -81,12 +84,17 @@ const buildVisualBlocks = (blocks: TariffBlock[]): TariffVisualBlock[] => {
                 previousBlock.nextHourTariffs.push(block.nextHourTariff);
             }
 
-            previousBlock.key = `${previousBlock.days[0]}-${block.dayOfWeek}-${block.startHour}-${block.endHour}`;
+            previousBlock.key = getVisualBlockKey(
+                previousBlock.days,
+                previousBlock.startHour,
+                previousBlock.endHour
+            );
+
             return;
         }
 
         visualBlocks.push({
-            key: `${block.dayOfWeek}-${block.startHour}-${block.endHour}`,
+            key: getVisualBlockKey([block.dayOfWeek], block.startHour, block.endHour),
             days: [block.dayOfWeek],
             startHour: block.startHour,
             endHour: block.endHour,
@@ -104,7 +112,7 @@ const PricesPage = () => {
     const intl = useIntl();
 
     const [tariffs, setTariffs] = useState<TariffDTO[]>([]);
-    const [selectedBlock, setSelectedBlock] = useState<TariffVisualBlock | null>(null);
+    const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
 
     const [firstHourPrice, setFirstHourPrice] = useState('');
     const [nextHourPrice, setNextHourPrice] = useState('');
@@ -153,8 +161,13 @@ const PricesPage = () => {
         return buildVisualBlocks(buildTariffBlocks(tariffs));
     }, [tariffs]);
 
+    const selectedBlock = useMemo(
+        () => visualBlocks.find((block) => block.key === selectedBlockKey) ?? null,
+        [visualBlocks, selectedBlockKey]
+    );
+
     const handleSelectBlock = (block: TariffVisualBlock) => {
-        setSelectedBlock(block);
+        setSelectedBlockKey(block.key);
         setFirstHourPrice(String(block.firstHourPrice).replace('.', ','));
         setNextHourPrice(String(block.nextHourPrice).replace('.', ','));
         setSaveError(null);
@@ -223,24 +236,6 @@ const PricesPage = () => {
                     return updated ?? tariff;
                 })
             );
-
-            setSelectedBlock((current) =>
-                current
-                    ? {
-                        ...current,
-                        firstHourPrice: parsedFirstHourPrice,
-                        nextHourPrice: parsedNextHourPrice,
-                        firstHourTariffs: current.firstHourTariffs.map((tariff) => ({
-                            ...tariff,
-                            price: parsedFirstHourPrice,
-                        })),
-                        nextHourTariffs: current.nextHourTariffs.map((tariff) => ({
-                            ...tariff,
-                            price: parsedNextHourPrice,
-                        })),
-                    }
-                    : current
-            );
         } catch (err) {
             console.error(err);
             setSaveError(intl.formatMessage({id: 'prices.errors.saveTariff'}));
@@ -273,7 +268,7 @@ const PricesPage = () => {
 
             <TariffSchedule
                 blocks={visualBlocks}
-                selectedBlockKey={selectedBlock?.key}
+                selectedBlockKey={selectedBlockKey}
                 isLoading={isLoading}
                 onBlockClick={handleSelectBlock}
             />
