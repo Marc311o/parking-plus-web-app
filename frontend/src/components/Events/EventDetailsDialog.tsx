@@ -14,6 +14,7 @@ import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 import {useIntl} from 'react-intl';
 
 import type {ParkingEventType, ParkingEventDTO} from '@api/Events';
+import {useState, useEffect} from "react";
 
 interface Props {
     open: boolean;
@@ -31,6 +32,14 @@ export default function EventDetailsDialog({
     }
 
     const {formatMessage} = useIntl();
+
+    const [imgOk, setImgOk] = useState(true);
+
+    useEffect(() => {
+        if (open) {
+            setImgOk(true);
+        }
+    }, [open, event?.carPhotoPath]);
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
@@ -127,6 +136,30 @@ export default function EventDetailsDialog({
                         <Typography sx={{fontSize: 14, mb: 1}}>
                             <b>{formatMessage({id: 'events.details.ownerEmail'})}:</b> {event.ownerEmail}
                         </Typography>
+
+                        {event.carPhotoPath && imgOk && (
+                            <Box
+                                sx={{
+                                    width: '100%',
+                                    height: 240,
+                                    overflow: 'hidden',
+                                    bgcolor: '#000',
+                                }}
+                            >
+                                <Box
+                                    component="img"
+                                    src={event.carPhotoPath}
+                                    alt={event.plateNumber}
+                                    onError={() => setImgOk(false)}
+                                    sx={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        display: 'block',
+                                    }}
+                                />
+                            </Box>
+                        )}
 
                         {/*<Typography sx={{fontSize: 14}}>*/}
                         {/*    <b>{formatMessage({id: 'events.details.id'})}:</b> {event.id}*/}

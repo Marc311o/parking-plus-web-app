@@ -10,6 +10,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Jan',
         ownerSurname: 'Kowalski',
         ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 2,
@@ -19,6 +20,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Anna',
         ownerSurname: 'Nowak',
         ownerEmail: 'anna.nowak@example.com',
+        carPhotoPath: '/car_photos/car002.png'
     },
     {
         id: 3,
@@ -28,6 +30,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Jan',
         ownerSurname: 'Kowalski',
         ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/notexist.png'
     },
     {
         id: 4,
@@ -37,6 +40,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Piotr',
         ownerSurname: 'Zieliński',
         ownerEmail: 'piotr.zielinski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 5,
@@ -46,6 +50,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Katarzyna',
         ownerSurname: 'Wiśniewska',
         ownerEmail: 'katarzyna.wisniewska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 6,
@@ -55,6 +60,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Michał',
         ownerSurname: 'Wójcik',
         ownerEmail: 'michal.wojcik@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 7,
@@ -64,6 +70,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Agnieszka',
         ownerSurname: 'Kamińska',
         ownerEmail: 'agnieszka.kaminska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 8,
@@ -73,6 +80,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Tomasz',
         ownerSurname: 'Lewandowski',
         ownerEmail: 'tomasz.lewandowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 9,
@@ -82,6 +90,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Paweł',
         ownerSurname: 'Dąbrowski',
         ownerEmail: 'pawel.dabrowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 10,
@@ -91,6 +100,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Ewa',
         ownerSurname: 'Zając',
         ownerEmail: 'ewa.zajac@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 11,
@@ -100,6 +110,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Marcin',
         ownerSurname: 'Szymański',
         ownerEmail: 'marcin.szymanski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 12,
@@ -109,6 +120,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Jan',
         ownerSurname: 'Kowalski',
         ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 13,
@@ -118,6 +130,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Anna',
         ownerSurname: 'Nowak',
         ownerEmail: 'anna.nowak@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 14,
@@ -127,6 +140,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Piotr',
         ownerSurname: 'Zieliński',
         ownerEmail: 'piotr.zielinski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 15,
@@ -136,6 +150,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Katarzyna',
         ownerSurname: 'Wiśniewska',
         ownerEmail: 'katarzyna.wisniewska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 16,
@@ -145,6 +160,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Michał',
         ownerSurname: 'Wójcik',
         ownerEmail: 'michal.wojcik@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 17,
@@ -154,6 +170,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Agnieszka',
         ownerSurname: 'Kamińska',
         ownerEmail: 'agnieszka.kaminska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 18,
@@ -163,6 +180,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Tomasz',
         ownerSurname: 'Lewandowski',
         ownerEmail: 'tomasz.lewandowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 19,
@@ -172,6 +190,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Paweł',
         ownerSurname: 'Dąbrowski',
         ownerEmail: 'pawel.dabrowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 20,
@@ -181,6 +200,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Ewa',
         ownerSurname: 'Zając',
         ownerEmail: 'ewa.zajac@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 21,
@@ -190,6 +210,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Marcin',
         ownerSurname: 'Szymański',
         ownerEmail: 'marcin.szymanski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 22,
@@ -199,6 +220,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Jan',
         ownerSurname: 'Kowalski',
         ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 23,
@@ -208,6 +230,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Anna',
         ownerSurname: 'Nowak',
         ownerEmail: 'anna.nowak@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 24,
@@ -217,6 +240,7 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Piotr',
         ownerSurname: 'Zieliński',
         ownerEmail: 'piotr.zielinski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
     {
         id: 25,
@@ -226,5 +250,6 @@ export const MOCK_EVENTS: ParkingEventDTO[] = [
         ownerName: 'Katarzyna',
         ownerSurname: 'Wiśniewska',
         ownerEmail: 'katarzyna.wisniewska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
     },
 ];
