@@ -1,1 +1,1 @@
-export * from './EventDetailsDialog.tsx';
+export { default as EventDetailsDialog } from './EventDetailsDialog.tsx';
