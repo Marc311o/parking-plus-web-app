@@ -13,8 +13,8 @@ import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 
 import {useIntl} from 'react-intl';
 
-import type {ParkingEventType, ParkingEventDTO} from '@api/Events';
-import {useState, useEffect} from "react";
+import type {ParkingEventDTO} from '@api/Events';
+import {useState, useEffect} from 'react';
 
 interface Props {
     open: boolean;
