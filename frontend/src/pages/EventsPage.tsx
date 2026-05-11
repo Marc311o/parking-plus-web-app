@@ -27,7 +27,7 @@ const EventsPage = () => {
     const [totalElements, setTotalElements] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
-    const [size, setSize] = useState(10);
+    const [size] = useState(10);
 
     const [selectedEvent, setSelectedEvent] = useState<ParkingEventDTO | null>(null);
 
