@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react';
-import {Box, Avatar} from '@mui/material';
+import {Box, Avatar, Alert} from '@mui/material';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {useSearchParams} from 'react-router-dom';
@@ -31,6 +31,8 @@ const EventsPage = () => {
 
     const [selectedEvent, setSelectedEvent] = useState<ParkingEventDTO | null>(null);
 
+    const [error, setError] = useState<string | null>(null);
+
     const totalPages = Math.max(Math.ceil(totalElements / size), 1);
 
     useEffect(() => {
@@ -38,6 +40,7 @@ const EventsPage = () => {
 
         const fetchEvents = async () => {
             setIsLoading(true);
+            setError(null);
 
             try {
                 const result = await getEvents({
@@ -52,6 +55,20 @@ const EventsPage = () => {
 
                 setEvents(result.content);
                 setTotalElements(result.totalElements);
+            } catch (error) {
+                if (!isMounted) return;
+
+                setEvents([]);
+                setTotalElements(0);
+
+                const message =
+                    error instanceof Error
+                        ? error.message
+                        : null;
+
+                if (message) {
+                    setError(message);
+                }
             } finally {
                 if (isMounted) setIsLoading(false);
             }
@@ -114,6 +131,14 @@ const EventsPage = () => {
 
     return (
         <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', gap: 2.5}}>
+
+            {error && (
+                <Box sx={{ mb: 2 }}>
+                    <Alert severity="error">
+                        {error}
+                    </Alert>
+                </Box>
+            )}
 
             <ListView
                 items={events}
