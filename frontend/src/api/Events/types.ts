@@ -10,7 +10,7 @@ export type ParkingEventDTO = {
     ownerSurname: string;
     ownerEmail: string;
 
-    carPhotoPath: string;
+    carPhotoPath?: string;
 };
 
 export type GetEventsParams = {
