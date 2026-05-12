@@ -223,12 +223,14 @@ class ParkingHistoryService(
                 previousStart = currentStart.minusDays(1)
                 previousEnd = currentEnd.minusDays(1)
             }
+
             AggregationPeriod.WEEKLY -> {
                 currentStart = date.with(DayOfWeek.MONDAY).atStartOfDay()
                 currentEnd = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
                 previousStart = currentStart.minusWeeks(1)
                 previousEnd = currentEnd.minusWeeks(1)
             }
+
             AggregationPeriod.YEARLY -> {
                 currentStart = date.withDayOfYear(1).atStartOfDay()
                 currentEnd = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
@@ -253,8 +255,17 @@ class ParkingHistoryService(
                 }
                 map
             }
+
             AggregationPeriod.WEEKLY -> {
-                val map = linkedMapOf("MON" to 0.0, "TUE" to 0.0, "WED" to 0.0, "THU" to 0.0, "FRI" to 0.0, "SAT" to 0.0, "SUN" to 0.0)
+                val map = linkedMapOf(
+                    "MON" to 0.0,
+                    "TUE" to 0.0,
+                    "WED" to 0.0,
+                    "THU" to 0.0,
+                    "FRI" to 0.0,
+                    "SAT" to 0.0,
+                    "SUN" to 0.0
+                )
                 currentData.forEach {
                     val day = it.endTime.dayOfWeek.name.substring(0, 3)
                     map[day] = (map[day] ?: 0.0) + it.price
@@ -262,8 +273,22 @@ class ParkingHistoryService(
                 }
                 map
             }
+
             AggregationPeriod.YEARLY -> {
-                val map = linkedMapOf("JAN" to 0.0, "FEB" to 0.0, "MAR" to 0.0, "APR" to 0.0, "MAY" to 0.0, "JUN" to 0.0, "JUL" to 0.0, "AUG" to 0.0, "SEP" to 0.0, "OCT" to 0.0, "NOV" to 0.0, "DEC" to 0.0)
+                val map = linkedMapOf(
+                    "JAN" to 0.0,
+                    "FEB" to 0.0,
+                    "MAR" to 0.0,
+                    "APR" to 0.0,
+                    "MAY" to 0.0,
+                    "JUN" to 0.0,
+                    "JUL" to 0.0,
+                    "AUG" to 0.0,
+                    "SEP" to 0.0,
+                    "OCT" to 0.0,
+                    "NOV" to 0.0,
+                    "DEC" to 0.0
+                )
                 currentData.forEach {
                     val month = it.endTime.month.name.substring(0, 3)
                     map[month] = (map[month] ?: 0.0) + it.price
@@ -307,10 +332,12 @@ class ParkingHistoryService(
                 currentStart = date.atStartOfDay()
                 currentEnd = date.atTime(LocalTime.MAX)
             }
+
             AggregationPeriod.WEEKLY -> {
                 currentStart = date.with(DayOfWeek.MONDAY).atStartOfDay()
                 currentEnd = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
             }
+
             AggregationPeriod.YEARLY -> {
                 currentStart = date.withDayOfYear(1).atStartOfDay()
                 currentEnd = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
@@ -382,4 +409,47 @@ class ParkingHistoryService(
             points = points
         )
     }
+
+    @Transactional(readOnly = true)
+    fun getParkingEvents(): List<ParkingEventDTO> {
+        val history = parkingHistoryRepository.findAll()
+        val events = mutableListOf<ParkingEventDTO>()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
+        for (entry in history) {
+            val owner = entry.vehicle.owner
+            val entryId = entry.id ?: continue
+
+            events.add(
+                ParkingEventDTO(
+                    id = entryId * 10,
+                    plateNumber = entry.vehicle.licensePlate,
+                    eventType = "ENTRY",
+                    eventDate = entry.startTime.format(formatter),
+                    ownerName = owner.name,
+                    ownerSurname = owner.surname,
+                    ownerEmail = owner.email,
+                    carPhotoPath = entry.photoPath
+                )
+            )
+
+            if (entry.endTime != null) {
+                events.add(
+                    ParkingEventDTO(
+                        id = entryId * 10 + 1,
+                        plateNumber = entry.vehicle.licensePlate,
+                        eventType = "EXIT",
+                        eventDate = entry.endTime!!.format(formatter),
+                        ownerName = owner.name,
+                        ownerSurname = owner.surname,
+                        ownerEmail = owner.email,
+                        carPhotoPath = entry.photoPath
+                    )
+                )
+            }
+        }
+
+        return events.sortedByDescending { it.eventDate }
+    }
+
 }

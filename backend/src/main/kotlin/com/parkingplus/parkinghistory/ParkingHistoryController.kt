@@ -124,4 +124,10 @@ class ParkingHistoryController(
     ): ResponseEntity<ParkingSpaceRankingResponseDTO> {
         return ResponseEntity.ok(parkingHistoryService.getSpaceRanking(date, floor))
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/events")
+    fun getParkingEvents(): ResponseEntity<List<ParkingEventDTO>> {
+        return ResponseEntity.ok(parkingHistoryService.getParkingEvents())
+    }
 }
