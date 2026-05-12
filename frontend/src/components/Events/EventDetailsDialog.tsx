@@ -27,9 +27,6 @@ export default function EventDetailsDialog({
                                                event,
                                                onClose,
                                            }: Props) {
-    if (!event) {
-        return null;
-    }
 
     const {formatMessage} = useIntl();
 
@@ -40,6 +37,10 @@ export default function EventDetailsDialog({
             setImgOk(true);
         }
     }, [open, event?.carPhotoPath]);
+
+    if (!event) {
+        return null;
+    }
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
