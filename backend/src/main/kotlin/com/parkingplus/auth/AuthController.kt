@@ -2,7 +2,10 @@ package com.parkingplus.auth
 
 import com.parkingplus.security.JwtService
 import com.parkingplus.security.TwoFactorAuthService
+import com.parkingplus.users.UserDTO
 import com.parkingplus.users.UserRepository
+import com.parkingplus.users.UserService
+import com.parkingplus.users.requests.CreateUserRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -15,7 +18,8 @@ class AuthController(
     private val passwordEncoder: PasswordEncoder,
     private val jwtService: JwtService,
     private val tfaService: TwoFactorAuthService,
-    private val passwordResetService: PasswordResetService
+    private val passwordResetService: PasswordResetService,
+    private val userService: UserService
 ) {
 
     companion object {
@@ -32,10 +36,12 @@ class AuthController(
         }
 
         if (user.isMfaEnabled) {
-            return ResponseEntity.ok(LoginResponse(
-                mfaRequired = true,
-                preAuthToken = jwtService.generatePreAuthToken(user)
-            ))
+            return ResponseEntity.ok(
+                LoginResponse(
+                    mfaRequired = true,
+                    preAuthToken = jwtService.generatePreAuthToken(user)
+                )
+            )
         }
 
         val token = jwtService.generateToken(user)
@@ -75,5 +81,11 @@ class AuthController(
         } else {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nieprawidłowy lub wygasły token.")
         }
+    }
+
+    @PostMapping("/register")
+    fun register(@RequestBody request: CreateUserRequest): ResponseEntity<UserDTO> {
+        val user = userService.registerUser(request)
+        return ResponseEntity.status(HttpStatus.CREATED).body(user)
     }
 }

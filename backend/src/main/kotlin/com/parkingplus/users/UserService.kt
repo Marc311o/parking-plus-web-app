@@ -105,4 +105,16 @@ class UserService(
         }
         return false
     }
+
+    @Transactional
+    fun registerUser(request: CreateUserRequest): UserDTO {
+        if (userRepository.existsByEmail(request.email)) {
+            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
+        }
+
+        val hashedPassword = passwordEncoder.encode(request.password)
+        val entity = request.toEntity(hashedPassword)
+
+        return userRepository.save(entity).toDTO()
+    }
 }
