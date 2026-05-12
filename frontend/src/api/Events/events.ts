@@ -1,4 +1,3 @@
-import {API_URL, getHeaders} from '../core';
 import type {GetEventsParams, ParkingEventDTO} from './types';
 import {MOCK_EVENTS} from './mock';
 
