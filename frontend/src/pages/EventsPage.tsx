@@ -104,7 +104,7 @@ const EventsPage = () => {
                 return <span style={{color, fontWeight: 600}}>{item.plateNumber}</span>;
             },
         },
-    ], []);
+    ], [formatMessage]);
 
     const handlePageChange = (nextPage: number) => {
         const nextParams = new URLSearchParams(searchParams);
