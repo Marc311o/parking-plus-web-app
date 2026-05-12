@@ -20,11 +20,7 @@ const EventsNavbar = () => {
         const nextParams = new URLSearchParams(searchParams);
 
         Object.entries(nextValues).forEach(([key, value]) => {
-            if (!value || value === '') {
-                nextParams.delete(key);
-            } else {
-                nextParams.set(key, value);
-            }
+            nextParams.set(key, value);
         });
 
         nextParams.set('page', '0');
