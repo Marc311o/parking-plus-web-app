@@ -1,5 +1,5 @@
 import type {GetEventsParams, ParkingEventDTO} from './types';
-import {MOCK_EVENTS} from './mock';
+import {API_URL, getHeaders} from '../core';
 
 type PageResponse<T> = {
     content: T[];
@@ -16,8 +16,19 @@ export const getEvents = async ({
                                 }: GetEventsParams): Promise<PageResponse<ParkingEventDTO>> => {
 
 
-    // todo change
-    let data = [...MOCK_EVENTS];
+    const response = await fetch(
+        `${API_URL}/parking-history/events`,
+        {
+            method: 'GET',
+            headers: getHeaders(),
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch events: ${response.status}`);
+    }
+
+    let data: ParkingEventDTO[] = await response.json();
 
     if (search.trim()) {
         data = data.filter(e =>
