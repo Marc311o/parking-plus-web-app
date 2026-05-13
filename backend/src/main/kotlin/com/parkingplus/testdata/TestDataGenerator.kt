@@ -86,9 +86,7 @@ class TestDataGenerator(
 
     @Transactional
     fun generate() {
-        if (userRepository.count() > 1) return
-
-        println(">>> Rozpoczynanie generowania danych testowych...")
+        println(">>> Sprawdzanie i generowanie danych testowych...")
 
         val users = generateUsers(100)
         val vehicles = generateVehicles(users)
@@ -96,10 +94,16 @@ class TestDataGenerator(
         val tariffs = generateTariffs()
         generateHistory(vehicles, spaces, tariffs)
 
-        println(">>> Zakończono generowanie danych testowych.")
+        println(">>> Zakończono proces generowania/weryfikacji danych.")
     }
 
     private fun generateUsers(count: Int): List<UserEntity> {
+        val currentCount = userRepository.count()
+        if (currentCount > 1) {
+            println(">>> Użytkownicy już istnieją (liczba: $currentCount). Pomijam generowanie nowych.")
+            return userRepository.findAll().filter { !it.isOperator }
+        }
+
         val users = mutableListOf<UserEntity>()
         for (i in 1..count) {
             val name = firstNames.random()
@@ -125,6 +129,12 @@ class TestDataGenerator(
     }
 
     private fun generateVehicles(users: List<UserEntity>): List<VehicleEntity> {
+        val currentCount = vehicleRepository.count()
+        if (currentCount > 0) {
+            println(">>> Pojazdy już istnieją (liczba: $currentCount). Pomijam generowanie nowych.")
+            return vehicleRepository.findAll()
+        }
+
         val vehicles = mutableListOf<VehicleEntity>()
         for (user in users) {
             val carCount = Random.nextInt(1, 4)
@@ -158,6 +168,12 @@ class TestDataGenerator(
     }
 
     private fun generateParkingSpaces(): List<ParkingSpaceEntity> {
+        val currentCount = parkingSpaceRepository.count()
+        if (currentCount > 0) {
+            println(">>> Miejsca parkingowe już istnieją (liczba: $currentCount). Pomijam generowanie nowych.")
+            return parkingSpaceRepository.findAll()
+        }
+
         val spaces = mutableListOf<ParkingSpaceEntity>()
 
         for (level in 0..1) {
@@ -180,6 +196,12 @@ class TestDataGenerator(
     }
 
     private fun generateTariffs(): List<TariffEntity> {
+        val currentCount = tariffRepository.count()
+        if (currentCount > 0) {
+            println(">>> Taryfy już istnieją (liczba: $currentCount). Pomijam generowanie nowych.")
+            return tariffRepository.findAll()
+        }
+
         val tariffs = mutableListOf<TariffEntity>()
         for (day in 1..7) {
             tariffs.add(
@@ -240,6 +262,12 @@ class TestDataGenerator(
         spaces: List<ParkingSpaceEntity>,
         tariffs: List<TariffEntity>
     ) {
+        val currentCount = parkingHistoryRepository.count()
+        if (currentCount > 0) {
+            println(">>> Historia parkowania już istnieje (liczba: $currentCount). Pomijam generowanie nowej.")
+            return
+        }
+
         val now = LocalDateTime.now()
         val historyEntries = mutableListOf<ParkingHistoryEntity>()
 
