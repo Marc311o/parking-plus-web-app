@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
 @Service
 class UserService(
@@ -41,7 +43,7 @@ class UserService(
     @Transactional
     fun createUser(request: CreateUserRequest): UserDTO {
         if (userRepository.existsByEmail(request.email)) {
-            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Użytkownik z mailem ${request.email} już istnieje.")
         }
 
         val hashedPassword = passwordEncoder.encode(request.password)
@@ -53,7 +55,7 @@ class UserService(
     @Transactional
     fun createOperator(request: CreateUserRequest): UserDTO {
         if (userRepository.existsByEmail(request.email)) {
-            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
+            throw ResponseStatusException(HttpStatus.CONFLICT, "Użytkownik z mailem ${request.email} już istnieje.")
         }
 
         val hashedPassword = passwordEncoder.encode(request.password)
@@ -104,17 +106,5 @@ class UserService(
             return true
         }
         return false
-    }
-
-    @Transactional
-    fun registerUser(request: CreateUserRequest): UserDTO {
-        if (userRepository.existsByEmail(request.email)) {
-            throw IllegalArgumentException("Użytkownik z mailem ${request.email} już istnieje.")
-        }
-
-        val hashedPassword = passwordEncoder.encode(request.password)
-        val entity = request.toEntity(hashedPassword)
-
-        return userRepository.save(entity).toDTO()
     }
 }

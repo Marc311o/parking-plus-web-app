@@ -6,6 +6,7 @@ import com.parkingplus.users.UserDTO
 import com.parkingplus.users.UserRepository
 import com.parkingplus.users.UserService
 import com.parkingplus.users.requests.CreateUserRequest
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -84,8 +85,15 @@ class AuthController(
     }
 
     @PostMapping("/register")
-    fun register(@RequestBody request: CreateUserRequest): ResponseEntity<UserDTO> {
-        val user = userService.registerUser(request)
+    fun register(@Valid @RequestBody request: RegisterUserRequest): ResponseEntity<UserDTO> {
+        val createUserRequest = CreateUserRequest(
+            name = request.name,
+            surname = request.surname,
+            email = request.email,
+            password = request.password,
+            isOperator = false
+        )
+        val user = userService.createUser(createUserRequest)
         return ResponseEntity.status(HttpStatus.CREATED).body(user)
     }
 }
