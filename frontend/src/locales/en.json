@@ -212,6 +212,24 @@
       }
     }
   },
+  "events": {
+    "list": {
+      "empty": "No events found",
+      "details": "Details"
+    },
+    "entry": "Entry",
+    "exit": "Exit",
+    "details": {
+      "title": "Event details",
+      "plate": "Plate number",
+      "date": "Date",
+      "type": "Type",
+      "id": "ID",
+      "ownerName": "Owner name",
+      "ownerSurname": "Owner surname",
+      "ownerEmail": "Owner e-mail"
+    }
+  },
   "prices": {
     "schedule": {
       "days": {
@@ -244,6 +262,24 @@
       "fetchTariffs": "Could not fetch tariffs.",
       "invalidPrices": "Enter valid prices.",
       "saveTariff": "Could not save the price."
+    }
+  },
+  "events": {
+    "list": {
+      "empty": "No events found",
+      "details": "Details"
+    },
+    "entry": "Entry",
+    "exit": "Exit",
+    "details": {
+      "title": "Event details",
+      "plate": "Plate number",
+      "date": "Date",
+      "type": "Type",
+      "id": "ID",
+      "ownerName": "Owner name",
+      "ownerSurname": "Owner surname",
+      "ownerEmail": "Owner e-mail"
     }
   }
 }

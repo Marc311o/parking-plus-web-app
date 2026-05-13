@@ -1,15 +1,37 @@
 import {Box, Button, Checkbox, FormControlLabel, Paper, TextField, Typography} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import {useIntl} from 'react-intl';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
-const EventsFilterCard = () => {
+interface EventsFilterCardProps {
+    search: string;
+    entryChecked: boolean;
+    exitChecked: boolean;
+    onSearchChange: (value: string) => void;
+    onEntryChange: (value: boolean) => void;
+    onExitChange: (value: boolean) => void;
+}
+
+const EventsFilterCard = ({
+                              search,
+                              entryChecked,
+                              exitChecked,
+                              onSearchChange,
+                              onEntryChange,
+                              onExitChange,
+                          }: EventsFilterCardProps) => {
+
     const {formatMessage} = useIntl();
 
-    //TODO: implement search and filter functionality
-    const [search, setSearch] = useState('');
-    const [entryChecked, setEntryChecked] = useState(true);
-    const [exitChecked, setExitChecked] = useState(true);
+    const [localSearch, setLocalSearch] = useState(search);
+
+    useEffect(() => {
+        setLocalSearch(search);
+    }, [search]);
+
+    const handleSearchSubmit = () => {
+        onSearchChange(localSearch);
+    };
 
     return (
         <Paper
@@ -46,8 +68,13 @@ const EventsFilterCard = () => {
                         fullWidth
                         size="small"
                         placeholder={formatMessage({id: 'navbar.events.filters.searchPlaceholder'})}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={localSearch}
+                        onChange={(e) => setLocalSearch(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearchSubmit();
+                            }
+                        }}
                         variant="outlined"
                         sx={{
                             '& .MuiOutlinedInput-root': {
@@ -74,6 +101,7 @@ const EventsFilterCard = () => {
                     <Button
                         variant="contained"
                         startIcon={<SearchIcon/>}
+                        onClick={handleSearchSubmit}
                         sx={{
                             minWidth: 115,
                             height: 34,
@@ -105,7 +133,7 @@ const EventsFilterCard = () => {
                         control={
                             <Checkbox
                                 checked={entryChecked}
-                                onChange={(e) => setEntryChecked(e.target.checked)}
+                                onChange={(e) => onEntryChange(e.target.checked)}
                                 size="small"
                                 sx={{
                                     color: '#d0d0d4',
@@ -140,7 +168,7 @@ const EventsFilterCard = () => {
                         control={
                             <Checkbox
                                 checked={exitChecked}
-                                onChange={(e) => setExitChecked(e.target.checked)}
+                                onChange={(e) => onExitChange(e.target.checked)}
                                 size="small"
                                 sx={{
                                     color: '#d0d0d4',

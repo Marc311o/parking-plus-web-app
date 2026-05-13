@@ -1,0 +1,255 @@
+import type {ParkingEventDTO} from './types';
+
+
+export const MOCK_EVENTS: ParkingEventDTO[] = [
+    {
+        id: 1,
+        plateNumber: 'WA12345',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 08:12',
+        ownerName: 'Jan',
+        ownerSurname: 'Kowalski',
+        ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 2,
+        plateNumber: 'KR98765',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 09:01',
+        ownerName: 'Anna',
+        ownerSurname: 'Nowak',
+        ownerEmail: 'anna.nowak@example.com',
+        carPhotoPath: '/car_photos/car002.png'
+    },
+    {
+        id: 3,
+        plateNumber: 'WA12345',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 12:45',
+        ownerName: 'Jan',
+        ownerSurname: 'Kowalski',
+        ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/notexist.png'
+    },
+    {
+        id: 4,
+        plateNumber: 'GD54321',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 13:10',
+        ownerName: 'Piotr',
+        ownerSurname: 'Zieliński',
+        ownerEmail: 'piotr.zielinski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 5,
+        plateNumber: 'PO77881',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 15:20',
+        ownerName: 'Katarzyna',
+        ownerSurname: 'Wiśniewska',
+        ownerEmail: 'katarzyna.wisniewska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 6,
+        plateNumber: 'WA11111',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 16:00',
+        ownerName: 'Michał',
+        ownerSurname: 'Wójcik',
+        ownerEmail: 'michal.wojcik@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 7,
+        plateNumber: 'KR22222',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 16:30',
+        ownerName: 'Agnieszka',
+        ownerSurname: 'Kamińska',
+        ownerEmail: 'agnieszka.kaminska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 8,
+        plateNumber: 'GD33333',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 17:10',
+        ownerName: 'Tomasz',
+        ownerSurname: 'Lewandowski',
+        ownerEmail: 'tomasz.lewandowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 9,
+        plateNumber: 'LU45678',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 17:22',
+        ownerName: 'Paweł',
+        ownerSurname: 'Dąbrowski',
+        ownerEmail: 'pawel.dabrowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 10,
+        plateNumber: 'EL65432',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 17:40',
+        ownerName: 'Ewa',
+        ownerSurname: 'Zając',
+        ownerEmail: 'ewa.zajac@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 11,
+        plateNumber: 'WX90876',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 18:05',
+        ownerName: 'Marcin',
+        ownerSurname: 'Szymański',
+        ownerEmail: 'marcin.szymanski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 12,
+        plateNumber: 'KR11223',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 18:18',
+        ownerName: 'Jan',
+        ownerSurname: 'Kowalski',
+        ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 13,
+        plateNumber: 'PO44556',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 18:40',
+        ownerName: 'Anna',
+        ownerSurname: 'Nowak',
+        ownerEmail: 'anna.nowak@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 14,
+        plateNumber: 'GD77889',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 19:02',
+        ownerName: 'Piotr',
+        ownerSurname: 'Zieliński',
+        ownerEmail: 'piotr.zielinski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 15,
+        plateNumber: 'WA99887',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 19:15',
+        ownerName: 'Katarzyna',
+        ownerSurname: 'Wiśniewska',
+        ownerEmail: 'katarzyna.wisniewska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 16,
+        plateNumber: 'KR55443',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 19:35',
+        ownerName: 'Michał',
+        ownerSurname: 'Wójcik',
+        ownerEmail: 'michal.wojcik@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 17,
+        plateNumber: 'LB12399',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 19:50',
+        ownerName: 'Agnieszka',
+        ownerSurname: 'Kamińska',
+        ownerEmail: 'agnieszka.kaminska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 18,
+        plateNumber: 'ZS77661',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 20:10',
+        ownerName: 'Tomasz',
+        ownerSurname: 'Lewandowski',
+        ownerEmail: 'tomasz.lewandowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 19,
+        plateNumber: 'DW44512',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 20:25',
+        ownerName: 'Paweł',
+        ownerSurname: 'Dąbrowski',
+        ownerEmail: 'pawel.dabrowski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 20,
+        plateNumber: 'SK90812',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 20:40',
+        ownerName: 'Ewa',
+        ownerSurname: 'Zając',
+        ownerEmail: 'ewa.zajac@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 21,
+        plateNumber: 'BI22290',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 21:00',
+        ownerName: 'Marcin',
+        ownerSurname: 'Szymański',
+        ownerEmail: 'marcin.szymanski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 22,
+        plateNumber: 'NO77123',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 21:12',
+        ownerName: 'Jan',
+        ownerSurname: 'Kowalski',
+        ownerEmail: 'jan.kowalski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 23,
+        plateNumber: 'WA66119',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 21:35',
+        ownerName: 'Anna',
+        ownerSurname: 'Nowak',
+        ownerEmail: 'anna.nowak@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 24,
+        plateNumber: 'GD12098',
+        eventType: 'EXIT',
+        eventDate: '2026-05-10 21:50',
+        ownerName: 'Piotr',
+        ownerSurname: 'Zieliński',
+        ownerEmail: 'piotr.zielinski@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+    {
+        id: 25,
+        plateNumber: 'KR33001',
+        eventType: 'ENTRY',
+        eventDate: '2026-05-10 22:05',
+        ownerName: 'Katarzyna',
+        ownerSurname: 'Wiśniewska',
+        ownerEmail: 'katarzyna.wisniewska@example.com',
+        carPhotoPath: '/car_photos/car001.png'
+    },
+];
