@@ -15,7 +15,6 @@ export const getEvents = async ({
                                     exit = true,
                                 }: GetEventsParams): Promise<PageResponse<ParkingEventDTO>> => {
 
-
     const response = await fetch(
         `${API_URL}/parking-history/events`,
         {

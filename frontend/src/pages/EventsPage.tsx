@@ -81,16 +81,22 @@ const EventsPage = () => {
         };
     }, [page, size, search, entryChecked, exitChecked]);
 
+    const parseDate = (value: string) => new Date(value.replace(' ', 'T'));
+
     const columns = useMemo<ListViewColumn<ParkingEventDTO>[]>(() => [
         {
             key: 'date',
             width: '0.8fr',
             render: (item) => {
                 const color = item.eventType === 'ENTRY' ? '#2e7d32' : '#d32f2f';
-                const [date] = item.eventDate.split(' ');
-                const [y, m, d] = date.split('-');
 
-                return <span style={{color, fontWeight: 600}}>{`${d}.${m}.${y}`}</span>;
+                const date = parseDate(item.eventDate);
+
+                return (
+                    <span style={{color, fontWeight: 600}}>
+            {date.toLocaleDateString('pl-PL')}
+        </span>
+                );
             },
         },
         {
@@ -98,7 +104,17 @@ const EventsPage = () => {
             width: '0.8fr',
             render: (item) => {
                 const color = item.eventType === 'ENTRY' ? '#2e7d32' : '#d32f2f';
-                return <span style={{color, fontWeight: 600}}>{item.eventDate.split(' ')[1]}</span>;
+
+                const date = parseDate(item.eventDate);
+
+                return (
+                    <span style={{color, fontWeight: 600}}>
+                        {date.toLocaleTimeString('pl-PL', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                        })}
+                    </span>
+                );
             },
         },
         {
@@ -133,7 +149,7 @@ const EventsPage = () => {
         <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', gap: 2.5}}>
 
             {error && (
-                <Box sx={{ mb: 2 }}>
+                <Box sx={{mb: 2}}>
                     <Alert severity="error">
                         {error}
                     </Alert>
@@ -162,7 +178,8 @@ const EventsPage = () => {
                                 color: isEntry ? '#2e7d32' : '#d32f2f',
                             }}
                         >
-                            {isEntry ? <ArrowDropUpIcon sx={{fontSize: 48}} /> : <ArrowDropDownIcon sx={{fontSize: 48}} />}
+                            {isEntry ? <ArrowDropUpIcon sx={{fontSize: 48}}/> :
+                                <ArrowDropDownIcon sx={{fontSize: 48}}/>}
                         </Avatar>
                     );
                 }}

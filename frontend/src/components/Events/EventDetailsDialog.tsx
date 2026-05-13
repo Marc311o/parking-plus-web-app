@@ -32,6 +32,9 @@ export default function EventDetailsDialog({
 
     const [imgOk, setImgOk] = useState(true);
 
+    const parseDate = (value: string) =>
+        new Date(value.replace(' ', 'T'));
+
     useEffect(() => {
         if (open) {
             setImgOk(true);
@@ -123,7 +126,14 @@ export default function EventDetailsDialog({
                         </Typography>
 
                         <Typography sx={{fontSize: 14, mb: 1}}>
-                            <b>{formatMessage({id: 'events.details.date'})}:</b> {event.eventDate}
+                            <b>{formatMessage({id: 'events.details.date'})}: </b>
+                            {new Date(event.eventDate).toLocaleString('pl-PL', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            })}
                         </Typography>
 
                         <Typography sx={{fontSize: 14, mb: 1}}>
