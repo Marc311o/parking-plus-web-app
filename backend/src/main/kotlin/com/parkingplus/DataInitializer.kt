@@ -14,7 +14,7 @@ class DataInitializer(
     private val testDataGenerator: com.parkingplus.testdata.TestDataGenerator,
     @Value("\${app.admin.email:admin@parking.pl}") private val adminEmail: String,
     @Value("\${app.admin.password:#{null}}") private val adminPassword: String?,
-    @Value("\${app.testdata.enabled:false}") private val testDataEnabled: Boolean
+    @Value("\${app.testdata.enabled:true}") private val testDataEnabled: Boolean
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
