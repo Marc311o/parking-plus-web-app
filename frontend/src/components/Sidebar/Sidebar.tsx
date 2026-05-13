@@ -15,6 +15,7 @@ import EventIcon from '@mui/icons-material/Event';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import {useIntl} from 'react-intl';
 import {useLocation, useNavigate} from 'react-router-dom';
 import logo from '@assets/logo.png';
@@ -48,6 +49,12 @@ const Sidebar = () => {
             icon: <DashboardIcon/>,
             path: '/',
             active: location.pathname === '/dashboard',
+        },
+        {
+            text: formatMessage({id: 'sidebar.menu.dashboard'}),
+            icon: <ShoppingCartOutlinedIcon/>,
+            path: '/parkingPurchase',
+            active: location.pathname === '/parkingPurchase',
         },
         {
             text: formatMessage({id: 'sidebar.menu.statistics'}),

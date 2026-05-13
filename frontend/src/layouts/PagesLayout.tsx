@@ -20,6 +20,7 @@ const PagesLayout = () => {
         {prefix: '/pricing', navbar: <PricingNavbar/>},
         {prefix: '/settings', navbar: <SettingsNavbar/>},
         {prefix: '/dashboard', navbar: <DashboardNavbar/>},
+        {prefix: '/parkingPurchase', navbar: <SettingsNavbar/>},
         {prefix: '/', navbar: <DashboardNavbar/>},
     ];
 
