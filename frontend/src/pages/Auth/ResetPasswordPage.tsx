@@ -1,21 +1,18 @@
-import React, { useState } from "react";
-import "./Login.css";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import renderIcon from "../../utils/RenderIcon";
+import React, {useState} from "react";
+import {useNavigate, useSearchParams} from "react-router-dom";
+import { useIntl } from "react-intl";
+import {Alert, Box, Stack, Typography} from "@mui/material";
+import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
+import ButtonWhite from "@components/Login/ButtonWhite.tsx";
+import { resetPassword  } from "@api/Login/auth";
+import QuestionMark from '@assets/questionMark.svg';
 
-import { Alert, Box } from "@mui/material";
-import EyeOn from '@assets/eyeOn.svg';
-import EyeOff from '@assets/eyeOff.svg';
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 const ResetPasswordPage = () => {
+    const {formatMessage} = useIntl();
 
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
-
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatPassword, setShowRepeatPassword] = useState(false);
 
     const [password, setPassword] = useState("");
     const [passwordRepeat, setPasswordRepeat] = useState("");
@@ -26,6 +23,8 @@ const ResetPasswordPage = () => {
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
     const [passwordRepeatEmptyError, setPasswordRepeatEmptyError] = useState(false);
 
+    const [success, setSuccess] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -33,16 +32,17 @@ const ResetPasswordPage = () => {
         navigate("/login");
     };
 
-    const handleResetPassword = async () => {
+    const handleResetPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
         setError("");
 
         if (!token) {
-            setError("Brak tokenu resetującego");
+            setError(formatMessage({ id: 'logins.errors.auth.missingToken' }));
             return;
         }
 
         if (!password || !passwordRepeat) {
-            setError("Wszystkie pola są wymagane");
+            setError(formatMessage({ id: 'logins.errors.auth.emptyFields' }));
             if (!password)
                 setPasswordEmptyError(true)
             if (!passwordRepeat)
@@ -51,12 +51,12 @@ const ResetPasswordPage = () => {
         }
 
         if (password.length < 6) {
-            setError("Hasło powinno mieć min. 6 znaków");
+            setError(formatMessage({ id: 'logins.errors.auth.passwordTooShort' }));
             return;
         }
 
         if (password !== passwordRepeat) {
-            setError("Hasła nie są identyczne");
+            setError(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }));
             return;
         }
 
@@ -64,29 +64,20 @@ const ResetPasswordPage = () => {
         try {
             setLoading(true);
 
-            const res = await fetch(`${API_URL}/api/auth/reset-password`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    token: token,
-                    newPassword: password,
-                }),
-            });
+            await resetPassword(token, password);
 
-            if (!res.ok) {
-                throw new Error("Token jest nieprawidłowy lub wygasł");
-            }
+            setSuccess(true);
+            setError("");
 
-            alert("Hasło zostało zmienione poprawnie");
-            navigate("/login");
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
 
         } catch (err) {
             if (err instanceof Error) {
                 setError(err.message);
             } else {
-                setError("Wystąpił nieznany błąd");
+                setError(formatMessage({ id: 'logins.errors.auth.unknown' }));
             }
         } finally {
             setLoading(false);
@@ -94,7 +85,7 @@ const ResetPasswordPage = () => {
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
 
         switch (name) {
             case "password":
@@ -110,73 +101,118 @@ const ResetPasswordPage = () => {
     };
 
     return (
-        <Box sx={{ width: '100%', minHeight: '100vh' }}>
-            <div className='container'>
+        <Box sx={{width: '100%', minHeight: '100vh'}}>
+            <Box
+                sx={{
+                    width: "100%",
+                    backgroundColor: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                    padding: "20px 0",
+                    minHeight: "100vh",
+                    boxSizing: "border-box",
+                }}
+            >
 
-                <h1>RESET HASŁA</h1>
+                <Typography
+                    variant="h4"
+                    component="h1"
+                    sx={{
+                        color: "#5E076E",
+                        fontFamily: `"Poppins", "Segoe UI", Arial, sans-serif`,
+                        fontWeight: 600,
+                        letterSpacing: "1px",
+                        textTransform: "uppercase",
+                        mt: 4,
+                    }}
+                >
+                    {formatMessage({ id: 'logins.resetPassword.title' })}
+                </Typography>
 
-                <div className='inputs'>
+                <Box
+                    component="img"
+                    src={QuestionMark}
+                    alt="Question Mark"
+                    sx={{width: '100%', maxWidth: 150, mt: 5,}}
+                />
 
-                    {error && <Alert severity="error">{error}</Alert>}
+                <Box component="form" onSubmit={handleResetPassword}
+                     sx={{
+                         display: "flex",
+                         flexDirection: "column",
+                         alignItems: "center",
+                     }}
+                >
 
-                    {/* password */}
-                    <label className='inputTitle'>Nowe hasło</label>
+                    <Stack
+                        spacing={2}
+                        sx={{
+                            mt: "55px",
+                            alignItems: "flex-start",
+                            width: 350,
+                        }}
+                    >
 
-                    <div className='input passwordBox'>
-                        <input
+                        {error && (
+                            <Alert severity="error" sx={{ width: "100%" }}>
+                                {error}
+                            </Alert>
+                        )}
+
+                        {success && (
+                            <Alert severity="success" sx={{ width: "100%" }}>
+                                {formatMessage({ id: 'logins.resetPassword.success' })}
+                            </Alert>
+                        )}
+
+                        {/* password */}
+                        <AuthPasswordField
                             name="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Nowe hasło"
+                            label={formatMessage({ id: "logins.resetPassword.passwordLabel" })}
+                            placeholder={formatMessage({ id: "logins.resetPassword.passwordPlaceholder" })}
                             value={password}
                             onChange={(e) => handleInputChange(e)}
-                            className={passwordEmptyError ? "errorInput" : ""}
+                            disabled={loading}
+                            error={passwordEmptyError}
                         />
 
-                        <span
-                            className="toggleIcon"
-                            onClick={() => setShowPassword(prev => !prev)}
-                        >
-                            {showPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-                        </span>
-                    </div>
-
-                    {/* repeat password */}
-                    <label className='inputTitle'>Powtórz nowe hasło</label>
-
-                    <div className='input passwordBox'>
-                        <input
+                        {/* password repeat */}
+                        <AuthPasswordField
                             name="passwordRepeat"
-                            type={showRepeatPassword ? "text" : "password"}
-                            placeholder="Powtórz nowe hasło"
+                            label={formatMessage({ id: "logins.resetPassword.confirmPasswordLabel" })}
+                            placeholder={formatMessage({ id: "logins.resetPassword.confirmPasswordPlaceholder" })}
                             value={passwordRepeat}
                             onChange={(e) => handleInputChange(e)}
-                            className={passwordRepeatEmptyError ? "errorInput" : ""}
+                            disabled={loading}
+                            error={passwordRepeatEmptyError}
                         />
 
-                        <span
-                            className="toggleIcon"
-                            onClick={() => setShowRepeatPassword(prev => !prev)}
-                        >
-                            {showRepeatPassword ? renderIcon(EyeOff) : renderIcon(EyeOn)}
-                        </span>
-                    </div>
+                    </Stack>
 
-                </div>
 
-                <div className='buttons'>
-                    <button
-                        onClick={handleResetPassword}
-                        className='signupBtn'
-                        disabled={loading}
+                    <Stack
+                        direction="row"
+                        spacing={1.25}
+                        alignItems="center"
+                        sx={{
+                            py: "5px",
+                            mt: 4,
+                        }}
                     >
-                        {loading ? "Resetowanie..." : "Resetuj hasło"}
-                    </button>
 
-                    <button onClick={handleBack} className='signupBtn'>
-                        Wróć
-                    </button>
-                </div>
-            </div>
+                        <ButtonWhite type="submit">
+                            {loading ? formatMessage({ id: "logins.resetPassword.resetButton" }) : formatMessage({ id: "logins.resetPassword.verifyButton" })}
+                        </ButtonWhite>
+
+                        <ButtonWhite type="button" onClick={handleBack}>
+                            {formatMessage({ id: "logins.resetPassword.backButton" })}
+                        </ButtonWhite>
+
+                    </Stack>
+                </Box>
+            </Box>
         </Box>
     );
 };
