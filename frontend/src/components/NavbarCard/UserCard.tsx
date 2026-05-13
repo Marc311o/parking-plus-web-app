@@ -1,7 +1,13 @@
 import {Box, Typography, Paper, Avatar} from '@mui/material';
+import {useAuthStore} from "@store/useAuthStore";
 
 //TODO: AFTER USEAUTHSTORE WILL BE CREATED, THIS COMPONENT SHOULD BE UPDATED TO SHOW THE REAL USER DATA
 const UserCard = () => {
+
+    const user = useAuthStore((state) => state.user);
+
+    if (!user) return null;
+
     return (
         <Paper
             elevation={0}
@@ -20,10 +26,10 @@ const UserCard = () => {
             <Avatar sx={{width: 56, height: 56, bgcolor: '#dfdfe2'}}/>
             <Box sx={{minWidth: 0}}>
                 <Typography variant="body2" sx={{fontWeight: 700, color: 'text.primary'}}>
-                    Operator Test
+                    {user.name} {user.surname}
                 </Typography>
                 <Typography variant="caption" sx={{color: 'text.secondary', display: 'block'}}>
-                    operator.test@gmail.com
+                    {user.email}
                 </Typography>
             </Box>
         </Paper>

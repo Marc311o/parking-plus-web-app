@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {Link as RouterLink} from "react-router-dom";
 import {Link as MuiLink, Stack, Typography} from "@mui/material";
 import { useIntl } from "react-intl";
-import { login, verifyMfa } from "@api/Login/auth";
+import { login, verifyMfa, fetchUserData } from "@api/Login/auth";
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress} from "@mui/material";
 import {useAuthStore} from "@store/useAuthStore";
@@ -16,6 +16,7 @@ import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 const Login = () => {
     const {formatMessage} = useIntl();
 
+    const setUser = useAuthStore((state) => state.setUser);
     const setToken = useAuthStore((state) => state.setToken);
 
     const [email, setEmail] = useState("");
@@ -92,15 +93,18 @@ const Login = () => {
             if (result.mfa) {
                 setPreToken(result.preAuthToken);
                 setStep("2fa");
-            } else {
-                setToken(result.token);
-                navigate("/dashboard");
+                return;
             }
+
+            const userData = await fetchUserData(result.token);
+
+            setToken(result.token);
+            setUser(userData);
+
+            navigate("/dashboard");
 
         } catch (err) {
             setError(formatMessage({ id: 'logins.errors.auth.invalidCredentials' }));
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -115,6 +119,10 @@ const Login = () => {
             const data = await verifyMfa(preToken, totpCode);
 
             setToken(data.token);
+
+            const userData = await fetchUserData(data.token);
+            setUser(userData);
+
             navigate("/");
 
         } catch (err) {
