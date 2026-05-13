@@ -83,4 +83,7 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
         @Param("startOfDay") startOfDay: LocalDateTime,
         @Param("endOfDay") endOfDay: LocalDateTime
     ): List<ParkingHistoryEntity>
+
+    @Query("SELECT p FROM ParkingHistoryEntity p JOIN FETCH p.vehicle v JOIN FETCH v.owner")
+    fun findAllWithVehicleAndOwner(): List<ParkingHistoryEntity>
 }
