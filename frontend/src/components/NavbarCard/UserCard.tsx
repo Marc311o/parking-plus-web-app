@@ -1,7 +1,6 @@
 import {Box, Typography, Paper, Avatar} from '@mui/material';
 import {useAuthStore} from "@store/useAuthStore";
 
-//TODO: AFTER USEAUTHSTORE WILL BE CREATED, THIS COMPONENT SHOULD BE UPDATED TO SHOW THE REAL USER DATA
 const UserCard = () => {
 
     const user = useAuthStore((state) => state.user);
