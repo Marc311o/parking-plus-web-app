@@ -6,6 +6,8 @@ import theme from './theme';
 
 import enMessages from '@locales/en.json';
 import plMessages from '@locales/pl.json';
+import {useAuthStore} from "@store/useAuthStore.tsx";
+import {useEffect} from "react";
 
 type Messages = Record<string, string | Messages>;
 
@@ -30,6 +32,13 @@ const flattenMessages = (
 const rawMessages = {en: enMessages, pl: plMessages};
 
 function App() {
+
+    const initialize = useAuthStore((state) => state.initialize);
+
+    useEffect(() => {
+        initialize();
+    }, []);
+
     const locale = 'en';
 
     const messages = flattenMessages(
