@@ -52,14 +52,9 @@ The backend is implemented in **Kotlin** using **Spring Boot**, providing a robu
 
 * **Spring Security + JWT**
 
-* **Flyway** – database migrations
-
 * **PostgreSQL**
 
 * **OpenAPI / Swagger**
-
-* **JUnit + Testcontainers**
-
 
 The application is organized into domain-based modules:
 
@@ -87,15 +82,13 @@ The frontend is built with **Vue 3** using the **Nuxt** framework, enabling a mo
 
 **Technologies**
 
-* **Vue 3**
-
-* **Nuxt**
+* **React**
 
 * **TypeScript**
 
-* **Pinia** – state management
+* **JavaScript (Chart.js)**
 
-* **Tailwind CSS**
+* **CSS**
 
 The interface is divided into three main areas:
 
