@@ -245,5 +245,20 @@
       "invalidPrices": "Podaj poprawne ceny.",
       "saveTariff": "Nie udało się zapisać ceny."
     }
+  },
+  "events": {
+    "list": {
+      "empty": "Brak zdarzeń",
+      "details": "Szczegóły"
+    },
+    "entry": "Wjazd",
+    "exit": "Wyjazd",
+    "details": {
+      "title": "Szczegóły zdarzenia",
+      "plate": "Rejestracja",
+      "date": "Data",
+      "type": "Typ",
+      "id": "ID"
+    }
   }
 }

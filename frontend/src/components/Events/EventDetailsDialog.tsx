@@ -11,7 +11,10 @@ import {
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 
-type ParkingEventType = 'ENTRY' | 'EXIT';
+import {useIntl} from 'react-intl';
+
+import type {ParkingEventType} from '@api/Events';
+
 
 export type ParkingEventDTO = {
     id: number;
@@ -34,6 +37,8 @@ export default function EventDetailsDialog({
     if (!event) {
         return null;
     }
+
+    const {formatMessage} = useIntl();
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
@@ -85,7 +90,7 @@ export default function EventDetailsDialog({
 
                     <Box>
                         <Typography sx={{fontSize: 18, fontWeight: 800}}>
-                            Szczegóły zdarzenia
+                            {formatMessage({id: 'events.details.title'})}
                         </Typography>
 
                         <Typography sx={{fontSize: 13, opacity: 0.85}}>
@@ -107,20 +112,20 @@ export default function EventDetailsDialog({
                         }}
                     >
                         <Typography sx={{fontSize: 14, mb: 1}}>
-                            <b>Rejestracja:</b> {event.plateNumber}
+                            <b>{formatMessage({id: 'events.details.plate'})}:</b> {event.plateNumber}
                         </Typography>
 
                         <Typography sx={{fontSize: 14, mb: 1}}>
-                            <b>Typ:</b>{' '}
-                            {event.eventType === 'ENTRY' ? 'Wjazd' : 'Wyjazd'}
+                            <b>{formatMessage({id: 'events.details.type'})}:</b>{' '}
+                            {event.eventType === 'ENTRY' ? formatMessage({id: 'events.entry'}) : formatMessage({id: 'events.exit'})}
                         </Typography>
 
                         <Typography sx={{fontSize: 14, mb: 1}}>
-                            <b>Data:</b> {event.eventDate}
+                            <b>{formatMessage({id: 'events.details.date'})}:</b> {event.eventDate}
                         </Typography>
 
                         <Typography sx={{fontSize: 14}}>
-                            <b>ID:</b> {event.id}
+                            <b>{formatMessage({id: 'events.details.id'})}:</b> {event.id}
                         </Typography>
                     </Paper>
                 </Box>
