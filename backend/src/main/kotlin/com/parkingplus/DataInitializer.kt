@@ -11,11 +11,20 @@ import org.springframework.stereotype.Component
 class DataInitializer(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val testDataGenerator: com.parkingplus.testdata.TestDataGenerator,
     @Value("\${app.admin.email:admin@parking.pl}") private val adminEmail: String,
-    @Value("\${app.admin.password:#{null}}") private val adminPassword: String?
+    @Value("\${app.admin.password:#{null}}") private val adminPassword: String?,
+    @Value("\${app.testdata.enabled:true}") private val testDataEnabled: Boolean
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
+        initializeAdmin()
+        if (testDataEnabled) {
+            testDataGenerator.generate()
+        }
+    }
+
+    private fun initializeAdmin() {
         if (userRepository.findAllByIsOperatorTrue().isEmpty()) {
             val password = adminPassword
                 ?: throw IllegalStateException(
