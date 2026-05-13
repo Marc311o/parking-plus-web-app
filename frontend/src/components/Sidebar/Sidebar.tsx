@@ -18,6 +18,7 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import {useIntl} from 'react-intl';
 import {useLocation, useNavigate} from 'react-router-dom';
 import logo from '@assets/logo.png';
+import {useAuthStore} from "../../store/useAuthStore.tsx";
 
 const SidebarContainer = styled(Box)(({theme}) => ({
     width: 300,
@@ -34,6 +35,12 @@ const Sidebar = () => {
     const {formatMessage} = useIntl();
     const location = useLocation();
     const navigate = useNavigate();
+
+    const logout = useAuthStore((state) => state.logout);
+    const handleLogout = () => {
+        logout()
+        navigate('/login');
+    };
 
     const menuItems = [
         {
@@ -78,8 +85,7 @@ const Sidebar = () => {
         {
             text: formatMessage({id: 'sidebar.other.logout'}),
             icon: <LogoutIcon/>,
-            path: '/logout',
-            active: false,
+            onClick: handleLogout,
         },
     ];
 
@@ -167,7 +173,13 @@ const Sidebar = () => {
                 {secondaryItems.map((item) => (
                     <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
                         <ListItemButton
-                            onClick={() => navigate(item.path)}
+                            onClick={() => {
+                                if (item.onClick) {
+                                    item.onClick();
+                                } else {
+                                    navigate(item.path);
+                                }
+                            }}
                             sx={{
                                 minHeight: 44,
                                 borderRadius: 2.5,
