@@ -412,9 +412,8 @@ class ParkingHistoryService(
 
     @Transactional(readOnly = true)
     fun getParkingEvents(): List<ParkingEventDTO> {
-        val history = parkingHistoryRepository.findAll()
+        val history = parkingHistoryRepository.findAllWithVehicleAndOwner()
         val events = mutableListOf<ParkingEventDTO>()
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
         for (entry in history) {
             val owner = entry.vehicle.owner
@@ -424,8 +423,8 @@ class ParkingHistoryService(
                 ParkingEventDTO(
                     id = entryId * 10,
                     plateNumber = entry.vehicle.licensePlate,
-                    eventType = "ENTRY",
-                    eventDate = entry.startTime.format(formatter),
+                    eventType = ParkingEventType.ENTRY,
+                    eventDate = entry.startTime,
                     ownerName = owner.name,
                     ownerSurname = owner.surname,
                     ownerEmail = owner.email,
@@ -438,8 +437,8 @@ class ParkingHistoryService(
                     ParkingEventDTO(
                         id = entryId * 10 + 1,
                         plateNumber = entry.vehicle.licensePlate,
-                        eventType = "EXIT",
-                        eventDate = entry.endTime!!.format(formatter),
+                        eventType = ParkingEventType.EXIT,
+                        eventDate = entry.endTime!!,
                         ownerName = owner.name,
                         ownerSurname = owner.surname,
                         ownerEmail = owner.email,
@@ -451,5 +450,4 @@ class ParkingHistoryService(
 
         return events.sortedByDescending { it.eventDate }
     }
-
 }
