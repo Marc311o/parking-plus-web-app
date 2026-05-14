@@ -19,6 +19,7 @@ import com.parkingplus.transactions.enums.TransactionType
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
@@ -120,7 +121,8 @@ class TestDataGenerator(
                 password = passwordEncoder.encode("password123"),
                 isOperator = false,
                 isMfaEnabled = isMfaEnabled,
-                mfaSecret = mfaSecret
+                mfaSecret = mfaSecret,
+                balance = BigDecimal(Random.nextInt(50, 501))
             )
             users.add(userRepository.save(user))
         }

@@ -8,7 +8,8 @@ fun UserEntity.toDTO() = UserDTO(
     surname = surname,
     email = email,
     isOperator = isOperator,
-    isMfaEnabled = isMfaEnabled
+    isMfaEnabled = isMfaEnabled,
+    balance = balance
 )
 
 

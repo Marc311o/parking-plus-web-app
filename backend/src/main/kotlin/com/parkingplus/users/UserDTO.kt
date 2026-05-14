@@ -2,6 +2,7 @@ package com.parkingplus.users
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
+import java.math.BigDecimal
 
 data class UserDTO(
     val id: Long? = null,
@@ -18,5 +19,7 @@ data class UserDTO(
 
     val isOperator: Boolean = false,
 
-    val isMfaEnabled: Boolean = false
+    val isMfaEnabled: Boolean = false,
+
+    val balance: BigDecimal = BigDecimal.ZERO
 )
