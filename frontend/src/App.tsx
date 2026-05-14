@@ -3,6 +3,7 @@ import {IntlProvider} from 'react-intl';
 import {CssBaseline, ThemeProvider} from '@mui/material';
 import AppRoutes from './AppRoutes';
 import theme from './theme';
+import {useLocaleStore} from '@store/useLocaleStore';
 
 import enMessages from '@locales/en.json';
 import plMessages from '@locales/pl.json';
@@ -39,7 +40,7 @@ function App() {
         initialize();
     }, []);
 
-    const locale = 'en';
+    const locale = useLocaleStore((state) => state.locale);
 
     const messages = flattenMessages(
         rawMessages[locale as keyof typeof rawMessages] as Messages

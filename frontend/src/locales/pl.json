@@ -355,5 +355,17 @@
       "ownerSurname": "Nazwisko właściciela",
       "ownerEmail": "E-mail właściciela"
     }
+  },
+  "settings": {
+    "tabs_general": "Ogólne",
+    "tabs_account": "Moje konto",
+    "general_title": "Ustawienia ogólne",
+    "account_title": "Moje konto",
+    "language": "Język strony",
+    "first_name": "Imię",
+    "last_name": "Nazwisko",
+    "email": "Adres e-mail",
+    "lang_pl": "Polski",
+    "lang_en": "English"
   }
 }

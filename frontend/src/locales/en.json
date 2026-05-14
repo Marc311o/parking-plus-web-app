@@ -43,7 +43,6 @@
       "resetButton": "Resetting...",
       "backButton": "Back",
       "success": "Password has been successfully changed"
-
     },
     "forgotPassword": {
       "title": "FORGOT PASSWORD",
@@ -51,7 +50,7 @@
       "emailLabel": "Email",
       "emailPlaceholder": "Email",
       "resetButton": "Reset password",
-      "sendingButton":  "Sending ...",
+      "sendingButton": "Sending ...",
       "backButton": "Back",
       "success": "If the account exists, a reset link has been sent"
     },
@@ -356,5 +355,17 @@
       "ownerSurname": "Owner surname",
       "ownerEmail": "Owner e-mail"
     }
+  },
+  "settings": {
+    "tabs_general": "General",
+    "tabs_account": "My account",
+    "general_title": "General settings",
+    "account_title": "My account",
+    "language": "Website language",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email address",
+    "lang_pl": "Polish",
+    "lang_en": "English"
   }
 }
