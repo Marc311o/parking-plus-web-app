@@ -8,6 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import java.time.Instant
+import java.math.BigDecimal
 
 @Entity
 @Table(name = "users")
@@ -41,5 +42,8 @@ class UserEntity(
     var mfaSecret: String? = null,
 
     @Column(name = "is_mfa_enabled", nullable = false)
-    var isMfaEnabled: Boolean = false
+    var isMfaEnabled: Boolean = false,
+
+    @Column(name = "balance", nullable = false)
+    var balance: BigDecimal = BigDecimal.ZERO
 )
