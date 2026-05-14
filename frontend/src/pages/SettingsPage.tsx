@@ -1,6 +1,9 @@
+// todo alert replace
+
 import {useState} from 'react';
 import {useIntl, FormattedMessage} from 'react-intl';
 
+import { mfaSetup, mfaConfirm, fetchUserData } from '@api/Login/auth';
 import {useLocaleStore} from '@store/useLocaleStore';
 import {useAuthStore} from '@store/useAuthStore';
 
@@ -14,6 +17,7 @@ import {
     Divider,
     TextField,
     MenuItem,
+    Button,
 } from '@mui/material';
 
 const SettingsPage = () => {
@@ -25,6 +29,59 @@ const SettingsPage = () => {
     const setLocale = useLocaleStore((state) => state.setLocale);
 
     const user = useAuthStore((state) => state.user);
+    const token = useAuthStore((state) => state.token);
+
+
+    const [mfaStep, setMfaStep] = useState<
+        'idle' | 'setup' | 'confirm' | 'enabled'
+    >('idle');
+
+    const [otpCode, setOtpCode] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [mfaSecret, setMfaSecret] = useState<string | null>(null);
+    const [mfaError, setMfaError] = useState<string | null>(null);
+
+    const handleMfaSetup = async () => {
+        if (!user || !token) return;
+
+        setMfaError(null);
+        setLoading(true);
+
+        try {
+            const data = await mfaSetup(token, user.id);
+
+            setMfaSecret(data.secret || null);
+            setMfaStep('setup');
+        } catch (e: any) {
+            setMfaError(e.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleMfaConfirm = async () => {
+        if (!user || !token) return;
+
+        setLoading(true);
+
+        try {
+            await mfaConfirm(token, user.id, user.email, otpCode);
+
+            const refreshedUser = await fetchUserData(token);
+
+            useAuthStore.setState({
+                user: refreshedUser,
+            });
+
+            setMfaStep('enabled');
+            setOtpCode('');
+            alert("success!"); // todo
+        } catch (e: any) {
+            alert(e.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <Box
@@ -36,7 +93,6 @@ const SettingsPage = () => {
             }}
         >
             <Paper
-                elevation={2}
                 sx={{
                     width: '100%',
                     height: '100%',
@@ -46,18 +102,18 @@ const SettingsPage = () => {
             >
                 <Tabs
                     value={tab}
-                    onChange={(_, newValue) => setTab(newValue)}
+                    onChange={(_, v) => {
+                        setTab(v);
+                        setMfaError(null);
+                    }}
                     variant="fullWidth"
                 >
-                    <Tab
-                        label={<FormattedMessage id="settings.tabs_general" />}
-                    />
-                    <Tab
-                        label={<FormattedMessage id="settings.tabs_account" />}
-                    />
+                    <Tab label={<FormattedMessage id="settings.tabs_general" />} />
+                    <Tab label={<FormattedMessage id="settings.tabs_account" />} />
                 </Tabs>
 
                 <Box sx={{p: 4}}>
+                    {/* ================= GENERAL ================= */}
                     {tab === 0 && (
                         <TextField
                             select
@@ -70,22 +126,12 @@ const SettingsPage = () => {
                                 setLocale(e.target.value as 'pl' | 'en')
                             }
                         >
-                            <MenuItem value="pl">
-                                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                                    <span style={{fontSize: 20}}>🇵🇱</span>
-                                    <FormattedMessage id="settings.lang_pl" />
-                                </Box>
-                            </MenuItem>
-
-                            <MenuItem value="en">
-                                <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
-                                    <span style={{fontSize: 20}}>🇬🇧</span>
-                                    <FormattedMessage id="settings.lang_en" />
-                                </Box>
-                            </MenuItem>
+                            <MenuItem value="pl">🇵🇱 Polski</MenuItem>
+                            <MenuItem value="en">🇬🇧 English</MenuItem>
                         </TextField>
                     )}
 
+                    {/* ================= ACCOUNT ================= */}
                     {tab === 1 && (
                         <Stack spacing={3}>
                             <Typography variant="h6">
@@ -94,31 +140,108 @@ const SettingsPage = () => {
 
                             <Divider />
 
-                            <Stack spacing={1}>
-                                <Typography variant="body2" color="text.secondary">
-                                    <FormattedMessage id="settings.first_name" />
-                                </Typography>
-                                <Typography variant="body1">
-                                    {user?.name || '-'}
-                                </Typography>
-                            </Stack>
+                            <Typography>{user?.name || '-'}</Typography>
+                            <Typography>{user?.surname || '-'}</Typography>
+                            <Typography>{user?.email || '-'}</Typography>
 
-                            <Stack spacing={1}>
-                                <Typography variant="body2" color="text.secondary">
-                                    <FormattedMessage id="settings.last_name" />
-                                </Typography>
-                                <Typography variant="body1">
-                                    {user?.surname || '-'}
-                                </Typography>
-                            </Stack>
+                            <Divider />
 
-                            <Stack spacing={1}>
-                                <Typography variant="body2" color="text.secondary">
-                                    <FormattedMessage id="settings.email" />
+                            {/* ================= MFA ================= */}
+                            <Stack spacing={2}>
+                                <Typography variant="h6">
+                                    {intl.formatMessage({ id: 'settings.mfa.title'})}
                                 </Typography>
-                                <Typography variant="body1">
-                                    {user?.email || '-'}
-                                </Typography>
+
+                                {/* IDLE */}
+                                {mfaStep === 'idle' && (
+                                    <Stack spacing={2}>
+                                        {user?.mfaEnabled ? (
+                                            <Typography color="success.main">
+                                                {intl.formatMessage({ id: 'settings.mfa.already_enabled'})}
+                                            </Typography>
+                                        ) : (
+                                            <>
+                                                {mfaError && (
+                                                    <Typography color="error">
+                                                        {mfaError}
+                                                    </Typography>
+                                                )}
+
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={handleMfaSetup}
+                                                    disabled={loading}
+                                                >
+                                                    {intl.formatMessage({ id: 'settings.mfa.enable'})}
+                                                </Button>
+                                            </>
+                                        )}
+                                    </Stack>
+                                )}
+
+                                {/* SETUP */}
+                                {mfaStep === 'setup' && (
+                                    <Stack spacing={2}>
+                                        <Typography variant="body2">
+                                            {intl.formatMessage({ id: 'settings.mfa.code_label'})}
+                                        </Typography>
+
+                                        <Typography variant="caption">
+                                            {intl.formatMessage({ id: 'settings.mfa.secret'})}: {mfaSecret}
+                                        </Typography>
+
+                                        <Button
+                                            variant="outlined"
+                                            onClick={() =>
+                                                setMfaStep('confirm')
+                                            }
+                                        >
+                                            {intl.formatMessage({ id: 'settings.mfa.next'})}
+                                        </Button>
+                                    </Stack>
+                                )}
+
+                                {/* CONFIRM */}
+                                {mfaStep === 'confirm' && (
+                                    <Stack spacing={2}>
+                                        <TextField
+                                            label={intl.formatMessage({ id: 'settings.mfa.code_label'})}
+                                            value={otpCode}
+                                            onChange={(e) =>
+                                                setOtpCode(e.target.value)
+                                            }
+                                            fullWidth
+                                        />
+
+                                        <Box sx={{display: 'flex', gap: 2}}>
+                                            <Button
+                                                variant="contained"
+                                                onClick={handleMfaConfirm}
+                                                disabled={loading}
+                                            >
+                                                {intl.formatMessage({ id: 'settings.mfa.confirm'})}
+                                            </Button>
+
+                                            <Button
+                                                onClick={() => {
+                                                    setMfaStep('idle');
+                                                    setOtpCode('');
+                                                    setMfaSecret(null);
+                                                    setMfaError(null);
+                                                }}
+                                            >
+                                                {intl.formatMessage({ id: 'settings.mfa.cancel'})}
+                                            </Button>
+                                        </Box>
+                                    </Stack>
+                                )}
+
+                                {/* ENABLED */}
+                                {mfaStep === 'enabled' && (
+                                    <Typography color="success.main">
+                                        {intl.formatMessage({ id: 'settings.mfa.enabled'})}
+                                    </Typography>
+                                )}
                             </Stack>
                         </Stack>
                     )}

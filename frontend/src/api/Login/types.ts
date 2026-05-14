@@ -3,6 +3,6 @@ type User = {
     name: string;
     surname: string;
     email: string;
-    "isOperator": false,
-    "isMfaEnabled": false
+    operator: boolean;
+    mfaEnabled: boolean;
 };

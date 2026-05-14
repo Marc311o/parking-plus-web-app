@@ -7,7 +7,7 @@ export async function login(email: string, password: string) {
             "Content-Type": "application/json"
         },
         credentials: "include",
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({email, password})
     });
 
     const data = await response.json();
@@ -62,7 +62,7 @@ export async function createNewAccount(
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, surname, email, password }),
+        body: JSON.stringify({name, surname, email, password}),
     });
 
     if (!response.ok) {
@@ -76,7 +76,7 @@ export async function forgotPassword(email: string) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({email}),
     });
 
     if (!res.ok) {
@@ -117,3 +117,44 @@ export const fetchUserData = async (token: string) => {
 
     return response.json();
 };
+
+export async function mfaSetup(token: string, userId: number) {
+    const res = await fetch(`${API_URL}/users/${userId}/mfa-setup`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data?.message || "MFA setup failed");
+    }
+
+    return data;
+}
+
+export async function mfaConfirm(
+    token: string,
+    userId: number,
+    email: string,
+    code: string
+) {
+    const res = await fetch(`${API_URL}/users/${userId}/mfa-confirm`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({email, code}),
+    });
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "MFA confirm failed");
+    }
+
+    return await res.text();
+}

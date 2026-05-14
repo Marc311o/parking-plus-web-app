@@ -366,6 +366,17 @@
     "last_name": "Last name",
     "email": "Email address",
     "lang_pl": "Polish",
-    "lang_en": "English"
+    "lang_en": "English",
+    "mfa": {
+      "title": "2FA verification",
+      "already_enabled": "2FA is already enabled on your account",
+      "secret": "Secret",
+      "next": "Next",
+      "enable": "Enable 2FA",
+      "code_label": "Code from app",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "enabled": "2FA enabled"
+    }
   }
 }

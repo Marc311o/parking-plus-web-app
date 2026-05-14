@@ -366,6 +366,17 @@
     "last_name": "Nazwisko",
     "email": "Adres e-mail",
     "lang_pl": "Polski",
-    "lang_en": "English"
+    "lang_en": "English",
+    "mfa": {
+      "title": "Weryfikacja 2FA",
+      "already_enabled": "2FA jest już aktywne na Twoim koncie",
+      "secret": "Sekret",
+      "next": "Dalej",
+      "enable": "Włącz 2FA",
+      "code_label": "Kod z aplikacji",
+      "confirm": "Potwierdź",
+      "cancel": "Anuluj",
+      "enabled": "2FA aktywne"
+    }
   }
 }
