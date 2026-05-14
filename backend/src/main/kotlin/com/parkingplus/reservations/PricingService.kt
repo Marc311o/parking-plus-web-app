@@ -3,8 +3,11 @@ package com.parkingplus.reservations
 import com.parkingplus.tariffs.TariffRepository
 import com.parkingplus.users.UserRepository
 import com.parkingplus.vehicles.VehicleRepository
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -20,15 +23,15 @@ class PricingService(
         
         val balanceToUse = if (request.vehicleId != null) {
             val vehicle = vehicleRepository.findById(request.vehicleId).orElseThrow {
-                NoSuchElementException("Vehicle with id ${request.vehicleId} not found")
+                ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle with id ${request.vehicleId} not found")
             }
             if (vehicle.owner.id != userId) {
-                throw IllegalArgumentException("Vehicle with id ${request.vehicleId} does not belong to user $userId")
+                throw ResponseStatusException(HttpStatus.FORBIDDEN, "Vehicle with id ${request.vehicleId} does not belong to user $userId")
             }
             vehicle.owner.balance
         } else {
             val user = userRepository.findById(userId).orElseThrow {
-                NoSuchElementException("User with id $userId not found")
+                ResponseStatusException(HttpStatus.NOT_FOUND, "User with id $userId not found")
             }
             user.balance
         }
@@ -42,9 +45,12 @@ class PricingService(
     }
 
     fun calculatePrice(start: LocalDateTime, end: LocalDateTime): BigDecimal {
+        if (end.isBefore(start) || end == start) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time")
+        }
+
         val durationMinutes = Duration.between(start, end).toMinutes()
         val durationHours = Math.ceil(durationMinutes / 60.0).toInt().coerceAtLeast(1)
-        val dayOfWeek = start.dayOfWeek.value
 
         val tariffs = tariffRepository.findAll()
         val dailyTariffsByDay = tariffs
@@ -61,9 +67,7 @@ class PricingService(
             }
             .groupBy({ (tariffDayOfWeek, hour, _) -> tariffDayOfWeek to hour }, { (_, _, tariff) -> tariff })
 
-        val dailyTariff = dailyTariffsByDay[dayOfWeek]?.firstOrNull()
-
-        var totalCost = 0.0
+        var totalCost = BigDecimal.ZERO
         var currentHour = start
 
         for (h in 0 until durationHours) {
@@ -71,22 +75,33 @@ class PricingService(
             val isFirstHour = (h == 0)
             val hourlyTariffs = hourlyTariffsByDayAndHour[currentHour.dayOfWeek.value to hourOfDay].orEmpty()
 
-            val tariff = hourlyTariffs.firstOrNull {
-                it.isFirstHour == isFirstHour || !it.isFirstHour
-            } ?: hourlyTariffs.firstOrNull()
+            val tariff = if (isFirstHour) {
+                hourlyTariffs.find { it.isFirstHour } ?: hourlyTariffs.find { !it.isFirstHour }
+            } else {
+                hourlyTariffs.find { !it.isFirstHour }
+            }
 
-            totalCost += tariff?.price ?: 5.0
+            val priceToAdd = if (tariff != null) BigDecimal.valueOf(tariff.price) else BigDecimal.valueOf(5.0)
+            totalCost = totalCost.add(priceToAdd)
             currentHour = currentHour.plusHours(1)
         }
 
-        val finalPrice = if (dailyTariff != null && totalCost > dailyTariff.price) dailyTariff.price else totalCost
-        return BigDecimal.valueOf(finalPrice)
+        // Check if daily cap applies (for the start day)
+        val dailyTariff = dailyTariffsByDay[start.dayOfWeek.value]?.firstOrNull()
+        val finalPrice = if (dailyTariff != null) {
+            val dailyPrice = BigDecimal.valueOf(dailyTariff.price)
+            if (totalCost > dailyPrice) dailyPrice else totalCost
+        } else {
+            totalCost
+        }
+
+        return finalPrice.setScale(2, RoundingMode.HALF_UP)
     }
 }
 
 data class ParkingPurchaseRequestDTO(
     val vehicleId: Long?,
-    val mode: String, // 'PURCHASE' | 'RESERVATION'
+    val mode: ParkingPurchaseMode,
     val startTime: LocalDateTime,
     val endTime: LocalDateTime,
     val durationMinutes: Int? = null
