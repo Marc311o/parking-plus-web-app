@@ -20,13 +20,16 @@ class PricingService(
         val price = calculatePrice(request.startTime, request.endTime)
         
         val balanceToUse = if (request.vehicleId != null) {
-            val vehicle = vehicleRepository.findById(request.vehicleId).orElseThrow { 
-                NoSuchElementException("Vehicle with id ${request.vehicleId} not found") 
+            val vehicle = vehicleRepository.findById(request.vehicleId).orElseThrow {
+                NoSuchElementException("Vehicle with id ${request.vehicleId} not found")
+            }
+            if (vehicle.owner.id != userId) {
+                throw IllegalArgumentException("Vehicle with id ${request.vehicleId} does not belong to user $userId")
             }
             vehicle.owner.balance
         } else {
-            val user = userRepository.findById(userId).orElseThrow { 
-                NoSuchElementException("User with id $userId not found") 
+            val user = userRepository.findById(userId).orElseThrow {
+                NoSuchElementException("User with id $userId not found")
             }
             user.balance
         }
