@@ -44,6 +44,6 @@ class UserEntity(
     @Column(name = "is_mfa_enabled", nullable = false)
     var isMfaEnabled: Boolean = false,
 
-    @Column(name = "balance", nullable = false)
+    @Column(name = "balance", nullable = false, precision = 19, scale = 2)
     var balance: BigDecimal = BigDecimal.ZERO
 )
