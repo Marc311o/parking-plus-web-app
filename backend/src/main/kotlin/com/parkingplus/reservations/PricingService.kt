@@ -18,21 +18,21 @@ class PricingService(
 
     fun calculateQuote(request: ParkingPurchaseRequestDTO, userId: Long): ParkingQuoteDTO {
         val price = calculatePrice(request.startTime, request.endTime)
-        
+
         val balanceToUse = if (request.vehicleId != null) {
-            val vehicle = vehicleRepository.findById(request.vehicleId).orElseThrow { 
-                NoSuchElementException("Vehicle with id ${request.vehicleId} not found") 
+            val vehicle = vehicleRepository.findById(request.vehicleId).orElseThrow {
+                NoSuchElementException("Vehicle with id ${request.vehicleId} not found")
             }
             vehicle.owner.balance
         } else {
-            val user = userRepository.findById(userId).orElseThrow { 
-                NoSuchElementException("User with id $userId not found") 
+            val user = userRepository.findById(userId).orElseThrow {
+                NoSuchElementException("User with id $userId not found")
             }
             user.balance
         }
-        
+
         val balanceAfter = balanceToUse.subtract(price)
-        
+
         return ParkingQuoteDTO(
             price = price,
             balanceAfter = balanceAfter
@@ -43,7 +43,7 @@ class PricingService(
         val durationMinutes = Duration.between(start, end).toMinutes()
         val durationHours = Math.ceil(durationMinutes / 60.0).toInt().coerceAtLeast(1)
         val dayOfWeek = start.dayOfWeek.value
-        
+
         val tariffs = tariffRepository.findAll()
         val dailyTariff = tariffs.find { it.isDaily && it.dayOfWeek == dayOfWeek }
 
