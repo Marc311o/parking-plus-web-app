@@ -46,9 +46,23 @@ class PricingService(
         val durationMinutes = Duration.between(start, end).toMinutes()
         val durationHours = Math.ceil(durationMinutes / 60.0).toInt().coerceAtLeast(1)
         val dayOfWeek = start.dayOfWeek.value
-        
+
         val tariffs = tariffRepository.findAll()
-        val dailyTariff = tariffs.find { it.isDaily && it.dayOfWeek == dayOfWeek }
+        val dailyTariffsByDay = tariffs
+            .asSequence()
+            .filter { it.isDaily }
+            .groupBy { it.dayOfWeek }
+        val hourlyTariffsByDayAndHour = tariffs
+            .asSequence()
+            .filter { !it.isDaily }
+            .flatMap { tariff ->
+                (tariff.startHour until tariff.endHour).asSequence().map { hour ->
+                    Triple(tariff.dayOfWeek, hour, tariff)
+                }
+            }
+            .groupBy({ (tariffDayOfWeek, hour, _) -> tariffDayOfWeek to hour }, { (_, _, tariff) -> tariff })
+
+        val dailyTariff = dailyTariffsByDay[dayOfWeek]?.firstOrNull()
 
         var totalCost = 0.0
         var currentHour = start
@@ -56,14 +70,11 @@ class PricingService(
         for (h in 0 until durationHours) {
             val hourOfDay = currentHour.hour
             val isFirstHour = (h == 0)
+            val hourlyTariffs = hourlyTariffsByDayAndHour[currentHour.dayOfWeek.value to hourOfDay].orEmpty()
 
-            val tariff = tariffs.find {
-                !it.isDaily &&
-                        it.dayOfWeek == currentHour.dayOfWeek.value &&
-                        hourOfDay >= it.startHour && hourOfDay < it.endHour &&
-                        (it.isFirstHour == isFirstHour || !it.isFirstHour)
-            }
-                ?: tariffs.find { !it.isDaily && it.dayOfWeek == currentHour.dayOfWeek.value && hourOfDay >= it.startHour && hourOfDay < it.endHour }
+            val tariff = hourlyTariffs.firstOrNull {
+                it.isFirstHour == isFirstHour || !it.isFirstHour
+            } ?: hourlyTariffs.firstOrNull()
 
             totalCost += tariff?.price ?: 5.0
             currentHour = currentHour.plusHours(1)
