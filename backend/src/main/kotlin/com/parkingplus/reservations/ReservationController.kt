@@ -12,7 +12,7 @@ class ReservationController(
     private val pricingService: PricingService
 ) {
 
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @PostMapping("/quote")
     fun getQuote(
         @RequestBody request: ParkingPurchaseRequestDTO,
