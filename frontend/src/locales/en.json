@@ -376,7 +376,8 @@
       "code_label": "Code from app",
       "confirm": "Confirm",
       "cancel": "Cancel",
-      "enabled": "2FA enabled"
+      "enabled": "2FA enabled",
+      "setup_mfa": "Set up your authenticator app"
     }
   }
 }

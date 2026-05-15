@@ -376,7 +376,8 @@
       "code_label": "Kod z aplikacji",
       "confirm": "Potwierdź",
       "cancel": "Anuluj",
-      "enabled": "2FA aktywne"
+      "enabled": "2FA aktywne",
+      "setup_mfa": "Skonfiguruj aplikację uwierzytelniającą"
     }
   }
 }

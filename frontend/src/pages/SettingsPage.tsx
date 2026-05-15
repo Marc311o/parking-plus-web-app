@@ -134,15 +134,21 @@ const SettingsPage = () => {
                     {/* ================= ACCOUNT ================= */}
                     {tab === 1 && (
                         <Stack spacing={3}>
-                            <Typography variant="h6">
-                                <FormattedMessage id="settings.account_title" />
+
+                            <Typography>
+                                <strong>{intl.formatMessage({ id: 'settings.first_name' })}:</strong>{' '}
+                                {user?.name || '-'}
                             </Typography>
 
-                            <Divider />
+                            <Typography>
+                                <strong>{intl.formatMessage({ id: 'settings.last_name' })}:</strong>{' '}
+                                {user?.surname || '-'}
+                            </Typography>
 
-                            <Typography>{user?.name || '-'}</Typography>
-                            <Typography>{user?.surname || '-'}</Typography>
-                            <Typography>{user?.email || '-'}</Typography>
+                            <Typography>
+                                <strong>{intl.formatMessage({ id: 'settings.email' })}:</strong>{' '}
+                                {user?.email || '-'}
+                            </Typography>
 
                             <Divider />
 
@@ -183,7 +189,7 @@ const SettingsPage = () => {
                                 {mfaStep === 'setup' && (
                                     <Stack spacing={2}>
                                         <Typography variant="body2">
-                                            {intl.formatMessage({ id: 'settings.mfa.code_label'})}
+                                            {intl.formatMessage({ id: 'settings.mfa.setup_mfa'})}
                                         </Typography>
 
                                         <Typography variant="caption">
