@@ -18,14 +18,14 @@ class PricingService(
     private val vehicleRepository: VehicleRepository
 ) {
 
-    fun calculateQuote(request: ParkingPurchaseRequestDTO, userId: Long): ParkingQuoteDTO {
+    fun calculateQuote(request: ParkingPurchaseRequestDTO, userId: Long, isAdmin: Boolean = false): ParkingQuoteDTO {
         val price = calculatePrice(request.startTime, request.endTime)
         
         val balanceToUse = if (request.vehicleId != null) {
             val vehicle = vehicleRepository.findById(request.vehicleId).orElseThrow {
                 ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle with id ${request.vehicleId} not found")
             }
-            if (vehicle.owner.id != userId) {
+            if (!isAdmin && vehicle.owner.id != userId) {
                 throw ResponseStatusException(HttpStatus.FORBIDDEN, "Vehicle with id ${request.vehicleId} does not belong to user $userId")
             }
             vehicle.owner.balance
@@ -78,7 +78,7 @@ class PricingService(
             val tariff = if (isFirstHour) {
                 hourlyTariffs.find { it.isFirstHour } ?: hourlyTariffs.find { !it.isFirstHour }
             } else {
-                hourlyTariffs.find { !it.isFirstHour }
+                hourlyTariffs.find { !it.isFirstHour } ?: hourlyTariffs.find { it.isFirstHour }
             }
 
             val priceToAdd = if (tariff != null) BigDecimal.valueOf(tariff.price) else BigDecimal.valueOf(5.0)
