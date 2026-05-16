@@ -58,8 +58,12 @@ class JwtService(
     }
 
     fun extractUserId(token: String): Long? {
-        return Jwts.parserBuilder().setSigningKey(secretKey).build()
-            .parseClaimsJws(token).body.get("id", Long::class.javaObjectType)
+        val body = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).body
+        val id = body["id"]
+        return when (id) {
+            is Number -> id.toLong()
+            else -> null
+        }
     }
 
     fun isOperator(token: String): Boolean {

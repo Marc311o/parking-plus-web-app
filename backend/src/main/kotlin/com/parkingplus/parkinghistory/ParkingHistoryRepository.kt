@@ -16,6 +16,7 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
     fun existsByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): Boolean
     fun findAllByParkingSpaceId(parkingSpaceId: String): List<ParkingHistoryEntity>
     fun findByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): ParkingHistoryEntity?
+    fun existsByVehicleIdAndEndTimeIsNull(vehicleId: Long): Boolean
 
     @Query("SELECT COALESCE(SUM(p.price), 0.0) FROM ParkingHistoryEntity p WHERE p.endTime BETWEEN :start AND :end")
     fun sumPriceByEndTimeBetween(
