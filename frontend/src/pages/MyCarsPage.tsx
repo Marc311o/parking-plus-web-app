@@ -110,7 +110,7 @@ const MyCarsPage = () => {
             key: 'plate',
             width: '1fr',
             render: (item) => (
-                <span style={{fontWeight: 600}}>
+                <span style={{fontWeight: 600, color: '#7F0F96'}}>
                     {item.licensePlate}
                 </span>
             ),
@@ -119,7 +119,7 @@ const MyCarsPage = () => {
             key: 'type',
             width: '1fr',
             render: (item) => (
-                <span style={{fontWeight: 600}}>
+                <span style={{fontWeight: 600, color: '#7F0F96'}}>
                     {formatCarType(item.carType)}
                 </span>
             ),
@@ -195,7 +195,7 @@ const MyCarsPage = () => {
                             width: 38,
                             height: 38,
                             bgcolor: 'transparent',
-                            color: '#1976d2',
+                            color: '#7F0F96',
                         }}
                     >
                         <DirectionsCarIcon/>
