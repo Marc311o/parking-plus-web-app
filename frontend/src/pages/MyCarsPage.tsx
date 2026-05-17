@@ -10,8 +10,10 @@ import AddIcon from '@mui/icons-material/Add';
 import ListView, {type ListViewColumn} from '@components/Common/ListView';
 import type {CarType} from "@api/MyCars";
 import type {VehicleDTO} from "@api/MyCars";
-import {getVehiclesByOwner} from "@api/MyCars";
+import {getVehiclesByOwner, addVehicle} from "@api/MyCars";
 import {useAuthStore} from '@store/useAuthStore';
+
+import AddCarDialog from '@components/MyCars/AddCarDialog';
 
 
 const MyCarsPage = () => {
@@ -28,6 +30,8 @@ const MyCarsPage = () => {
     const [cars, setCars] = useState<VehicleDTO[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const [addDialogOpen, setAddDialogOpen] = useState(false);
 
     const totalElements = cars.length;
     const totalPages = Math.max(Math.ceil(totalElements / size), 1);
@@ -110,6 +114,20 @@ const MyCarsPage = () => {
         },
     ], []);
 
+
+    const handleAddVehicle = async (
+        vehicle: Omit<VehicleDTO, 'id'>
+    ) => {
+        try {
+            const created = await addVehicle(vehicle);
+
+            setCars((prev) => [...prev, created]);
+
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     return (
         <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', gap: 2.5}}>
 
@@ -130,7 +148,7 @@ const MyCarsPage = () => {
                 <Button
                     variant="contained"
                     startIcon={<AddIcon/>}
-                    onClick={() => console.log('Open add car modal')}
+                    onClick={() => setAddDialogOpen(true)}
                 >
                     {formatMessage({id: 'myCars.addCar'})}
                 </Button>
@@ -159,6 +177,14 @@ const MyCarsPage = () => {
                     </Avatar>
                 )}
             />
+
+            <AddCarDialog
+                open={addDialogOpen}
+                onClose={() => setAddDialogOpen(false)}
+                ownerId={ownerId}
+                onSubmit={handleAddVehicle}
+            />
+
         </Box>
     );
 };

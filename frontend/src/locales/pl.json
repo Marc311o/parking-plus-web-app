@@ -421,9 +421,17 @@
   },
   "myCars": {
     "list": {
-      "empty": "Brak pojazdów do wyświetlenia"
+      "empty": "Brak samochodów do wyświetlenia"
     },
-    "addCar": "Dodaj pojazd",
+    "addCar": "Dodaj samochód",
+    "addDialog": {
+      "title": "Dodaj pojazd"
+    },
+    "fields": {
+      "licensePlate": "Numer rejestracyjny",
+      "carType": "Typ pojazdu",
+      "cancel": "Anuluj"
+    },
     "carTypes": {
       "REGULAR_ABLEBODIED": "Standardowy",
       "REGULAR_HANDICAPED": "Standardowy (dla niepełnosprawnych)",

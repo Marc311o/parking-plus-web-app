@@ -19,3 +19,27 @@ export const getVehiclesByOwner = async (
 
     return response.json();
 };
+
+export const addVehicle = async (
+    dto: Omit<VehicleDTO, 'id'>
+): Promise<VehicleDTO> => {
+
+    const response = await fetch(
+        `${API_URL}/vehicles`,
+        {
+            method: 'POST',
+            headers: {
+                ...getHeaders(),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dto),
+        }
+    );
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `Failed to add vehicle: ${response.status}`);
+    }
+
+    return response.json();
+};

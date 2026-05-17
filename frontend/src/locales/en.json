@@ -424,6 +424,14 @@
       "empty": "No cars to display"
     },
     "addCar": "Add car",
+    "addDialog": {
+      "title": "Add vehicle"
+    },
+    "fields": {
+      "licensePlate": "License plate",
+      "carType": "Vehicle type",
+      "cancel": "Cancel"
+    },
     "carTypes": {
       "REGULAR_ABLEBODIED": "Regular",
       "REGULAR_HANDICAPED": "Regular (Handicapped)",
