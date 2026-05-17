@@ -82,9 +82,9 @@ const Login = () => {
         setError("");
 
         if (areEmptyFields()) {
-            setError(formatMessage({ id: 'logins.errors.auth.emptyFields' }))
-            setLoading(false)
-            return
+            setError(formatMessage({ id: 'logins.errors.auth.emptyFields' }));
+            setLoading(false);
+            return;
         }
 
         try {
@@ -102,9 +102,10 @@ const Login = () => {
             setUser(userData);
 
             navigate("/dashboard");
-
         } catch (err) {
             setError(formatMessage({ id: 'logins.errors.auth.invalidCredentials' }));
+        } finally {
+            setLoading(false);
         }
     };
 
