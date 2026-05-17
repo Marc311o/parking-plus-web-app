@@ -117,3 +117,45 @@ export const fetchUserData = async (token: string) => {
 
     return response.json();
 };
+
+
+export async function mfaSetup(token: string, userId: number) {
+    const res = await fetch(`${API_URL}/users/${userId}/mfa-setup`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+        throw new Error(data?.message || "MFA setup failed");
+    }
+
+    return data;
+}
+
+export async function mfaConfirm(
+    token: string,
+    userId: number,
+    email: string,
+    code: string
+) {
+    const res = await fetch(`${API_URL}/users/${userId}/mfa-confirm`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({email, code}),
+    });
+
+    if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "MFA confirm failed");
+    }
+
+    return await res.text();
+}

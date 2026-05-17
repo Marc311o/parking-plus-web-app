@@ -8,6 +8,7 @@ import enMessages from '@locales/en.json';
 import plMessages from '@locales/pl.json';
 import {useAuthStore} from "@store/useAuthStore.tsx";
 import {useEffect} from "react";
+import {useLocaleStore} from '@store/useLocaleStore';
 
 type Messages = Record<string, string | Messages>;
 
@@ -39,7 +40,7 @@ function App() {
         initialize();
     }, []);
 
-    const locale = 'en';
+    const locale = useLocaleStore((state) => state.locale);
 
     const messages = flattenMessages(
         rawMessages[locale as keyof typeof rawMessages] as Messages

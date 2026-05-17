@@ -339,24 +339,6 @@
       "saveTariff": "Could not save the price."
     }
   },
-  "events": {
-    "list": {
-      "empty": "No events found",
-      "details": "Details"
-    },
-    "entry": "Entry",
-    "exit": "Exit",
-    "details": {
-      "title": "Event details",
-      "plate": "Plate number",
-      "date": "Date",
-      "type": "Type",
-      "id": "ID",
-      "ownerName": "Owner name",
-      "ownerSurname": "Owner surname",
-      "ownerEmail": "Owner e-mail"
-    }
-  },
   "parkingPurchase": {
     "title": "Buy or reserve a parking space",
     "subtitle": "Choose your vehicle and parking time, and we will assign a suitable space for you.",
@@ -409,5 +391,31 @@
     },
     "completedButton": "Parking confirmed",
     "backToFormButton": "Back to parking selection"
+  },
+  "settings": {
+    "tabs_general": "General",
+    "tabs_account": "My account",
+    "general_title": "General settings",
+    "account_title": "My account",
+    "language": "Website language",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "email": "Email address",
+    "lang_pl": "Polish",
+    "lang_en": "English",
+    "mfa": {
+      "title": "2FA verification",
+      "already_enabled": "2FA is already enabled on your account",
+      "secret": "Secret",
+      "next": "Next",
+      "enable": "Enable 2FA",
+      "code_label": "Code from app",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "enabled": "2FA enabled",
+      "setup_mfa": "Set up your authenticator app",
+      "invalid_code": "Invalid code",
+      "success": "Two-factor authentication has been enabled successfully"
+    }
   }
 }

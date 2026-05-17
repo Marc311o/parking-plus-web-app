@@ -339,24 +339,6 @@
       "saveTariff": "Nie udało się zapisać ceny."
     }
   },
-  "events": {
-    "list": {
-      "empty": "Brak zdarzeń",
-      "details": "Szczegóły"
-    },
-    "entry": "Wjazd",
-    "exit": "Wyjazd",
-    "details": {
-      "title": "Szczegóły zdarzenia",
-      "plate": "Rejestracja",
-      "date": "Data",
-      "type": "Typ",
-      "id": "ID",
-      "ownerName": "Imię właściciela",
-      "ownerSurname": "Nazwisko właściciela",
-      "ownerEmail": "E-mail właściciela"
-    }
-  },
   "parkingPurchase": {
     "title": "Kup lub zarezerwuj miejsce parkingowe",
     "subtitle": "Wybierz samochód i czas postoju, a my dobierzemy dla Ciebie odpowiednie miejsce.",
@@ -409,5 +391,31 @@
     },
     "completedButton": "Postój zakupiony",
     "backToFormButton": "Wróć do wyboru postoju"
+  },
+  "settings": {
+    "tabs_general": "Ogólne",
+    "tabs_account": "Moje konto",
+    "general_title": "Ustawienia ogólne",
+    "account_title": "Moje konto",
+    "language": "Język strony",
+    "first_name": "Imię",
+    "last_name": "Nazwisko",
+    "email": "Adres e-mail",
+    "lang_pl": "Polski",
+    "lang_en": "English",
+    "mfa": {
+      "title": "Weryfikacja 2FA",
+      "already_enabled": "2FA jest już aktywne na Twoim koncie",
+      "secret": "Sekret",
+      "next": "Dalej",
+      "enable": "Włącz 2FA",
+      "code_label": "Kod z aplikacji",
+      "confirm": "Potwierdź",
+      "cancel": "Anuluj",
+      "enabled": "2FA aktywne",
+      "setup_mfa": "Skonfiguruj aplikację uwierzytelniającą",
+      "invalid_code": "Niepoprawny kod",
+      "success": "Uwierzytelnianie dwuskładnikowe zostało pomyślnie włączone"
+    }
   }
 }
