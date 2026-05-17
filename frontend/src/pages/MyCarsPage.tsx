@@ -11,6 +11,7 @@ import ListView, { type ListViewColumn } from '@components/Common/ListView';
 import type {CarType} from "@api/MyCars";
 import type {VehicleDTO} from "@api/MyCars";
 import {getVehiclesByOwner} from "@api/MyCars";
+import { useAuthStore } from '@store/useAuthStore';
 
 
 const formatCarType = (type: CarType) => {
@@ -35,7 +36,9 @@ const MyCarsPage = () => {
     const page = Number(searchParams.get('page') ?? 0);
     const size = 10;
 
-    const ownerId = "1"; // todo change
+    const user = useAuthStore((state) => state.user);
+
+    const ownerId = user?.id;
 
     const [cars, setCars] = useState<VehicleDTO[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +55,8 @@ const MyCarsPage = () => {
 
 
     useEffect(() => {
+        if (!ownerId) return;
+
         let isMounted = true;
 
         const fetchCars = async () => {
