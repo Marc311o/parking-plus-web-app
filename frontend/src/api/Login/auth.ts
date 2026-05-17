@@ -7,7 +7,7 @@ export async function login(email: string, password: string) {
             "Content-Type": "application/json"
         },
         credentials: "include",
-        body: JSON.stringify({email, password})
+        body: JSON.stringify({ email, password })
     });
 
     const data = await response.json();
@@ -62,7 +62,7 @@ export async function createNewAccount(
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({name, surname, email, password}),
+        body: JSON.stringify({ name, surname, email, password }),
     });
 
     if (!response.ok) {
@@ -76,7 +76,7 @@ export async function forgotPassword(email: string) {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({email}),
+        body: JSON.stringify({ email }),
     });
 
     if (!res.ok) {

@@ -12,6 +12,7 @@ import Login from '@pages/Auth/Login';
 import CreateNewAccount from '@pages/Auth/CreateNewAccountPage';
 import ForgotPassword from '@pages/Auth/ForgotPasswordPage';
 import ResetPassword from '@pages/Auth/ResetPasswordPage';
+import ParkingPurchasePage from "@pages/ParkingPurchasePage.tsx";
 import {ProtectedRoute} from "./login/ProtectedRoute.tsx";
 import {useAuthStore} from "@store/useAuthStore.tsx";
 
@@ -47,6 +48,7 @@ const AppRoutes = () => {
                     <Route path="events" element={<EventsPage/>}/>
                     <Route path="pricing" element={<PricesPage/>}/>
                     <Route path="settings" element={<SettingsPage/>}/>
+                    <Route path="parkingPurchase" element={<ParkingPurchasePage/>}/>
                 </Route>
             </Route>
 
