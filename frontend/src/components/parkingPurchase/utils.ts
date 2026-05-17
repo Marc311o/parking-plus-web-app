@@ -1,7 +1,13 @@
 export const MOCK_WALLET_BALANCE = 120;
 export const MOCK_WALLET_CURRENCY = 'PLN';
 
-export const toDateInputValue = (date: Date) => date.toISOString().slice(0, 10);
+export const toDateInputValue = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
 
 export const toTimeInputValue = (date: Date) => date.toTimeString().slice(0, 5);
 
