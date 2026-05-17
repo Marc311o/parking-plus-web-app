@@ -4,6 +4,6 @@ export type User = {
     surname: string;
     email: string;
     balance: number;
-    "isOperator": false,
-    "isMfaEnabled": false
+    isOperator: boolean;
+    isMfaEnabled: boolean;
 };
