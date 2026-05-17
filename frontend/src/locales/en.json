@@ -418,5 +418,11 @@
       "invalid_code": "Invalid code",
       "success": "Two-factor authentication has been enabled successfully"
     }
+  },
+  "myCars": {
+    "list": {
+      "empty": "No cars to display"
+    },
+    "addCar": "Add car"
   }
 }

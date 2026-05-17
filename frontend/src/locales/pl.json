@@ -418,5 +418,11 @@
       "invalid_code": "Niepoprawny kod",
       "success": "Uwierzytelnianie dwuskładnikowe zostało pomyślnie włączone"
     }
+  },
+  "myCars": {
+    "list": {
+      "empty": "Brak pojazdów do wyświetlenia"
+    },
+    "addCar": "Dodaj pojazd"
   }
 }
