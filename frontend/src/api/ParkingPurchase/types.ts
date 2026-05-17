@@ -1,10 +1,12 @@
+import type { CarType } from '@api/Clients';
+
 export type ParkingPurchaseMode = 'PURCHASE' | 'RESERVATION';
 
 export type VehicleDTO = {
     id?: number;
     licensePlate: string;
     ownerId?: number;
-    carType: string;
+    carType: CarType;
 };
 
 export type ParkingSpaceDTO = {
