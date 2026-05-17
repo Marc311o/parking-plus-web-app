@@ -146,13 +146,13 @@ const ParkingPurchasePage = () => {
         return () => {
             isMounted = false;
         };
-    }, [formatMessage]);
+    }, [formatMessage, userId]);
 
     useEffect(() => {
         let isMounted = true;
 
         const fetchQuote = async () => {
-            if (!isParkingTimeValid) {
+            if (purchaseResult || !isParkingTimeValid) {
                 setQuote(null);
                 return;
             }
@@ -198,6 +198,7 @@ const ParkingPurchasePage = () => {
         parkingStartDateTime,
         parkingEndDateTime,
         isParkingTimeValid,
+        purchaseResult,
         formatMessage,
     ]);
 
@@ -208,6 +209,12 @@ const ParkingPurchasePage = () => {
 
     const handleAddVehicle = () => {
         // TODO: podpiąć okienko dodawania auta.
+    };
+
+    const handleBackToForm = () => {
+        setPurchaseResult(null);
+        setPurchaseError(null);
+        setQuoteError(null);
     };
 
     const handlePurchase = async () => {
@@ -236,8 +243,7 @@ const ParkingPurchasePage = () => {
             });
 
             setPurchaseResult(result);
-
-            useAuthStore.getState().setBalance(result.balanceAfter)
+            useAuthStore.getState().setBalance(result.balanceAfter);
             setCurrency(result.currency ?? MOCK_WALLET_CURRENCY);
         } catch (err) {
             console.error(err);
@@ -246,6 +252,67 @@ const ParkingPurchasePage = () => {
             setIsPurchasing(false);
         }
     };
+
+    if (purchaseResult) {
+        return (
+            <Box
+                sx={{
+                    width: '100%',
+                    minHeight: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2.5,
+                }}
+            >
+                <Box
+                    sx={{
+                        p: {
+                            xs: 2,
+                            md: 3,
+                        },
+                    }}
+                >
+                    <Stack
+                        spacing={2.5}
+                        sx={{
+                            maxWidth: 760,
+                            mx: 'auto',
+                        }}
+                    >
+                        <ParkingPurchaseResultCard
+                            purchaseResult={purchaseResult}
+                            currency={currency}
+                        />
+
+                        <Button
+                            variant="contained"
+                            size="large"
+                            onClick={handleBackToForm}
+                            sx={{
+                                alignSelf: {
+                                    xs: 'stretch',
+                                    sm: 'center',
+                                },
+                                minWidth: 240,
+                                height: 44,
+                                borderRadius: '13px',
+                                bgcolor: '#9C13B8',
+                                textTransform: 'none',
+                                fontWeight: 800,
+                                boxShadow: 'none',
+                                '&:hover': {
+                                    bgcolor: '#7F0F96',
+                                    boxShadow: 'none',
+                                },
+                            }}
+                        >
+                            {formatMessage({id: 'parkingPurchase.backToFormButton'})}
+                        </Button>
+                    </Stack>
+                </Box>
+            </Box>
+        );
+    }
 
     return (
         <Box
@@ -376,13 +443,6 @@ const ParkingPurchasePage = () => {
                                     >
                                         {purchaseError}
                                     </Alert>
-                                )}
-
-                                {purchaseResult && (
-                                    <ParkingPurchaseResultCard
-                                        purchaseResult={purchaseResult}
-                                        currency={currency}
-                                    />
                                 )}
 
                                 <Button

@@ -43,7 +43,6 @@
       "resetButton": "Resetting...",
       "backButton": "Back",
       "success": "Password has been successfully changed"
-
     },
     "forgotPassword": {
       "title": "FORGOT PASSWORD",
@@ -51,7 +50,7 @@
       "emailLabel": "Email",
       "emailPlaceholder": "Email",
       "resetButton": "Reset password",
-      "sendingButton":  "Sending ...",
+      "sendingButton": "Sending ...",
       "backButton": "Back",
       "success": "If the account exists, a reset link has been sent"
     },
@@ -86,7 +85,7 @@
       "clients": "Clients",
       "events": "Events",
       "prices": "Prices",
-      "parkingPurchase":  "Buy spot"
+      "parkingPurchase": "Buy spot"
     },
     "other": {
       "settings": "Settings",
@@ -407,6 +406,8 @@
       "initialData": "Could not load the data needed to prepare parking.",
       "quote": "Could not calculate the price for the selected time.",
       "purchase": "Could not confirm parking."
-    }
+    },
+    "completedButton": "Parking confirmed",
+    "backToFormButton": "Back to parking selection"
   }
 }

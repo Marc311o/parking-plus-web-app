@@ -406,6 +406,8 @@
       "initialData": "Nie udało się pobrać danych potrzebnych do przygotowania postoju.",
       "quote": "Nie udało się wyliczyć ceny dla wybranego czasu.",
       "purchase": "Nie udało się potwierdzić postoju."
-    }
+    },
+    "completedButton": "Postój zakupiony",
+    "backToFormButton": "Wróć do wyboru postoju"
   }
 }
