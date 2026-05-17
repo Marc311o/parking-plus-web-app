@@ -61,7 +61,7 @@ const SettingsPage = () => {
         setLoading(true);
 
         try {
-            const data = await mfaSetup(token, Number(user.id));
+            const data = await mfaSetup(token, user.id);
 
             setMfaSecret(data.secret || null);
             setMfaStep('setup');
@@ -79,7 +79,7 @@ const SettingsPage = () => {
         setOtpError(null);
 
         try {
-            await mfaConfirm(token, Number(user.id), user.email, otpCode);
+            await mfaConfirm(token, user.id, user.email, otpCode);
 
             const refreshedUser = await fetchUserData(token);
 
