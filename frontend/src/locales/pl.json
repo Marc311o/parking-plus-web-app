@@ -423,6 +423,12 @@
     "list": {
       "empty": "Brak pojazdów do wyświetlenia"
     },
-    "addCar": "Dodaj pojazd"
+    "addCar": "Dodaj pojazd",
+    "carTypes": {
+      "REGULAR_ABLEBODIED": "Standardowy",
+      "REGULAR_HANDICAPED": "Standardowy (dla niepełnosprawnych)",
+      "EV_ABLEBODIED": "Elektryczny",
+      "EV_HANDICAPED": "Elektryczny (dla niepełnosprawnych)"
+    }
   }
 }

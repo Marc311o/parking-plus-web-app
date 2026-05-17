@@ -1,36 +1,21 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Box, Avatar, Alert } from '@mui/material';
+import {useEffect, useMemo, useState} from 'react';
+import {Box, Avatar, Alert} from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import { useSearchParams } from 'react-router-dom';
-import { useIntl } from 'react-intl';
-import { Button } from '@mui/material';
+import {useSearchParams} from 'react-router-dom';
+import {useIntl} from 'react-intl';
+import {Button} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 
-import ListView, { type ListViewColumn } from '@components/Common/ListView';
+import ListView, {type ListViewColumn} from '@components/Common/ListView';
 import type {CarType} from "@api/MyCars";
 import type {VehicleDTO} from "@api/MyCars";
 import {getVehiclesByOwner} from "@api/MyCars";
-import { useAuthStore } from '@store/useAuthStore';
+import {useAuthStore} from '@store/useAuthStore';
 
-
-const formatCarType = (type: CarType) => {
-    switch (type) {
-        case 'REGULAR_ABLEBODIED':
-            return 'Regular';
-        case 'REGULAR_HANDICAPED':
-            return 'Regular (Handicapped)';
-        case 'EV_ABLEBODIED':
-            return 'EV';
-        case 'EV_HANDICAPED':
-            return 'EV (Handicapped)';
-        default:
-            return type;
-    }
-}; // todo intl
 
 const MyCarsPage = () => {
-    const { formatMessage } = useIntl();
+    const {formatMessage} = useIntl();
     const [searchParams, setSearchParams] = useSearchParams();
 
     const page = Number(searchParams.get('page') ?? 0);
@@ -52,7 +37,11 @@ const MyCarsPage = () => {
         return cars.slice(start, start + size);
     }, [cars, page]);
 
-
+    const formatCarType = (type: CarType) => {
+        return formatMessage({
+            id: `myCars.carTypes.${type}`,
+        });
+    };
 
     useEffect(() => {
         if (!ownerId) return;
@@ -105,7 +94,7 @@ const MyCarsPage = () => {
             key: 'plate',
             width: '1fr',
             render: (item) => (
-                <span style={{ fontWeight: 600 }}>
+                <span style={{fontWeight: 600}}>
                     {item.licensePlate}
                 </span>
             ),
@@ -114,7 +103,7 @@ const MyCarsPage = () => {
             key: 'type',
             width: '1fr',
             render: (item) => (
-                <span style={{ fontWeight: 600 }}>
+                <span style={{fontWeight: 600}}>
                     {formatCarType(item.carType)}
                 </span>
             ),
@@ -122,7 +111,7 @@ const MyCarsPage = () => {
     ], []);
 
     return (
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+        <Box sx={{width: '100%', display: 'flex', flexDirection: 'column', gap: 2.5}}>
 
             {error && (
                 <Alert severity="error">
@@ -140,17 +129,17 @@ const MyCarsPage = () => {
             >
                 <Button
                     variant="contained"
-                    startIcon={<AddIcon />}
+                    startIcon={<AddIcon/>}
                     onClick={() => console.log('Open add car modal')}
                 >
-                    {formatMessage({ id: 'myCars.addCar' })}
+                    {formatMessage({id: 'myCars.addCar'})}
                 </Button>
             </Box>
 
             <ListView
                 items={pagedCars}
                 isLoading={isLoading}
-                emptyMessage={formatMessage({ id: 'myCars.list.empty' })}
+                emptyMessage={formatMessage({id: 'myCars.list.empty'})}
                 columns={columns}
                 pagination={{
                     page,
@@ -166,7 +155,7 @@ const MyCarsPage = () => {
                             color: '#1976d2',
                         }}
                     >
-                        <DirectionsCarIcon />
+                        <DirectionsCarIcon/>
                     </Avatar>
                 )}
             />

@@ -423,6 +423,12 @@
     "list": {
       "empty": "No cars to display"
     },
-    "addCar": "Add car"
+    "addCar": "Add car",
+    "carTypes": {
+      "REGULAR_ABLEBODIED": "Regular",
+      "REGULAR_HANDICAPED": "Regular (Handicapped)",
+      "EV_ABLEBODIED": "EV",
+      "EV_HANDICAPED": "EV (Handicapped)"
+    }
   }
 }
