@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {useIntl, FormattedMessage} from 'react-intl';
 
-import {mfaSetup, mfaConfirm, fetchUserData} from '@api/Login/auth';
+import { mfaSetup, mfaConfirm, fetchUserData } from '@api/Login/auth';
 import {useLocaleStore} from '@store/useLocaleStore';
 import {useAuthStore} from '@store/useAuthStore';
 
@@ -39,6 +39,11 @@ const SettingsPage = () => {
         setVerifySuccess(null);
     };
 
+    useEffect(() => {
+        return () => {
+            resetMfaState();
+        };
+    }, []);
 
     const [mfaStep, setMfaStep] = useState<
         'idle' | 'setup' | 'confirm' | 'enabled'
@@ -48,18 +53,6 @@ const SettingsPage = () => {
     const [loading, setLoading] = useState(false);
     const [mfaSecret, setMfaSecret] = useState<string | null>(null);
     const [mfaError, setMfaError] = useState<string | null>(null);
-
-    useEffect(() => {
-        return () => {
-            resetMfaState();
-        };
-    }, []);
-
-    useEffect(() => {
-        if (mfaStep === 'confirm') {
-            setOtpError(null);
-        }
-    }, [mfaStep]);
 
     const handleMfaSetup = async () => {
         if (!user || !token) return;
@@ -139,8 +132,8 @@ const SettingsPage = () => {
                     }}
                     variant="fullWidth"
                 >
-                    <Tab label={<FormattedMessage id="settings.tabs_general"/>}/>
-                    <Tab label={<FormattedMessage id="settings.tabs_account"/>}/>
+                    <Tab label={<FormattedMessage id="settings.tabs_general" />} />
+                    <Tab label={<FormattedMessage id="settings.tabs_account" />} />
                 </Tabs>
 
                 <Box sx={{p: 4}}>
@@ -167,26 +160,26 @@ const SettingsPage = () => {
                         <Stack spacing={3}>
 
                             <Typography>
-                                <strong>{intl.formatMessage({id: 'settings.first_name'})}:</strong>{' '}
+                                <strong>{intl.formatMessage({ id: 'settings.first_name' })}:</strong>{' '}
                                 {user?.name || '-'}
                             </Typography>
 
                             <Typography>
-                                <strong>{intl.formatMessage({id: 'settings.last_name'})}:</strong>{' '}
+                                <strong>{intl.formatMessage({ id: 'settings.last_name' })}:</strong>{' '}
                                 {user?.surname || '-'}
                             </Typography>
 
                             <Typography>
-                                <strong>{intl.formatMessage({id: 'settings.email'})}:</strong>{' '}
+                                <strong>{intl.formatMessage({ id: 'settings.email' })}:</strong>{' '}
                                 {user?.email || '-'}
                             </Typography>
 
-                            <Divider/>
+                            <Divider />
 
                             {/* ================= MFA ================= */}
                             <Stack spacing={2}>
                                 <Typography variant="h6">
-                                    {intl.formatMessage({id: 'settings.mfa.title'})}
+                                    {intl.formatMessage({ id: 'settings.mfa.title'})}
                                 </Typography>
 
                                 {/* IDLE */}
@@ -194,7 +187,7 @@ const SettingsPage = () => {
                                     <Stack spacing={2}>
                                         {user?.mfaEnabled ? (
                                             <Typography color="success.main">
-                                                {intl.formatMessage({id: 'settings.mfa.already_enabled'})}
+                                                {intl.formatMessage({ id: 'settings.mfa.already_enabled'})}
                                             </Typography>
                                         ) : (
                                             <>
@@ -209,7 +202,7 @@ const SettingsPage = () => {
                                                     onClick={handleMfaSetup}
                                                     disabled={loading}
                                                 >
-                                                    {intl.formatMessage({id: 'settings.mfa.enable'})}
+                                                    {intl.formatMessage({ id: 'settings.mfa.enable'})}
                                                 </Button>
                                             </>
                                         )}
@@ -220,11 +213,11 @@ const SettingsPage = () => {
                                 {mfaStep === 'setup' && (
                                     <Stack spacing={2}>
                                         <Typography variant="body2">
-                                            {intl.formatMessage({id: 'settings.mfa.setup_mfa'})}
+                                            {intl.formatMessage({ id: 'settings.mfa.setup_mfa'})}
                                         </Typography>
 
                                         <Typography variant="caption">
-                                            {intl.formatMessage({id: 'settings.mfa.secret'})}: {mfaSecret}
+                                            {intl.formatMessage({ id: 'settings.mfa.secret'})}: {mfaSecret}
                                         </Typography>
 
                                         <Button
@@ -233,7 +226,7 @@ const SettingsPage = () => {
                                                 setMfaStep('confirm')
                                             }
                                         >
-                                            {intl.formatMessage({id: 'settings.mfa.next'})}
+                                            {intl.formatMessage({ id: 'settings.mfa.next'})}
                                         </Button>
                                     </Stack>
                                 )}
@@ -242,7 +235,7 @@ const SettingsPage = () => {
                                 {mfaStep === 'confirm' && (
                                     <Stack spacing={2}>
                                         <TextField
-                                            label={intl.formatMessage({id: 'settings.mfa.code_label'})}
+                                            label={intl.formatMessage({ id: 'settings.mfa.code_label'})}
                                             value={otpCode}
                                             onChange={(e) =>
                                                 setOtpCode(e.target.value)
@@ -251,13 +244,13 @@ const SettingsPage = () => {
                                         />
 
                                         {verifySuccess && (
-                                            <Alert severity="success" sx={{width: "100%"}}>
+                                            <Alert severity="success" sx={{ width: "100%" }}>
                                                 {verifySuccess}
                                             </Alert>
                                         )}
 
                                         {otpError && (
-                                            <Alert severity="error" sx={{width: "100%"}}>
+                                            <Alert severity="error" sx={{ width: "100%" }}>
                                                 {otpError}
                                             </Alert>
                                         )}
@@ -268,7 +261,7 @@ const SettingsPage = () => {
                                                 onClick={handleMfaConfirm}
                                                 disabled={loading}
                                             >
-                                                {intl.formatMessage({id: 'settings.mfa.confirm'})}
+                                                {intl.formatMessage({ id: 'settings.mfa.confirm'})}
                                             </Button>
 
                                             <Button
@@ -277,7 +270,7 @@ const SettingsPage = () => {
                                                     resetMfaState();
                                                 }}
                                             >
-                                                {intl.formatMessage({id: 'settings.mfa.cancel'})}
+                                                {intl.formatMessage({ id: 'settings.mfa.cancel'})}
                                             </Button>
                                         </Box>
                                     </Stack>
@@ -286,7 +279,7 @@ const SettingsPage = () => {
                                 {/* ENABLED */}
                                 {mfaStep === 'enabled' && (
                                     <Typography color="success.main">
-                                        {intl.formatMessage({id: 'settings.mfa.enabled'})}
+                                        {intl.formatMessage({ id: 'settings.mfa.enabled'})}
                                     </Typography>
                                 )}
                             </Stack>
