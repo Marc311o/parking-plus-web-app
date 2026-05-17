@@ -49,6 +49,11 @@ const MyCarsPage = () => {
         });
     };
 
+    const getErrorMessage = (e: unknown): string => {
+        if (e instanceof Error) return e.message;
+        return 'Unexpected error occurred';
+    };
+
     useEffect(() => {
         if (!ownerId) return;
 
@@ -95,7 +100,7 @@ const MyCarsPage = () => {
 
             setCars((prev) => prev.filter((v) => v.id !== id));
         } catch (e) {
-            console.error(e);
+            setError(getErrorMessage(e));
         }
     };
 
@@ -149,7 +154,7 @@ const MyCarsPage = () => {
             setCars((prev) => [...prev, created]);
 
         } catch (e) {
-            console.error(e);
+            setError(getErrorMessage(e));
         }
     };
 
