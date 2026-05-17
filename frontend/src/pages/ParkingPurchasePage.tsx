@@ -237,8 +237,7 @@ const ParkingPurchasePage = () => {
 
             setPurchaseResult(result);
 
-            // TODO: po integracji z useAuthStore najlepiej aktualizować saldo w store,
-            useAuthStore.getState().setWalletBalance(result.balanceAfter)
+            useAuthStore.getState().setBalance(result.balanceAfter)
             setCurrency(result.currency ?? MOCK_WALLET_CURRENCY);
         } catch (err) {
             console.error(err);
