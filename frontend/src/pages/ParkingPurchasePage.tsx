@@ -51,6 +51,8 @@ const ParkingPurchasePage = () => {
     const [reservationEndTime, setReservationEndTime] = useState(toTimeInputValue(addHours(now, 2)));
 
     const balance = useAuthStore((state) => state.user?.balance ?? null);
+    const userId = useAuthStore((state) => state.user?.id ?? null);
+
     const [currency, setCurrency] = useState(MOCK_WALLET_CURRENCY);
 
     const [quote, setQuote] = useState<ParkingQuoteDTO | null>(null);
@@ -113,9 +115,7 @@ const ParkingPurchasePage = () => {
             setError(null);
 
             try {
-                // TODO: podmienić na getMyVehicles(), gdy backend doda GET /vehicles/me.
-                // Na razie tymczasowo pobieramy auta klienta po ID.
-                const vehiclesResult = await getClientVehicles(4);
+                const vehiclesResult = await getClientVehicles(userId);
 
                 if (!isMounted) {
                     return;
