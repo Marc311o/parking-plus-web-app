@@ -5,12 +5,14 @@ import {useSearchParams} from 'react-router-dom';
 import {useIntl} from 'react-intl';
 import {Button} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 
 import ListView, {type ListViewColumn} from '@components/Common/ListView';
 import type {CarType} from "@api/MyCars";
 import type {VehicleDTO} from "@api/MyCars";
-import {getVehiclesByOwner, addVehicle} from "@api/MyCars";
+import {getVehiclesByOwner, addVehicle, deleteVehicle} from "@api/MyCars";
 import {useAuthStore} from '@store/useAuthStore';
 
 import AddCarDialog from '@components/MyCars/AddCarDialog';
@@ -87,6 +89,16 @@ const MyCarsPage = () => {
         };
     }, [ownerId]);
 
+    const handleDeleteVehicle = async (id: string) => {
+        try {
+            await deleteVehicle(id);
+
+            setCars((prev) => prev.filter((v) => v.id !== id));
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     const handlePageChange = (nextPage: number) => {
         const nextParams = new URLSearchParams(searchParams);
         nextParams.set('page', String(nextPage));
@@ -112,6 +124,19 @@ const MyCarsPage = () => {
                 </span>
             ),
         },
+        {
+            key: 'actions',
+            width: '0.5fr',
+            render: (item) => (
+                <IconButton
+                    onClick={() => handleDeleteVehicle(item.id)}
+                    size="small"
+                    sx={{ color: '#d32f2f' }}
+                >
+                    <CloseIcon />
+                </IconButton>
+            ),
+        }
     ], []);
 
 

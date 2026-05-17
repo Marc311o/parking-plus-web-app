@@ -1,5 +1,5 @@
-import type { VehicleDTO } from './types';
-import { API_URL, getHeaders } from '../core';
+import type {VehicleDTO} from './types';
+import {API_URL, getHeaders} from '../core';
 
 export const getVehiclesByOwner = async (
     ownerId: string
@@ -42,4 +42,28 @@ export const addVehicle = async (
     }
 
     return response.json();
+};
+
+export const deleteVehicle = async (id: string): Promise<void> => {
+    const response = await fetch(
+        `${API_URL}/vehicles/${id}`,
+        {
+            method: 'DELETE',
+            headers: getHeaders(),
+        }
+    );
+
+    if (!response.ok) {
+        const text = await response.text();
+
+        if (response.status === 403) {
+            throw new Error('You are not allowed to delete this vehicle');
+        }
+
+        if (response.status === 404) {
+            throw new Error('Vehicle not found');
+        }
+
+        throw new Error(text || `Failed to delete vehicle: ${response.status}`);
+    }
 };
