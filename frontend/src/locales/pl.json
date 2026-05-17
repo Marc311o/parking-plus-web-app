@@ -87,7 +87,8 @@
       "clients": "Klienci",
       "events": "Zdarzenia",
       "prices": "Cennik",
-      "parkingPurchase": "Zakup miejsce"
+      "parkingPurchase": "Zakup miejsce",
+      "myCars": "Moje pojazdy"
     },
     "other": {
       "settings": "Ustawienia",

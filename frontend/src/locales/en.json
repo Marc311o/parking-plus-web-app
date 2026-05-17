@@ -85,7 +85,8 @@
       "clients": "Clients",
       "events": "Events",
       "prices": "Prices",
-      "parkingPurchase": "Buy spot"
+      "parkingPurchase": "Buy spot",
+      "myCars": "My cars"
     },
     "other": {
       "settings": "Settings",
