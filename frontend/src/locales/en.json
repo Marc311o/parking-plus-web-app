@@ -85,7 +85,8 @@
       "statistics": "Statistics",
       "clients": "Clients",
       "events": "Events",
-      "prices": "Prices"
+      "prices": "Prices",
+      "parkingPurchase":  "Buy spot"
     },
     "other": {
       "settings": "Settings",

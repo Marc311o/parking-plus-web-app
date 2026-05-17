@@ -86,7 +86,8 @@
       "statistics": "Statystyki",
       "clients": "Klienci",
       "events": "Zdarzenia",
-      "prices": "Cennik"
+      "prices": "Cennik",
+      "parkingPurchase": "Zakup miejsce"
     },
     "other": {
       "settings": "Ustawienia",

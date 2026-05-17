@@ -9,6 +9,7 @@ type AuthState = {
 
     setToken: (token: string | null) => void;
     setUser: (user: User | null) => void;
+    setBalance: (balance: number) => void;
 
     initialize: () => Promise<void>;
 
@@ -20,9 +21,21 @@ export const useAuthStore = create<AuthState>()(
         (set, get) => ({
             token: null,
             user: null,
+
             setToken: (token) => set({ token }),
             setUser: (user) => set({ user }),
-            logout: () => set({ token: null }),
+
+            setBalance: (balance) =>
+                set((state) => ({
+                    user: state.user
+                        ? {
+                            ...state.user,
+                            balance,
+                        }
+                        : state.user,
+                })),
+
+            logout: () => set({ token: null, user: null }),
 
             initialize: async () => {
                 const token = get().token;

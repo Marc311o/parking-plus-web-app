@@ -13,11 +13,12 @@ import {
 } from '@api/ParkingPurchase';
 import {getClientVehicles} from '@api/Clients';
 
+import {useAuthStore} from '@store/useAuthStore';
+
 import {
     addHours,
     buildDateTime,
     getCurrentDateTimeValue,
-    MOCK_WALLET_BALANCE,
     MOCK_WALLET_CURRENCY,
     ParkingPurchaseEmptyState,
     ParkingPurchaseHero,
@@ -49,10 +50,7 @@ const ParkingPurchasePage = () => {
     const [reservationEndDate, setReservationEndDate] = useState(toDateInputValue(addHours(now, 2)));
     const [reservationEndTime, setReservationEndTime] = useState(toTimeInputValue(addHours(now, 2)));
 
-    // TODO: później podmienić na saldo z useAuthStore, np.
-    // const balance = useAuthStore((state) => state.user?.walletBalance ?? null);
-    // const currency = useAuthStore((state) => state.user?.currency ?? 'PLN');
-    const [balance, setBalance] = useState<number | null>(MOCK_WALLET_BALANCE);
+    const balance = useAuthStore((state) => state.user?.balance ?? null);
     const [currency, setCurrency] = useState(MOCK_WALLET_CURRENCY);
 
     const [quote, setQuote] = useState<ParkingQuoteDTO | null>(null);
@@ -124,10 +122,6 @@ const ParkingPurchasePage = () => {
                 }
 
                 setVehicles(vehiclesResult);
-
-                // TODO: usunąć, gdy saldo będzie brane z useAuthStore po /me.
-                setBalance(MOCK_WALLET_BALANCE);
-                setCurrency(MOCK_WALLET_CURRENCY);
 
                 const firstVehicleWithId = vehiclesResult.find((vehicle) => vehicle.id !== undefined);
 
@@ -244,8 +238,7 @@ const ParkingPurchasePage = () => {
             setPurchaseResult(result);
 
             // TODO: po integracji z useAuthStore najlepiej aktualizować saldo w store,
-            // np. useAuthStore.getState().setWalletBalance(result.balanceAfter)
-            setBalance(result.balanceAfter);
+            useAuthStore.getState().setWalletBalance(result.balanceAfter)
             setCurrency(result.currency ?? MOCK_WALLET_CURRENCY);
         } catch (err) {
             console.error(err);

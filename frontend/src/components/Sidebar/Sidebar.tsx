@@ -51,7 +51,7 @@ const Sidebar = () => {
             active: location.pathname === '/dashboard',
         },
         {
-            text: formatMessage({id: 'sidebar.menu.dashboard'}),
+            text: formatMessage({id: 'sidebar.menu.parkingPurchase'}),
             icon: <ShoppingCartOutlinedIcon/>,
             path: '/parkingPurchase',
             active: location.pathname === '/parkingPurchase',
