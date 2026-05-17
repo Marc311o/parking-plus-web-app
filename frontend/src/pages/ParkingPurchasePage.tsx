@@ -111,11 +111,23 @@ const ParkingPurchasePage = () => {
         let isMounted = true;
 
         const fetchInitialData = async () => {
+            if (userId == null) {
+                setIsLoading(false);
+                return;
+            }
+
+            const clientId = Number(userId);
+
+            if (Number.isNaN(clientId)) {
+                setIsLoading(false);
+                return;
+            }
+
             setIsLoading(true);
             setError(null);
 
             try {
-                const vehiclesResult = await getClientVehicles(userId);
+                const vehiclesResult = await getClientVehicles(clientId);
 
                 if (!isMounted) {
                     return;
