@@ -1,8 +1,9 @@
-type User = {
-    id: string;
+export type User = {
+    id: number;
     name: string;
     surname: string;
     email: string;
-    "isOperator": false,
-    "isMfaEnabled": false
+    balance: number;
+    isOperator: boolean;
+    isMfaEnabled: boolean;
 };
