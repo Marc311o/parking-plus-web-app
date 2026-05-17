@@ -1,4 +1,6 @@
-import {useState, useEffect} from 'react';
+// todo alert replace
+
+import {useState} from 'react';
 import {useIntl, FormattedMessage} from 'react-intl';
 
 import { mfaSetup, mfaConfirm, fetchUserData } from '@api/Login/auth';
@@ -6,7 +8,6 @@ import {useLocaleStore} from '@store/useLocaleStore';
 import {useAuthStore} from '@store/useAuthStore';
 
 import {
-    Alert,
     Box,
     Tabs,
     Tab,
@@ -29,21 +30,7 @@ const SettingsPage = () => {
 
     const user = useAuthStore((state) => state.user);
     const token = useAuthStore((state) => state.token);
-    const [otpError, setOtpError] = useState<string | null>(null);
-    const [verifySuccess, setVerifySuccess] = useState<string | null>(null);
 
-    const resetMfaState = () => {
-        setOtpCode('');
-        setMfaSecret(null);
-        setMfaError(null);
-        setVerifySuccess(null);
-    };
-
-    useEffect(() => {
-        return () => {
-            resetMfaState();
-        };
-    }, []);
 
     const [mfaStep, setMfaStep] = useState<
         'idle' | 'setup' | 'confirm' | 'enabled'
@@ -76,7 +63,6 @@ const SettingsPage = () => {
         if (!user || !token) return;
 
         setLoading(true);
-        setOtpError(null);
 
         try {
             await mfaConfirm(token, user.id, user.email, otpCode);
@@ -89,19 +75,9 @@ const SettingsPage = () => {
 
             setMfaStep('enabled');
             setOtpCode('');
-            setVerifySuccess(
-                intl.formatMessage({
-                    id: 'settings.mfa.success',
-                })
-            );
-
-
+            alert("success!"); // todo
         } catch (e: any) {
-            setOtpError(
-                intl.formatMessage({
-                    id: 'settings.mfa.invalid_code',
-                })
-            );
+            alert(e.message);
         } finally {
             setLoading(false);
         }
@@ -243,18 +219,6 @@ const SettingsPage = () => {
                                             fullWidth
                                         />
 
-                                        {verifySuccess && (
-                                            <Alert severity="success" sx={{ width: "100%" }}>
-                                                {verifySuccess}
-                                            </Alert>
-                                        )}
-
-                                        {otpError && (
-                                            <Alert severity="error" sx={{ width: "100%" }}>
-                                                {otpError}
-                                            </Alert>
-                                        )}
-
                                         <Box sx={{display: 'flex', gap: 2}}>
                                             <Button
                                                 variant="contained"
@@ -267,7 +231,9 @@ const SettingsPage = () => {
                                             <Button
                                                 onClick={() => {
                                                     setMfaStep('idle');
-                                                    resetMfaState();
+                                                    setOtpCode('');
+                                                    setMfaSecret(null);
+                                                    setMfaError(null);
                                                 }}
                                             >
                                                 {intl.formatMessage({ id: 'settings.mfa.cancel'})}

@@ -377,9 +377,7 @@
       "confirm": "Potwierdź",
       "cancel": "Anuluj",
       "enabled": "2FA aktywne",
-      "setup_mfa": "Skonfiguruj aplikację uwierzytelniającą",
-      "invalid_code": "Niepoprawny kod",
-      "success": "Uwierzytelnianie dwuskładnikowe zostało pomyślnie włączone"
+      "setup_mfa": "Skonfiguruj aplikację uwierzytelniającą"
     }
   }
 }

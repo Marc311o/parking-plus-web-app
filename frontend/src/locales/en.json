@@ -377,9 +377,7 @@
       "confirm": "Confirm",
       "cancel": "Cancel",
       "enabled": "2FA enabled",
-      "setup_mfa": "Set up your authenticator app",
-      "invalid_code": "Invalid code",
-      "success": "Two-factor authentication has been enabled successfully"
+      "setup_mfa": "Set up your authenticator app"
     }
   }
 }
