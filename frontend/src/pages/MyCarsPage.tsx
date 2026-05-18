@@ -23,7 +23,7 @@ const MyCarsPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const page = Number(searchParams.get('page') ?? 0);
-    const size = 3;
+    const size = 10;
 
     const user = useAuthStore((state) => state.user);
 
