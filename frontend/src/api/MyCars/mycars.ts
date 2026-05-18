@@ -2,7 +2,7 @@ import type {VehicleDTO} from './types';
 import {API_URL, getHeaders} from '../core';
 
 export const getVehiclesByOwner = async (
-    ownerId: string
+    ownerId: number
 ): Promise<VehicleDTO[]> => {
 
     const response = await fetch(
@@ -44,7 +44,7 @@ export const addVehicle = async (
     return response.json();
 };
 
-export const deleteVehicle = async (id: string): Promise<void> => {
+export const deleteVehicle = async (id: number): Promise<void> => {
     const response = await fetch(
         `${API_URL}/vehicles/${id}`,
         {
