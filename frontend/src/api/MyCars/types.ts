@@ -5,8 +5,8 @@ export type CarType =
     | 'EV_HANDICAPED';
 
 export type VehicleDTO = {
-    id: string;
+    id: number;
     licensePlate: string;
-    ownerId: string;
+    ownerId: number;
     carType: CarType;
 };
