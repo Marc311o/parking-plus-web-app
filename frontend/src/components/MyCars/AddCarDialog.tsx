@@ -20,13 +20,14 @@ import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 
 import {useIntl} from 'react-intl';
 import {useState} from 'react';
-import type {CarType, VehicleDTO} from "@api/MyCars";
+
+import type {CarType, VehicleDTO} from '@api/MyCars';
 
 interface Props {
     open: boolean;
     onClose: () => void;
     onSubmit: (vehicle: Omit<VehicleDTO, 'id'>) => Promise<void>;
-    ownerId: string;
+    ownerId?: number;
 }
 
 const CAR_TYPES: CarType[] = [
@@ -42,7 +43,6 @@ export default function AddCarDialog({
                                          onSubmit,
                                          ownerId,
                                      }: Props) {
-
     const {formatMessage} = useIntl();
 
     const [licensePlate, setLicensePlate] = useState('');
@@ -52,11 +52,15 @@ export default function AddCarDialog({
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
+        if (ownerId == null) {
+            return;
+        }
+
         try {
             setLoading(true);
 
             await onSubmit({
-                licensePlate,
+                licensePlate: licensePlate.trim(),
                 ownerId,
                 carType,
             });
@@ -71,8 +75,12 @@ export default function AddCarDialog({
     };
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-
+        <Dialog
+            open={open}
+            onClose={onClose}
+            fullWidth
+            maxWidth="xs"
+        >
             <IconButton
                 onClick={onClose}
                 disableRipple
@@ -89,7 +97,7 @@ export default function AddCarDialog({
                     },
                 }}
             >
-                <CloseRoundedIcon/>
+                <CloseRoundedIcon />
             </IconButton>
 
             <DialogTitle
@@ -117,7 +125,7 @@ export default function AddCarDialog({
                             color: '#FFFFFF',
                         }}
                     >
-                        <DirectionsCarRoundedIcon/>
+                        <DirectionsCarRoundedIcon />
                     </Avatar>
 
                     <Box>
@@ -176,7 +184,10 @@ export default function AddCarDialog({
                             }
                         >
                             {CAR_TYPES.map((type) => (
-                                <MenuItem key={type} value={type}>
+                                <MenuItem
+                                    key={type}
+                                    value={type}
+                                >
                                     {formatMessage({
                                         id: `myCars.carTypes.${type}`,
                                     })}
@@ -206,7 +217,11 @@ export default function AddCarDialog({
                 <Button
                     variant="contained"
                     onClick={handleSubmit}
-                    disabled={loading || !licensePlate.trim()}
+                    disabled={
+                        loading ||
+                        !licensePlate.trim() ||
+                        ownerId == null
+                    }
                 >
                     {formatMessage({
                         id: 'myCars.addCar',
