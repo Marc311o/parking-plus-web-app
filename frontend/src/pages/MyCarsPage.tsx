@@ -23,7 +23,7 @@ const MyCarsPage = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const page = Number(searchParams.get('page') ?? 0);
-    const size = 10;
+    const size = 3;
 
     const user = useAuthStore((state) => state.user);
 
@@ -53,6 +53,17 @@ const MyCarsPage = () => {
         if (e instanceof Error) return e.message;
         return 'Unexpected error occurred';
     };
+
+    useEffect(() => {
+        const newTotalPages = Math.max(
+            Math.ceil(cars.length / size),
+            1
+        );
+
+        if (page >= newTotalPages) {
+            handlePageChange(newTotalPages - 1);
+        }
+    }, [cars, page]);
 
     useEffect(() => {
         if (!ownerId) return;
@@ -98,7 +109,20 @@ const MyCarsPage = () => {
         try {
             await deleteVehicle(id);
 
-            setCars((prev) => prev.filter((v) => v.id !== id));
+            setCars((prev) => {
+                const updatedCars = prev.filter((v) => v.id !== id);
+
+                const newTotalPages = Math.max(
+                    Math.ceil(updatedCars.length / size),
+                    1
+                );
+
+                if (page >= newTotalPages) {
+                    handlePageChange(newTotalPages - 1);
+                }
+
+                return updatedCars;
+            });
         } catch (e) {
             setError(getErrorMessage(e));
         }
