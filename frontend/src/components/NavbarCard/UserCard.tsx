@@ -11,6 +11,7 @@ const UserCard = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const user = useAuthStore((state) => state.user);
+    const token = useAuthStore((state) => state.token);
 
     if (!user) return null;
 
@@ -77,6 +78,8 @@ const UserCard = () => {
 
             <UserBalanceDialog
                 open={isDialogOpen}
+                userId={Number(user.id)}
+                token={token}
                 onClose={() => setIsDialogOpen(false)}
             />
         </>

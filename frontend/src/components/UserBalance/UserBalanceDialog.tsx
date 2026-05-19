@@ -16,14 +16,21 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 
 import {useState} from 'react';
+import {topUpBalance} from "@api/UserBalance";
+import {useAuthStore} from "@store/useAuthStore";
+
 
 interface Props {
     open: boolean;
+    userId: number;
+    token: string;
     onClose: () => void;
 }
 
 export default function UserBalanceDialog({
                                               open,
+                                              userId,
+                                              token,
                                               onClose,
                                           }: Props) {
 
@@ -31,7 +38,9 @@ export default function UserBalanceDialog({
 
     const [error, setError] = useState('');
 
-    const handleTopUp = () => {
+    const setUser = useAuthStore((state) => state.setUser);
+
+    const handleTopUp = async () => {
 
         setError('');
 
@@ -52,11 +61,22 @@ export default function UserBalanceDialog({
             return;
         }
 
-        console.log(parsedAmount);
+        try {
 
-        // TODO API
+            const updatedUser = await topUpBalance(userId, token, parsedAmount);
+            setUser(updatedUser);
 
-        onClose();
+            onClose();
+
+        } catch (error) {
+
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : 'Top up failed';
+
+            setError(message);
+        }
     };
 
     return (
