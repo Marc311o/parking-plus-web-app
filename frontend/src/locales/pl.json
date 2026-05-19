@@ -426,6 +426,7 @@
     "topUp": "Doładuj",
     "minAmountError": "Minimalna kwota doładowania to 0,01 PLN",
     "invalidAmountError": "Wprowadź poprawną kwotę",
-    "genericError": "Doładowanie nie powiodło się"
+    "genericError": "Doładowanie nie powiodło się",
+    "success": "Saldo zostało pomyślnie doładowane"
   }
 }

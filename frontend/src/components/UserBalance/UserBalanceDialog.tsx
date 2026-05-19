@@ -9,7 +9,8 @@ import {
     Paper,
     TextField,
     Typography,
-    Alert
+    Alert,
+    Snackbar
 } from '@mui/material';
 
 import { useEffect } from 'react';
@@ -38,6 +39,8 @@ export default function UserBalanceDialog({
                                               token,
                                               onClose,
                                           }: Props) {
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const [amount, setAmount] = useState('');
 
@@ -86,7 +89,8 @@ export default function UserBalanceDialog({
             const updatedUser = await topUpBalance(userId, token, parsedAmount);
             setUser(updatedUser);
 
-            onClose();
+            setSnackbarOpen(true);
+            setAmount("")
 
         } catch (error) {
 
@@ -255,6 +259,18 @@ export default function UserBalanceDialog({
                     </Paper>
                 </Box>
             </DialogContent>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert severity="success" variant="filled">
+                    {formatMessage({ id: 'userBalanceDialog.success' })}
+                </Alert>
+            </Snackbar>
+
         </Dialog>
     );
 }
