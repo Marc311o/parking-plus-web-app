@@ -12,6 +12,8 @@ import {
     Alert
 } from '@mui/material';
 
+import { useEffect } from 'react';
+
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 
@@ -44,6 +46,19 @@ export default function UserBalanceDialog({
     const setUser = useAuthStore((state) => state.setUser);
 
     const {formatMessage} = useIntl();
+
+    useEffect(() => {
+        if (open) {
+            setError('');
+            setAmount('');
+        }
+    }, [open]);
+
+    const handleClose = () => {
+        setError('');
+        setAmount('');
+        onClose();
+    };
 
     const handleTopUp = async () => {
 
@@ -87,7 +102,7 @@ export default function UserBalanceDialog({
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={handleClose}
             fullWidth
             maxWidth="xs"
         >
