@@ -1,5 +1,7 @@
-import {Box, Typography, Paper, Avatar} from '@mui/material';
+import {Box, Typography, Paper, Avatar, IconButton} from '@mui/material';
 import {useAuthStore} from "@store/useAuthStore";
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+
 
 const UserCard = () => {
 
@@ -30,6 +32,40 @@ const UserCard = () => {
                 <Typography variant="caption" sx={{color: 'text.secondary', display: 'block'}}>
                     {user.email}
                 </Typography>
+                <Box
+                    sx={{
+                        py: 0,
+                        borderRadius: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.2,
+                        minWidth: 150,
+                    }}
+                >
+
+                    <IconButton
+                        onClick={null} // todo
+                        size="small"
+                        sx={{
+                            color: '#8B1F9E',
+                        }}
+                    >
+                        <AddRoundedIcon fontSize="small"/>
+                    </IconButton>
+
+                    <Box>
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                fontWeight: 700,
+                                mt: 0.3,
+                            }}
+                        >
+                            {user.balance.toFixed(2)} PLN
+                        </Typography>
+                    </Box>
+
+                </Box>
             </Box>
         </Paper>
     );
