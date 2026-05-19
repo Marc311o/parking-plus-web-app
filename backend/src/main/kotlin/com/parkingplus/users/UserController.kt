@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import com.parkingplus.users.requests.UpdateBalanceRequest
+import java.math.BigDecimal
 
 @RestController
 @RequestMapping("/api/users")
@@ -94,5 +96,27 @@ class UserController(private val userService: UserService) {
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         return ResponseEntity.ok(userService.getUserById(authUserId))
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PatchMapping("/{id}/balance")
+    fun addBalance(
+        @PathVariable id: Long,
+        @Valid @RequestBody request: UpdateBalanceRequest,
+        authentication: Authentication
+    ): ResponseEntity<UserDTO> {
+
+        val authUserId = authentication.details as? Long
+
+        if (
+            authentication.authorities.none { it.authority == "ROLE_ADMIN" } &&
+            authUserId != id
+        ) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+        }
+
+        return ResponseEntity.ok(
+            userService.addBalance(id, request.amount)
+        )
     }
 }

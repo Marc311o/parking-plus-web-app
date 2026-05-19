@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
+import java.math.BigDecimal
 
 @Service
 class UserService(
@@ -106,5 +107,24 @@ class UserService(
             return true
         }
         return false
+    }
+
+    @Transactional
+    fun addBalance(userId: Long, amount: BigDecimal): UserDTO {
+        if (amount <= BigDecimal.ZERO) {
+            throw ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Kwota musi być >= 0.01"
+            )
+        }
+
+        val user = userRepository.findById(userId)
+            .orElseThrow {
+                NoSuchElementException("User with id: $userId not found.")
+            }
+
+        user.balance = user.balance.add(amount)
+
+        return userRepository.save(user).toDTO()
     }
 }
