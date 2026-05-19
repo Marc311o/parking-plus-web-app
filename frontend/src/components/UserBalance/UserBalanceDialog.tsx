@@ -15,6 +15,9 @@ import {
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 
+import {useIntl} from 'react-intl';
+
+
 import {useState} from 'react';
 import {topUpBalance} from "@api/UserBalance";
 import {useAuthStore} from "@store/useAuthStore";
@@ -40,6 +43,8 @@ export default function UserBalanceDialog({
 
     const setUser = useAuthStore((state) => state.setUser);
 
+    const {formatMessage} = useIntl();
+
     const handleTopUp = async () => {
 
         setError('');
@@ -47,7 +52,7 @@ export default function UserBalanceDialog({
         const normalizedAmount = amount.replace(',', '.');
 
         if (normalizedAmount.endsWith('.')) {
-            setError('Enter a valid amount');
+            setError(formatMessage({ id: 'userBalanceDialog.invalidAmountError' }));
             return;
         }
 
@@ -57,7 +62,7 @@ export default function UserBalanceDialog({
             Number.isNaN(parsedAmount) ||
             parsedAmount < 0.01
         ) {
-            setError('Minimum top up amount is 0.01 PLN');
+            setError(formatMessage({ id: 'userBalanceDialog.minAmountError' }));
             return;
         }
 
@@ -73,7 +78,7 @@ export default function UserBalanceDialog({
             const message =
                 error instanceof Error
                     ? error.message
-                    : 'Top up failed';
+                    : formatMessage({ id: 'userBalanceDialog.genericError' });
 
             setError(message);
         }
@@ -139,7 +144,7 @@ export default function UserBalanceDialog({
                                 fontWeight: 800,
                             }}
                         >
-                            Top up balance
+                            {formatMessage({ id: 'userBalanceDialog.title' })}
                         </Typography>
 
                         <Typography
@@ -148,7 +153,7 @@ export default function UserBalanceDialog({
                                 opacity: 0.85,
                             }}
                         >
-                            Add funds to your account
+                            {formatMessage({ id: 'userBalanceDialog.subtitle' })}
                         </Typography>
                     </Box>
                 </Box>
@@ -177,7 +182,7 @@ export default function UserBalanceDialog({
                                 mb: 1.5,
                             }}
                         >
-                            Enter amount
+                            { formatMessage({ id: 'userBalanceDialog.enterAmount' }) }
                         </Typography>
 
                         {error && (
@@ -194,7 +199,7 @@ export default function UserBalanceDialog({
 
                         <TextField
                             fullWidth
-                            placeholder="0.00"
+                            placeholder={formatMessage({ id: 'userBalanceDialog.placeholder' })}
                             value={amount}
                             onChange={(e) => {
 
@@ -230,7 +235,7 @@ export default function UserBalanceDialog({
                                 },
                             }}
                         >
-                            Top up
+                            { formatMessage({ id: 'userBalanceDialog.topUp' }) }
                         </Button>
                     </Paper>
                 </Box>

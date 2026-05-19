@@ -417,5 +417,15 @@
       "invalid_code": "Niepoprawny kod",
       "success": "Uwierzytelnianie dwuskładnikowe zostało pomyślnie włączone"
     }
+  },
+  "userBalanceDialog": {
+    "title": "Doładuj saldo",
+    "subtitle": "Dodaj środki do swojego konta",
+    "enterAmount": "Wprowadź kwotę",
+    "placeholder": "0,01",
+    "topUp": "Doładuj",
+    "minAmountError": "Minimalna kwota doładowania to 0,01 PLN",
+    "invalidAmountError": "Wprowadź poprawną kwotę",
+    "genericError": "Doładowanie nie powiodło się"
   }
 }
