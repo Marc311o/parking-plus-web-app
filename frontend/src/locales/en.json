@@ -85,7 +85,8 @@
       "clients": "Clients",
       "events": "Events",
       "prices": "Prices",
-      "parkingPurchase": "Buy spot"
+      "parkingPurchase": "Buy spot",
+      "myCars": "My cars"
     },
     "other": {
       "settings": "Settings",
@@ -428,5 +429,25 @@
     "invalidAmountError": "Enter a valid amount",
     "genericError": "Top up failed",
     "success": "Balance has been successfully topped up"
+  },
+  "myCars": {
+    "list": {
+      "empty": "No cars to display"
+    },
+    "addCar": "Add car",
+    "addDialog": {
+      "title": "Add vehicle"
+    },
+    "fields": {
+      "licensePlate": "License plate",
+      "carType": "Vehicle type",
+      "cancel": "Cancel"
+    },
+    "carTypes": {
+      "REGULAR_ABLEBODIED": "Regular",
+      "REGULAR_HANDICAPED": "Regular (Handicapped)",
+      "EV_ABLEBODIED": "EV",
+      "EV_HANDICAPED": "EV (Handicapped)"
+    }
   }
 }
