@@ -111,7 +111,7 @@ export default function UserBalanceDialog({
             maxWidth="xs"
         >
             <IconButton
-                onClick={onClose}
+                onClick={handleClose}
                 disableRipple
                 sx={{
                     position: 'absolute',
