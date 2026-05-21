@@ -7,6 +7,7 @@ import com.parkingplus.parkingspaces.ParkingSpaceRepository
 import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
 import com.parkingplus.parkingspaces.toDTO
+import com.parkingplus.reservations.enums.ReservationStatus
 import com.parkingplus.transactions.TransactionEntity
 import com.parkingplus.transactions.TransactionRepository
 import com.parkingplus.transactions.enums.TransactionType

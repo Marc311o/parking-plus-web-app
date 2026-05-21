@@ -1,6 +1,7 @@
 package com.parkingplus.reservations
 
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.parkingplus.reservations.enums.ReservationStatus
 import com.parkingplus.vehicles.enums.CarType
 import java.math.BigDecimal
 import java.time.LocalDateTime
