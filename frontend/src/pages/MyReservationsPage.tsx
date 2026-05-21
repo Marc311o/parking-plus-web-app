@@ -1,4 +1,4 @@
-import {useMemo} from 'react';
+import {useEffect, useMemo} from 'react';
 import {Box, Avatar} from '@mui/material';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import {useSearchParams} from 'react-router-dom';
@@ -12,68 +12,18 @@ import ListView, {
 
 import type {CarType} from '@api/MyCars';
 import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations';
+import {useAuthStore} from '@store/useAuthStore';
+import {getReservationsByUser} from "../api/MyReservations/myreservations.ts";
 
-
-
-export const mockReservations: ReservationDetailsDTO[] = [
-    {
-        id: '1',
-        created_at: '2026-05-20 12:45',
-        start_time: '2026-05-21 10:00',
-        end_time: '2026-05-21 14:00',
-        price: 25.99,
-        status: 'CONFIRMED',
-        parking_place_id: 'PARK-A12',
-        vehicle_licence_plate: 'EL1234A',
-        vehicle_type: 'REGULAR_ABLEBODIED',
-    },
-    {
-        id: '2',
-        created_at: '2026-05-19 10:10',
-        start_time: '2026-05-20 08:00',
-        end_time: '2026-05-20 12:00',
-        price: 18.5,
-        status: 'PENDING',
-        parking_place_id: 'PARK-B03',
-        vehicle_licence_plate: 'EZ5678K',
-        vehicle_type: 'EV_ABLEBODIED',
-    },
-    {
-        id: '3',
-        created_at: '2026-05-18 15:00',
-        start_time: '2026-05-19 09:00',
-        end_time: '2026-05-19 11:00',
-        price: 12,
-        status: 'CANCELLED',
-        parking_place_id: 'PARK-C21',
-        vehicle_licence_plate: 'EPA9988',
-        vehicle_type: 'REGULAR_HANDICAPED',
-    },
-    {
-        id: '4',
-        created_at: '2026-05-17 09:00',
-        start_time: '2026-05-18 10:00',
-        end_time: '2026-05-18 12:00',
-        price: 30,
-        status: 'COMPLETED',
-        parking_place_id: 'PARK-D11',
-        vehicle_licence_plate: 'EL9999X',
-        vehicle_type: 'EV_HANDICAPED',
-    },
-    {
-        id: '5',
-        created_at: '2026-05-16 08:30',
-        start_time: '2026-05-17 09:00',
-        end_time: '2026-05-17 13:00',
-        price: 22.75,
-        status: 'CONFIRMED',
-        parking_place_id: 'PARK-E07',
-        vehicle_licence_plate: 'WY1122Z',
-        vehicle_type: 'REGULAR_ABLEBODIED',
-    },
-];
 
 const MyReservationsPage = () => {
+    const token = useAuthStore((state) => state.token);
+
+
+    const [reservations, setReservations] = useState<ReservationDetailsDTO[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     const [searchParams, setSearchParams] =
         useSearchParams();
 
@@ -83,11 +33,9 @@ const MyReservationsPage = () => {
 
     const size = 10;
 
-    const totalElements =
-        mockReservations.length;
 
     const totalPages = Math.max(
-        Math.ceil(totalElements / size),
+        Math.ceil(reservations.length / size),
         1
     );
 
@@ -96,6 +44,51 @@ const MyReservationsPage = () => {
 
     const [dialogOpen, setDialogOpen] =
         useState(false);
+
+    useEffect(() => {
+        if (!token) return;
+
+        let isMounted = true;
+
+        const fetchReservations = async () => {
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                const result =
+                    await getReservationsByUser(
+                        token
+                    );
+
+                if (!isMounted) return;
+
+                setReservations(result);
+            } catch (error) {
+                if (!isMounted) return;
+
+                setReservations([]);
+
+                const message =
+                    error instanceof Error
+                        ? error.message
+                        : null;
+
+                if (message) {
+                    setError(message);
+                }
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        void fetchReservations();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [token]);
 
     const handleOpenDetails = (
         reservation: ReservationDetailsDTO
@@ -106,12 +99,8 @@ const MyReservationsPage = () => {
 
     const pagedReservations = useMemo(() => {
         const start = page * size;
-
-        return mockReservations.slice(
-            start,
-            start + size
-        );
-    }, [page]);
+        return reservations.slice(start, start + size);
+    }, [reservations, page]);
 
     const getStatusColor = (status: ReservationStatus) => {
         switch (status) {
@@ -244,8 +233,6 @@ const MyReservationsPage = () => {
                 gap: 2.5,
             }}
         >
-            <h1>My reservations</h1>
-
             <ListView
                 items={pagedReservations}
                 isLoading={false}
@@ -267,7 +254,7 @@ const MyReservationsPage = () => {
                             color: '#7F0F96',
                         }}
                     >
-                        <EventSeatIcon />
+                        <EventSeatIcon/>
                     </Avatar>
                 )}
             />
