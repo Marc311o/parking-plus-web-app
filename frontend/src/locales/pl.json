@@ -461,7 +461,29 @@
       "COMPLETED": "Zakończona"
     }
   },
-  "reservationDetailsDialog": {
+  "reservationDetails": {
+    "title": "Szczegóły rezerwacji",
+    "status": "Status",
+    "createdAt": "Utworzono",
+    "startTime": "Początek",
+    "endTime": "Koniec",
+    "price": "Cena",
+    "parkingPlace": "Miejsce parkingowe",
+    "vehiclePlate": "Tablica rejestracyjna",
+    "vehicleType": "Typ pojazdu",
 
+    "statusValues": {
+      "PENDING": "Oczekująca",
+      "CONFIRMED": "Potwierdzona",
+      "CANCELLED": "Anulowana",
+      "COMPLETED": "Zakończona"
+    },
+
+    "vehicleTypeValues": {
+      "REGULAR_ABLEBODIED": "Regularny",
+      "REGULAR_HANDICAPED": "Regularny (niepełnosprawny)",
+      "EV_ABLEBODIED": "Elektryczny",
+      "EV_HANDICAPED": "Elektryczny (niepełnosprawny)"
+    }
   }
 }

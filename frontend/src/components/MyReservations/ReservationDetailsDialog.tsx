@@ -13,9 +13,9 @@ import {
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 
-import type {CarType} from '@api/MyCars';
-import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations';
-
+import type { CarType } from '@api/MyCars';
+import type { ReservationDetailsDTO } from '@api/MyReservations';
+import { useIntl } from 'react-intl';
 
 interface Props {
     open: boolean;
@@ -28,36 +28,41 @@ export default function ReservationDetailsDialog({
                                                      reservation,
                                                      onClose,
                                                  }: Props) {
+    const { formatMessage } = useIntl();
 
     const handleClose = () => {
         onClose();
     };
 
-
     const getStatusColor = () => {
         switch (reservation?.status) {
             case 'CONFIRMED':
                 return '#2e7d32';
-
             case 'PENDING':
                 return '#ed6c02';
-
             case 'CANCELLED':
                 return '#d32f2f';
-
             case 'COMPLETED':
                 return '#1565c0';
-
             default:
                 return '#757575';
         }
     };
 
-    const carTypeLabelMap: Record<CarType, string> = {
-        REGULAR_ABLEBODIED: 'Regular',
-        REGULAR_HANDICAPED: 'Regular (Disabled)',
-        EV_ABLEBODIED: 'Electric',
-        EV_HANDICAPED: 'Electric (Disabled)',
+    const formatStatus = (status?: string) => {
+        if (!status) return '-';
+
+        return formatMessage({
+            id: `reservationDetails.statusValues.${status}`,
+        });
+    };
+
+    const formatVehicleType = (type?: CarType) => {
+        if (!type) return '-';
+
+        return formatMessage({
+            id: `reservationDetails.vehicleTypeValues.${type}`,
+        });
     };
 
     return (
@@ -77,7 +82,6 @@ export default function ReservationDetailsDialog({
                     zIndex: 2,
                     color: '#FFFFFF',
                     p: 0,
-
                     '&:hover': {
                         bgcolor: 'transparent',
                         opacity: 0.75,
@@ -108,33 +112,20 @@ export default function ReservationDetailsDialog({
                         sx={{
                             width: 48,
                             height: 48,
-                            bgcolor:
-                                'rgba(255,255,255,0.18)',
+                            bgcolor: 'rgba(255,255,255,0.18)',
                             color: '#FFFFFF',
                         }}
                     >
                         <EventSeatIcon />
                     </Avatar>
 
-                    <Box>
-                        <Typography
-                            sx={{
-                                fontSize: 18,
-                                fontWeight: 800,
-                            }}
-                        >
-                            Reservation details
-                        </Typography>
-                    </Box>
+                    <Typography sx={{ fontSize: 18, fontWeight: 800 }}>
+                        {formatMessage({ id: 'reservationDetails.title' })}
+                    </Typography>
                 </Box>
             </DialogTitle>
 
-            <DialogContent
-                sx={{
-                    p: 0,
-                    bgcolor: '#FBF7FC',
-                }}
-            >
+            <DialogContent sx={{ p: 0, bgcolor: '#FBF7FC' }}>
                 <Box sx={{ p: 3 }}>
                     <Paper
                         elevation={0}
@@ -142,38 +133,28 @@ export default function ReservationDetailsDialog({
                             p: 3,
                             borderRadius: '16px',
                             bgcolor: '#FFFFFF',
-                            border:
-                                '1px solid rgba(139, 31, 158, 0.12)',
+                            border: '1px solid rgba(139, 31, 158, 0.12)',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: 2,
                         }}
                     >
-
+                        {/* STATUS */}
                         <Box
                             sx={{
                                 display: 'flex',
-                                justifyContent:
-                                    'space-between',
+                                justifyContent: 'space-between',
                                 alignItems: 'center',
                             }}
                         >
-                            <Typography
-                                sx={{
-                                    fontWeight: 700,
-                                    fontSize: 18,
-                                }}
-                            >
-                                Status
+                            <Typography sx={{ fontWeight: 700, fontSize: 18 }}>
+                                {formatMessage({ id: 'reservationDetails.status' })}
                             </Typography>
 
                             <Chip
-                                label={
-                                    reservation?.status
-                                }
+                                label={formatStatus(reservation?.status)}
                                 sx={{
-                                    bgcolor:
-                                        getStatusColor(),
+                                    bgcolor: getStatusColor(),
                                     color: '#FFFFFF',
                                     fontWeight: 700,
                                 }}
@@ -181,54 +162,43 @@ export default function ReservationDetailsDialog({
                         </Box>
 
                         <InfoRow
-                            label="Created at"
-                            value={
-                                reservation?.created_at
-                            }
+                            label={formatMessage({ id: 'reservationDetails.createdAt' })}
+                            value={reservation?.created_at}
                         />
 
                         <InfoRow
-                            label="Start time"
-                            value={
-                                reservation?.start_time
-                            }
+                            label={formatMessage({ id: 'reservationDetails.startTime' })}
+                            value={reservation?.start_time}
                         />
 
                         <InfoRow
-                            label="End time"
-                            value={
-                                reservation?.end_time
-                            }
+                            label={formatMessage({ id: 'reservationDetails.endTime' })}
+                            value={reservation?.end_time}
                         />
 
                         <InfoRow
-                            label="Price"
-                            value={`${reservation?.price.toFixed(2)} zł`}
-                        />
-
-                        <InfoRow
-                            label="Parking place"
+                            label={formatMessage({ id: 'reservationDetails.price' })}
                             value={
-                                reservation?.parking_place_id
-                            }
-                        />
-
-                        <InfoRow
-                            label="Vehicle plate"
-                            value={
-                                reservation?.vehicle_licence_plate
-                            }
-                        />
-
-                        <InfoRow
-                            label="Vehicle type"
-                            value={
-                                reservation?.vehicle_type
-                                    ? carTypeLabelMap[reservation.vehicle_type]
+                                reservation?.price != null
+                                    ? `${reservation.price.toFixed(2)} zł`
                                     : '-'
                             }
                         />
 
+                        <InfoRow
+                            label={formatMessage({ id: 'reservationDetails.parkingPlace' })}
+                            value={reservation?.parking_place_id}
+                        />
+
+                        <InfoRow
+                            label={formatMessage({ id: 'reservationDetails.vehiclePlate' })}
+                            value={reservation?.vehicle_licence_plate}
+                        />
+
+                        <InfoRow
+                            label={formatMessage({ id: 'reservationDetails.vehicleType' })}
+                            value={formatVehicleType(reservation?.vehicle_type)}
+                        />
                     </Paper>
                 </Box>
             </DialogContent>
@@ -238,13 +208,10 @@ export default function ReservationDetailsDialog({
 
 interface InfoRowProps {
     label: string;
-    value?: string;
+    value?: string | number;
 }
 
-function InfoRow({
-                     label,
-                     value,
-                 }: InfoRowProps) {
+function InfoRow({ label, value }: InfoRowProps) {
     return (
         <Box
             sx={{
@@ -253,26 +220,15 @@ function InfoRow({
                 alignItems: 'center',
                 gap: 2,
                 py: 1,
-                borderBottom:
-                    '1px solid rgba(0,0,0,0.06)',
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
             }}
         >
-            <Typography
-                sx={{
-                    fontWeight: 600,
-                    color: '#6B7280',
-                }}
-            >
+            <Typography sx={{ fontWeight: 600, color: '#6B7280' }}>
                 {label}
             </Typography>
 
-            <Typography
-                sx={{
-                    fontWeight: 700,
-                    textAlign: 'right',
-                }}
-            >
-                {value}
+            <Typography sx={{ fontWeight: 700, textAlign: 'right' }}>
+                {value ?? '-'}
             </Typography>
         </Box>
     );
