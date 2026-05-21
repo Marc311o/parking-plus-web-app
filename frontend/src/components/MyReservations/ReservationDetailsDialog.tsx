@@ -13,25 +13,9 @@ import {
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 
-interface ReservationDetailsDTO {
-    id: string;
-    created_at: string;
-    start_time: string;
-    end_time: string;
-    price: number;
-    status:
-        | 'PENDING'
-        | 'CONFIRMED'
-        | 'CANCELLED'
-        | 'COMPLETED';
-    parking_place_id: string;
-    vehicle_licence_plate: string;
-    vehicle_type:
-        | 'SEDAN'
-        | 'SUV'
-        | 'HATCHBACK'
-        | 'COUPE';
-}
+import type {CarType} from '@api/MyCars';
+import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations';
+
 
 interface Props {
     open: boolean;

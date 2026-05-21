@@ -10,23 +10,10 @@ import ListView, {
     type ListViewColumn,
 } from '@components/Common/ListView';
 
-type ReservationStatus =
-    | 'PENDING'
-    | 'CONFIRMED'
-    | 'CANCELLED'
-    | 'COMPLETED';
+import type {CarType} from '@api/MyCars';
+import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations';
 
-type ReservationDetailsDTO = {
-    id: string;
-    created_at: string;
-    start_time: string;
-    end_time: string;
-    price: number;
-    status: ReservationStatus;
-    parking_place_id: string;
-    vehicle_licence_plate: string;
-    vehicle_type: string;
-};
+
 
 export const mockReservations: ReservationDetailsDTO[] = [
     {
