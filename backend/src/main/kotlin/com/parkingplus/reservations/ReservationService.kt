@@ -176,6 +176,11 @@ class ReservationService(
             balanceAfter = user.balance
         )
     }
+
+    fun getUserReservations(userId: Long): List<ReservationDetailsDTO> {
+        return reservationRepository.findByUserIdOrderByCreatedAtDesc(userId)
+            .map { it.toDetailsDTO() }
+    }
 }
 
 data class ParkingPurchaseDTO(
