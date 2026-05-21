@@ -11,15 +11,10 @@ import ListView, {
 } from '@components/Common/ListView';
 
 type ReservationStatus =
-    | 'CONFIRMED'
     | 'PENDING'
-    | 'CANCELLED';
-
-type VehicleType =
-    | 'SEDAN'
-    | 'SUV'
-    | 'HATCHBACK'
-    | 'COUPE';
+    | 'CONFIRMED'
+    | 'CANCELLED'
+    | 'COMPLETED';
 
 type ReservationDetailsDTO = {
     id: string;
@@ -30,10 +25,10 @@ type ReservationDetailsDTO = {
     status: ReservationStatus;
     parking_place_id: string;
     vehicle_licence_plate: string;
-    vehicle_type: VehicleType;
+    vehicle_type: string;
 };
 
-const mockReservations: ReservationDetailsDTO[] = [
+export const mockReservations: ReservationDetailsDTO[] = [
     {
         id: '1',
         created_at: '2026-05-20 12:45',
@@ -41,31 +36,53 @@ const mockReservations: ReservationDetailsDTO[] = [
         end_time: '2026-05-21 14:00',
         price: 25.99,
         status: 'CONFIRMED',
-        parking_place_id: 'A12',
+        parking_place_id: 'PARK-A12',
         vehicle_licence_plate: 'EL1234A',
-        vehicle_type: 'SEDAN',
+        vehicle_type: 'REGULAR_ABLEBODIED',
     },
     {
         id: '2',
-        created_at: '2026-05-20 15:10',
-        start_time: '2026-05-22 08:00',
-        end_time: '2026-05-22 12:00',
+        created_at: '2026-05-19 10:10',
+        start_time: '2026-05-20 08:00',
+        end_time: '2026-05-20 12:00',
         price: 18.5,
         status: 'PENDING',
-        parking_place_id: 'B03',
+        parking_place_id: 'PARK-B03',
         vehicle_licence_plate: 'EZ5678K',
-        vehicle_type: 'SUV',
+        vehicle_type: 'EV_ABLEBODIED',
     },
     {
         id: '3',
-        created_at: '2026-05-19 18:20',
-        start_time: '2026-05-23 09:00',
-        end_time: '2026-05-23 11:00',
+        created_at: '2026-05-18 15:00',
+        start_time: '2026-05-19 09:00',
+        end_time: '2026-05-19 11:00',
         price: 12,
         status: 'CANCELLED',
-        parking_place_id: 'C21',
+        parking_place_id: 'PARK-C21',
         vehicle_licence_plate: 'EPA9988',
-        vehicle_type: 'HATCHBACK',
+        vehicle_type: 'REGULAR_HANDICAPED',
+    },
+    {
+        id: '4',
+        created_at: '2026-05-17 09:00',
+        start_time: '2026-05-18 10:00',
+        end_time: '2026-05-18 12:00',
+        price: 30,
+        status: 'COMPLETED',
+        parking_place_id: 'PARK-D11',
+        vehicle_licence_plate: 'EL9999X',
+        vehicle_type: 'EV_HANDICAPED',
+    },
+    {
+        id: '5',
+        created_at: '2026-05-16 08:30',
+        start_time: '2026-05-17 09:00',
+        end_time: '2026-05-17 13:00',
+        price: 22.75,
+        status: 'CONFIRMED',
+        parking_place_id: 'PARK-E07',
+        vehicle_licence_plate: 'WY1122Z',
+        vehicle_type: 'REGULAR_ABLEBODIED',
     },
 ];
 
@@ -108,6 +125,25 @@ const MyReservationsPage = () => {
             start + size
         );
     }, [page]);
+
+    const getStatusColor = (status: ReservationStatus) => {
+        switch (status) {
+            case 'CONFIRMED':
+                return '#2e7d32';
+
+            case 'PENDING':
+                return '#ed6c02';
+
+            case 'CANCELLED':
+                return '#d32f2f';
+
+            case 'COMPLETED':
+                return '#1565c0';
+
+            default:
+                return '#757575';
+        }
+    };
 
     const handlePageChange = (
         nextPage: number
@@ -176,19 +212,12 @@ const MyReservationsPage = () => {
                 render: (item) => (
                     <span
                         style={{
-                            fontWeight: 600,
-                            color:
-                                item.status ===
-                                'CONFIRMED'
-                                    ? '#2e7d32'
-                                    : item.status ===
-                                    'PENDING'
-                                        ? '#ed6c02'
-                                        : '#d32f2f',
+                            fontWeight: 700,
+                            color: getStatusColor(item.status),
                         }}
                     >
-                        {item.status}
-                    </span>
+            {item.status}
+        </span>
                 ),
             },
 

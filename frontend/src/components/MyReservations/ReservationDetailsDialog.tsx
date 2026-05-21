@@ -20,9 +20,10 @@ interface ReservationDetailsDTO {
     end_time: string;
     price: number;
     status:
-        | 'CONFIRMED'
         | 'PENDING'
-        | 'CANCELLED';
+        | 'CONFIRMED'
+        | 'CANCELLED'
+        | 'COMPLETED';
     parking_place_id: string;
     vehicle_licence_plate: string;
     vehicle_type:
@@ -48,6 +49,7 @@ export default function ReservationDetailsDialog({
         onClose();
     };
 
+
     const getStatusColor = () => {
         switch (reservation?.status) {
             case 'CONFIRMED':
@@ -58,6 +60,9 @@ export default function ReservationDetailsDialog({
 
             case 'CANCELLED':
                 return '#d32f2f';
+
+            case 'COMPLETED':
+                return '#1565c0';
 
             default:
                 return '#757575';
