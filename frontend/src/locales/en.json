@@ -419,6 +419,17 @@
       "success": "Two-factor authentication has been enabled successfully"
     }
   },
+  "userBalanceDialog": {
+    "title": "Top up balance",
+    "subtitle": "Add funds to your account",
+    "enterAmount": "Enter amount",
+    "placeholder": "0.01",
+    "topUp": "Top up",
+    "minAmountError": "Minimum top up amount is 0.01 PLN",
+    "invalidAmountError": "Enter a valid amount",
+    "genericError": "Top up failed",
+    "success": "Balance has been successfully topped up"
+  },
   "myCars": {
     "list": {
       "empty": "No cars to display"
