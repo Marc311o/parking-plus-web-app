@@ -87,7 +87,8 @@
       "clients": "Klienci",
       "events": "Zdarzenia",
       "prices": "Cennik",
-      "parkingPurchase": "Zakup miejsce"
+      "parkingPurchase": "Zakup miejsce",
+      "myCars": "Moje pojazdy"
     },
     "other": {
       "settings": "Ustawienia",
@@ -416,6 +417,26 @@
       "setup_mfa": "Skonfiguruj aplikację uwierzytelniającą",
       "invalid_code": "Niepoprawny kod",
       "success": "Uwierzytelnianie dwuskładnikowe zostało pomyślnie włączone"
+    }
+  },
+  "myCars": {
+    "list": {
+      "empty": "Brak samochodów do wyświetlenia"
+    },
+    "addCar": "Dodaj samochód",
+    "addDialog": {
+      "title": "Dodaj pojazd"
+    },
+    "fields": {
+      "licensePlate": "Numer rejestracyjny",
+      "carType": "Typ pojazdu",
+      "cancel": "Anuluj"
+    },
+    "carTypes": {
+      "REGULAR_ABLEBODIED": "Standardowy",
+      "REGULAR_HANDICAPED": "Standardowy (dla niepełnosprawnych)",
+      "EV_ABLEBODIED": "Elektryczny",
+      "EV_HANDICAPED": "Elektryczny (dla niepełnosprawnych)"
     }
   }
 }

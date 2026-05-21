@@ -14,6 +14,7 @@ import PeopleIconOutlined from '@mui/icons-material/PeopleOutlined';
 import EventIcon from '@mui/icons-material/Event';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
+import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import {useIntl} from 'react-intl';
@@ -55,6 +56,12 @@ const Sidebar = () => {
             icon: <ShoppingCartOutlinedIcon/>,
             path: '/parkingPurchase',
             active: location.pathname === '/parkingPurchase',
+        },
+        {
+            text: formatMessage({id: 'sidebar.menu.myCars'}),
+            icon: <DirectionsCarRoundedIcon/>,
+            path: '/myCars',
+            active: location.pathname === '/myCars',
         },
         {
             text: formatMessage({id: 'sidebar.menu.statistics'}),
