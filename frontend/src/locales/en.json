@@ -450,5 +450,18 @@
       "EV_ABLEBODIED": "EV",
       "EV_HANDICAPED": "EV (Handicapped)"
     }
+  },
+  "myReservations": {
+      "start": "From",
+      "end": "To",
+      "status": {
+        "PENDING": "Pending",
+        "CONFIRMED": "Confirmed",
+        "CANCELLED": "Cancelled",
+        "COMPLETED": "Completed"
+      }
+  },
+  "reservationDetailsDialog": {
+
   }
 }

@@ -15,8 +15,12 @@ import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations
 import {useAuthStore} from '@store/useAuthStore';
 import {getReservationsByUser} from "../api/MyReservations/myreservations.ts";
 import { Alert } from '@mui/material';
+import {useIntl} from 'react-intl';
+
 
 const MyReservationsPage = () => {
+    const {formatMessage} = useIntl();
+
     const token = useAuthStore((state) => state.token);
 
 
@@ -44,6 +48,14 @@ const MyReservationsPage = () => {
 
     const [dialogOpen, setDialogOpen] =
         useState(false);
+
+    const formatReservationStatus = (
+        status: ReservationStatus
+    ): string => {
+        return formatMessage({
+            id: `myReservations.status.${status}`,
+        });
+    };
 
     useEffect(() => {
         if (!token) return;
@@ -160,7 +172,7 @@ const MyReservationsPage = () => {
                 width: '1.2fr',
                 render: (item) => (
                     <span>
-                        Od: {item.start_time}
+                        {formatMessage({id: `myReservations.start`,})}: {item.start_time}
                     </span>
                 ),
             },
@@ -169,7 +181,7 @@ const MyReservationsPage = () => {
                 width: '1.2fr',
                 render: (item) => (
                     <span>
-                        Do: {item.end_time}
+                        {formatMessage({id: `myReservations.end`,})}: {item.end_time}
                     </span>
                 ),
             },
@@ -192,7 +204,7 @@ const MyReservationsPage = () => {
                             color: getStatusColor(item.status),
                         }}
                     >
-            {item.status}
+            { formatReservationStatus(item.status) }
         </span>
                 ),
             },
