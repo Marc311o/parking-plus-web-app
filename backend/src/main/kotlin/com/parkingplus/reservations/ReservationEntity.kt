@@ -1,6 +1,7 @@
 package com.parkingplus.reservations
 
 import com.parkingplus.parkingspaces.ParkingSpaceEntity
+import com.parkingplus.reservations.enums.ReservationStatus
 import com.parkingplus.users.UserEntity
 import com.parkingplus.vehicles.VehicleEntity
 import jakarta.persistence.*
@@ -43,10 +44,3 @@ class ReservationEntity(
     @Column(name = "status", nullable = false)
     var status: ReservationStatus = ReservationStatus.PENDING
 )
-
-enum class ReservationStatus {
-    PENDING,
-    CONFIRMED,
-    CANCELLED,
-    COMPLETED
-}

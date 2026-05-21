@@ -10,4 +10,6 @@ interface ReservationRepository : JpaRepository<ReservationEntity, Long> {
     @Query("SELECT r FROM ReservationEntity r WHERE r.parkingSpace.id = :spaceId AND r.status = 'CONFIRMED' AND " +
            "(r.startTime < :endTime AND r.endTime > :startTime)")
     fun findOverlappingReservations(spaceId: String, startTime: LocalDateTime, endTime: LocalDateTime): List<ReservationEntity>
+
+    fun findByUserIdOrderByCreatedAtDesc(userId: Long): List<ReservationEntity>
 }

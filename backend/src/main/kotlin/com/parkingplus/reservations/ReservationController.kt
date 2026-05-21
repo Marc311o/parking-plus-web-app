@@ -51,6 +51,16 @@ class ReservationController(
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
+    @GetMapping("/my")
+    fun getMyReservations(authentication: Authentication): ResponseEntity<List<ReservationDetailsDTO>> {
+        val authUserId = extractUserId(authentication)
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
+        val reservations = reservationService.getUserReservations(authUserId)
+        return ResponseEntity.ok(reservations)
+    }
+
     private fun extractUserId(authentication: Authentication): Long? {
         return when (val details = authentication.details) {
             is Long -> details

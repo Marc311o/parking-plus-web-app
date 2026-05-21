@@ -7,6 +7,7 @@ import com.parkingplus.parkingspaces.ParkingSpaceRepository
 import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
 import com.parkingplus.parkingspaces.toDTO
+import com.parkingplus.reservations.enums.ReservationStatus
 import com.parkingplus.transactions.TransactionEntity
 import com.parkingplus.transactions.TransactionRepository
 import com.parkingplus.transactions.enums.TransactionType
@@ -48,9 +49,8 @@ class ReservationService(
         }
         
         val user = vehicle.owner
-        val duration = java.time.Duration.between(request.startTime, request.endTime)
-        val startTime = if (request.mode == ParkingPurchaseMode.PURCHASE) LocalDateTime.now() else request.startTime
-        val endTime = if (request.mode == ParkingPurchaseMode.PURCHASE) startTime.plus(duration) else request.endTime
+        val startTime = request.startTime
+        val endTime = request.endTime
 
         val price = pricingService.calculatePrice(startTime, endTime)
         
@@ -175,6 +175,12 @@ class ReservationService(
             price = price,
             balanceAfter = user.balance
         )
+    }
+
+    @Transactional(readOnly = true)
+    fun getUserReservations(userId: Long): List<ReservationDetailsDTO> {
+        return reservationRepository.findByUserIdOrderByCreatedAtDesc(userId)
+            .map { it.toDetailsDTO() }
     }
 }
 
