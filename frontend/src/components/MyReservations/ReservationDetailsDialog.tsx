@@ -53,6 +53,13 @@ export default function ReservationDetailsDialog({
         }
     };
 
+    const carTypeLabelMap: Record<CarType, string> = {
+        REGULAR_ABLEBODIED: 'Regular',
+        REGULAR_HANDICAPED: 'Regular (Disabled)',
+        EV_ABLEBODIED: 'Electric',
+        EV_HANDICAPED: 'Electric (Disabled)',
+    };
+
     return (
         <Dialog
             open={open}
@@ -217,6 +224,8 @@ export default function ReservationDetailsDialog({
                             label="Vehicle type"
                             value={
                                 reservation?.vehicle_type
+                                    ? carTypeLabelMap[reservation.vehicle_type]
+                                    : '-'
                             }
                         />
 
