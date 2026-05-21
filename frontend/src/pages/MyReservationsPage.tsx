@@ -2,6 +2,9 @@ import {useMemo} from 'react';
 import {Box, Avatar} from '@mui/material';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import {useSearchParams} from 'react-router-dom';
+import {useState} from 'react';
+import ReservationDetailsDialog
+    from '@components/MyReservations/ReservationDetailsDialog';
 
 import ListView, {
     type ListViewColumn,
@@ -84,6 +87,19 @@ const MyReservationsPage = () => {
         1
     );
 
+    const [selectedReservation, setSelectedReservation] =
+        useState<ReservationDetailsDTO | null>(null);
+
+    const [dialogOpen, setDialogOpen] =
+        useState(false);
+
+    const handleOpenDetails = (
+        reservation: ReservationDetailsDTO
+    ) => {
+        setSelectedReservation(reservation);
+        setDialogOpen(true);
+    };
+
     const pagedReservations = useMemo(() => {
         const start = page * size;
 
@@ -124,26 +140,6 @@ const MyReservationsPage = () => {
                         }}
                     >
                         {item.parking_place_id}
-                    </span>
-                ),
-            },
-            {
-                key: 'vehicle_licence_plate',
-                width: '1fr',
-                render: (item) => (
-                    <span>
-                        {
-                            item.vehicle_licence_plate
-                        }
-                    </span>
-                ),
-            },
-            {
-                key: 'vehicle_type',
-                width: '1fr',
-                render: (item) => (
-                    <span>
-                        {item.vehicle_type}
                     </span>
                 ),
             },
@@ -195,6 +191,30 @@ const MyReservationsPage = () => {
                     </span>
                 ),
             },
+
+            {
+                key: 'actions',
+                width: '0.8fr',
+                render: (item) => (
+                    <button
+                        onClick={() =>
+                            handleOpenDetails(item)
+                        }
+                        style={{
+                            background: '#7F0F96',
+                            color: '#FFFFFF',
+                            border: 'none',
+                            borderRadius: 8,
+                            padding: '6px 12px',
+                            cursor: 'pointer',
+                            fontWeight: 600,
+                        }}
+                    >
+                        Details
+                    </button>
+                ),
+            },
+
         ],
         []
     );
@@ -235,6 +255,14 @@ const MyReservationsPage = () => {
                     </Avatar>
                 )}
             />
+
+
+            <ReservationDetailsDialog
+                open={dialogOpen}
+                reservation={selectedReservation}
+                onClose={() => setDialogOpen(false)}
+            />
+
         </Box>
     );
 };

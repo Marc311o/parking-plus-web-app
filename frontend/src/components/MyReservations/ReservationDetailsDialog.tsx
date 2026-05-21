@@ -1,0 +1,281 @@
+import {
+    Avatar,
+    Box,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    Paper,
+    Typography,
+    Chip,
+} from '@mui/material';
+
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import EventSeatIcon from '@mui/icons-material/EventSeat';
+
+interface ReservationDetailsDTO {
+    id: string;
+    created_at: string;
+    start_time: string;
+    end_time: string;
+    price: number;
+    status:
+        | 'CONFIRMED'
+        | 'PENDING'
+        | 'CANCELLED';
+    parking_place_id: string;
+    vehicle_licence_plate: string;
+    vehicle_type:
+        | 'SEDAN'
+        | 'SUV'
+        | 'HATCHBACK'
+        | 'COUPE';
+}
+
+interface Props {
+    open: boolean;
+    reservation: ReservationDetailsDTO | null;
+    onClose: () => void;
+}
+
+export default function ReservationDetailsDialog({
+                                                     open,
+                                                     reservation,
+                                                     onClose,
+                                                 }: Props) {
+
+    const handleClose = () => {
+        onClose();
+    };
+
+    const getStatusColor = () => {
+        switch (reservation?.status) {
+            case 'CONFIRMED':
+                return '#2e7d32';
+
+            case 'PENDING':
+                return '#ed6c02';
+
+            case 'CANCELLED':
+                return '#d32f2f';
+
+            default:
+                return '#757575';
+        }
+    };
+
+    return (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            fullWidth
+            maxWidth="sm"
+        >
+            <IconButton
+                onClick={handleClose}
+                disableRipple
+                sx={{
+                    position: 'absolute',
+                    top: 22,
+                    right: 16,
+                    zIndex: 2,
+                    color: '#FFFFFF',
+                    p: 0,
+
+                    '&:hover': {
+                        bgcolor: 'transparent',
+                        opacity: 0.75,
+                    },
+                }}
+            >
+                <CloseRoundedIcon />
+            </IconButton>
+
+            <DialogTitle
+                sx={{
+                    p: 0,
+                    background:
+                        'linear-gradient(135deg, #5E076E 0%, #C13BDB 100%)',
+                    color: '#FFFFFF',
+                }}
+            >
+                <Box
+                    sx={{
+                        p: 3,
+                        pr: 7,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1.5,
+                    }}
+                >
+                    <Avatar
+                        sx={{
+                            width: 48,
+                            height: 48,
+                            bgcolor:
+                                'rgba(255,255,255,0.18)',
+                            color: '#FFFFFF',
+                        }}
+                    >
+                        <EventSeatIcon />
+                    </Avatar>
+
+                    <Box>
+                        <Typography
+                            sx={{
+                                fontSize: 18,
+                                fontWeight: 800,
+                            }}
+                        >
+                            Reservation details
+                        </Typography>
+                    </Box>
+                </Box>
+            </DialogTitle>
+
+            <DialogContent
+                sx={{
+                    p: 0,
+                    bgcolor: '#FBF7FC',
+                }}
+            >
+                <Box sx={{ p: 3 }}>
+                    <Paper
+                        elevation={0}
+                        sx={{
+                            p: 3,
+                            borderRadius: '16px',
+                            bgcolor: '#FFFFFF',
+                            border:
+                                '1px solid rgba(139, 31, 158, 0.12)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                        }}
+                    >
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent:
+                                    'space-between',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Typography
+                                sx={{
+                                    fontWeight: 700,
+                                    fontSize: 18,
+                                }}
+                            >
+                                Status
+                            </Typography>
+
+                            <Chip
+                                label={
+                                    reservation?.status
+                                }
+                                sx={{
+                                    bgcolor:
+                                        getStatusColor(),
+                                    color: '#FFFFFF',
+                                    fontWeight: 700,
+                                }}
+                            />
+                        </Box>
+
+                        <InfoRow
+                            label="Created at"
+                            value={
+                                reservation?.created_at
+                            }
+                        />
+
+                        <InfoRow
+                            label="Start time"
+                            value={
+                                reservation?.start_time
+                            }
+                        />
+
+                        <InfoRow
+                            label="End time"
+                            value={
+                                reservation?.end_time
+                            }
+                        />
+
+                        <InfoRow
+                            label="Price"
+                            value={`${reservation?.price.toFixed(2)} zł`}
+                        />
+
+                        <InfoRow
+                            label="Parking place"
+                            value={
+                                reservation?.parking_place_id
+                            }
+                        />
+
+                        <InfoRow
+                            label="Vehicle plate"
+                            value={
+                                reservation?.vehicle_licence_plate
+                            }
+                        />
+
+                        <InfoRow
+                            label="Vehicle type"
+                            value={
+                                reservation?.vehicle_type
+                            }
+                        />
+
+                    </Paper>
+                </Box>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+interface InfoRowProps {
+    label: string;
+    value?: string;
+}
+
+function InfoRow({
+                     label,
+                     value,
+                 }: InfoRowProps) {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 2,
+                py: 1,
+                borderBottom:
+                    '1px solid rgba(0,0,0,0.06)',
+            }}
+        >
+            <Typography
+                sx={{
+                    fontWeight: 600,
+                    color: '#6B7280',
+                }}
+            >
+                {label}
+            </Typography>
+
+            <Typography
+                sx={{
+                    fontWeight: 700,
+                    textAlign: 'right',
+                }}
+            >
+                {value}
+            </Typography>
+        </Box>
+    );
+}
