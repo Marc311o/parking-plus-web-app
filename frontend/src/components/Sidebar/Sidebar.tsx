@@ -64,6 +64,12 @@ const Sidebar = () => {
             active: location.pathname === '/myCars',
         },
         {
+            text: formatMessage({id: 'sidebar.menu.myReservations'}),
+            icon: <DirectionsCarRoundedIcon/>,
+            path: '/myReservations',
+            active: location.pathname === '/myReservations',
+        },
+        {
             text: formatMessage({id: 'sidebar.menu.statistics'}),
             icon: <BarChartIcon/>,
             path: '/statistics',

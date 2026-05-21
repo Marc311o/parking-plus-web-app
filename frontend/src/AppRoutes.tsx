@@ -9,6 +9,7 @@ import EventsPage from '@pages/EventsPage';
 import PricesPage from '@pages/PricesPage';
 import SettingsPage from '@pages/SettingsPage';
 import MyCarsPage from '@pages/MyCarsPage';
+import MyReservationsPage from '@pages/MyReservationsPage';
 import Login from '@pages/Auth/Login';
 import CreateNewAccount from '@pages/Auth/CreateNewAccountPage';
 import ForgotPassword from '@pages/Auth/ForgotPasswordPage';
@@ -51,6 +52,7 @@ const AppRoutes = () => {
                     <Route path="settings" element={<SettingsPage/>}/>
                     <Route path="parkingPurchase" element={<ParkingPurchasePage/>}/>
                     <Route path="myCars" element={<MyCarsPage/>}/>
+                    <Route path="myReservations" element={<MyReservationsPage/>}/>
                 </Route>
             </Route>
 

@@ -86,7 +86,8 @@
       "events": "Events",
       "prices": "Prices",
       "parkingPurchase": "Buy spot",
-      "myCars": "My cars"
+      "myCars": "My cars",
+      "myReservations": "My reservations"
     },
     "other": {
       "settings": "Settings",

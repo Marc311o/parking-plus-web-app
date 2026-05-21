@@ -88,7 +88,8 @@
       "events": "Zdarzenia",
       "prices": "Cennik",
       "parkingPurchase": "Zakup miejsce",
-      "myCars": "Moje pojazdy"
+      "myCars": "Moje pojazdy",
+      "myReservations": "Moje rezerwacje"
     },
     "other": {
       "settings": "Ustawienia",
