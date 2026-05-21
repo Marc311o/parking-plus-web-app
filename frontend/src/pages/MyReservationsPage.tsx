@@ -14,7 +14,7 @@ import type {CarType} from '@api/MyCars';
 import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations';
 import {useAuthStore} from '@store/useAuthStore';
 import {getReservationsByUser} from "../api/MyReservations/myreservations.ts";
-
+import { Alert } from '@mui/material';
 
 const MyReservationsPage = () => {
     const token = useAuthStore((state) => state.token);
@@ -233,6 +233,16 @@ const MyReservationsPage = () => {
                 gap: 2.5,
             }}
         >
+            {error && (
+                <Alert
+                    severity="error"
+                    onClose={() => setError(null)}
+                    sx={{ mb: 2 }}
+                >
+                    {error}
+                </Alert>
+            )}
+
             <ListView
                 items={pagedReservations}
                 isLoading={false}
