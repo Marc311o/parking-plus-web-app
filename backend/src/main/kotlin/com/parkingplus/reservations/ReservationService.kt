@@ -48,9 +48,8 @@ class ReservationService(
         }
         
         val user = vehicle.owner
-        val duration = java.time.Duration.between(request.startTime, request.endTime)
-        val startTime = if (request.mode == ParkingPurchaseMode.PURCHASE) LocalDateTime.now() else request.startTime
-        val endTime = if (request.mode == ParkingPurchaseMode.PURCHASE) startTime.plus(duration) else request.endTime
+        val startTime = request.startTime
+        val endTime = request.endTime
 
         val price = pricingService.calculatePrice(startTime, endTime)
         
