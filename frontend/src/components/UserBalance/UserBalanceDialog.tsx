@@ -29,14 +29,12 @@ import {useAuthStore} from "@store/useAuthStore";
 interface Props {
     open: boolean;
     userId: number;
-    token: string;
     onClose: () => void;
 }
 
 export default function UserBalanceDialog({
                                               open,
                                               userId,
-                                              token,
                                               onClose,
                                           }: Props) {
 
@@ -49,6 +47,8 @@ export default function UserBalanceDialog({
     const setUser = useAuthStore((state) => state.setUser);
 
     const {formatMessage} = useIntl();
+
+    const token = useAuthStore.getState().token;
 
     useEffect(() => {
         if (open) {
