@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import EventSeatIcon from '@mui/icons-material/EventSeat';
 import {useIntl} from 'react-intl';
 import {useLocation, useNavigate} from 'react-router-dom';
 import logo from '@assets/logo.png';
@@ -65,7 +66,7 @@ const Sidebar = () => {
         },
         {
             text: formatMessage({id: 'sidebar.menu.myReservations'}),
-            icon: <DirectionsCarRoundedIcon/>,
+            icon: <EventSeatIcon/>,
             path: '/myReservations',
             active: location.pathname === '/myReservations',
         },
