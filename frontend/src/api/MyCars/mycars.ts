@@ -1,4 +1,4 @@
-import type {VehicleDTO} from './types';
+import type {VehicleDTO, UpdateVehicleDTO} from './types';
 import {API_URL, getHeaders} from '../core';
 
 export const getVehiclesByOwner = async (
@@ -66,4 +66,29 @@ export const deleteVehicle = async (id: number): Promise<void> => {
 
         throw new Error(text || `Failed to delete vehicle: ${response.status}`);
     }
+};
+
+export const updateVehicle = async (
+    vehicleID: number,
+    dto: Omit<UpdateVehicleDTO, 'id'>
+): Promise<VehicleDTO> => {
+
+    const response = await fetch(
+        `${API_URL}/vehicles/${vehicleID}`,
+        {
+            method: 'PUT',
+            headers: {
+                ...getHeaders(),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dto),
+        }
+    );
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `Failed to update vehicle: ${response.status}`);
+    }
+
+    return response.json();
 };
