@@ -1,5 +1,5 @@
 import type {ReservationDetailsDTO} from '@api/MyReservations';
-import {API_URL, getHeaders} from "../core.ts";
+import {API_URL, getHeaders} from '../core';
 
 export const getReservationsByUser = async (
     token: string
