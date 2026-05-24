@@ -1,5 +1,5 @@
 import {useEffect, useMemo} from 'react';
-import {Box, Avatar} from '@mui/material';
+import {Box, Avatar, Alert} from '@mui/material';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import {useSearchParams} from 'react-router-dom';
 import {useState} from 'react';
@@ -10,11 +10,9 @@ import ListView, {
     type ListViewColumn,
 } from '@components/Common/ListView';
 
-import type {CarType} from '@api/MyCars';
 import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations';
 import {useAuthStore} from '@store/useAuthStore';
 import {getReservationsByUser} from "../api/MyReservations/myreservations.ts";
-import { Alert } from '@mui/material';
 import {useIntl} from 'react-intl';
 
 
