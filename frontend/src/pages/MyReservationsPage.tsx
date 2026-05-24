@@ -25,7 +25,7 @@ const MyReservationsPage = () => {
 
 
     const [reservations, setReservations] = useState<ReservationDetailsDTO[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const [searchParams, setSearchParams] =
