@@ -22,7 +22,8 @@ export const getReservationsByUser = async (
     );
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch vehicles: ${response.status}`);
+        const responseBody = await response.text();
+        throw new Error(`Failed to fetch reservations: ${response.status} ${responseBody}`);
     }
 
     return response.json();
