@@ -233,7 +233,7 @@ const MyReservationsPage = () => {
             },
 
         ],
-        []
+        [formatMessage, handleOpenDetails, getStatusColor, formatReservationStatus]
     );
 
     return (
