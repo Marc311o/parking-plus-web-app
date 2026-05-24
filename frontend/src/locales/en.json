@@ -86,7 +86,8 @@
       "events": "Events",
       "prices": "Prices",
       "parkingPurchase": "Buy spot",
-      "myCars": "My cars"
+      "myCars": "My cars",
+      "myReservations": "My reservations"
     },
     "other": {
       "settings": "Settings",
@@ -448,6 +449,40 @@
       "REGULAR_HANDICAPED": "Regular (Handicapped)",
       "EV_ABLEBODIED": "EV",
       "EV_HANDICAPED": "EV (Handicapped)"
+    }
+  },
+  "myReservations": {
+    "start": "From",
+    "end": "To",
+    "emptyMessage": "No reservations found",
+    "status": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled",
+      "COMPLETED": "Completed"
+    }
+  },
+  "reservationDetails": {
+    "title": "Reservation details",
+    "status": "Status",
+    "createdAt": "Created at",
+    "startTime": "Start time",
+    "endTime": "End time",
+    "price": "Price",
+    "parkingPlace": "Parking place",
+    "vehiclePlate": "Vehicle plate",
+    "vehicleType": "Vehicle type",
+    "statusValues": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled",
+      "COMPLETED": "Completed"
+    },
+    "vehicleTypeValues": {
+      "REGULAR_ABLEBODIED": "Regular",
+      "REGULAR_HANDICAPED": "Regular (Disabled)",
+      "EV_ABLEBODIED": "Electric",
+      "EV_HANDICAPED": "Electric (Disabled)"
     }
   }
 }

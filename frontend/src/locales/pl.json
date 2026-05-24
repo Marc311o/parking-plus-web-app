@@ -88,7 +88,8 @@
       "events": "Zdarzenia",
       "prices": "Cennik",
       "parkingPurchase": "Zakup miejsce",
-      "myCars": "Moje pojazdy"
+      "myCars": "Moje pojazdy",
+      "myReservations": "Moje rezerwacje"
     },
     "other": {
       "settings": "Ustawienia",
@@ -448,6 +449,40 @@
       "REGULAR_HANDICAPED": "Standardowy (dla niepełnosprawnych)",
       "EV_ABLEBODIED": "Elektryczny",
       "EV_HANDICAPED": "Elektryczny (dla niepełnosprawnych)"
+    }
+  },
+  "myReservations": {
+    "start": "Od",
+    "end": "Do",
+    "emptyMessage": "Nie znaleziono żadnej rezerwacji",
+    "status": {
+      "PENDING": "Oczekująca",
+      "CONFIRMED": "Potwierdzona",
+      "CANCELLED": "Anulowana",
+      "COMPLETED": "Zakończona"
+    }
+  },
+  "reservationDetails": {
+    "title": "Szczegóły rezerwacji",
+    "status": "Status",
+    "createdAt": "Utworzono",
+    "startTime": "Początek",
+    "endTime": "Koniec",
+    "price": "Cena",
+    "parkingPlace": "Miejsce parkingowe",
+    "vehiclePlate": "Tablica rejestracyjna",
+    "vehicleType": "Typ pojazdu",
+    "statusValues": {
+      "PENDING": "Oczekująca",
+      "CONFIRMED": "Potwierdzona",
+      "CANCELLED": "Anulowana",
+      "COMPLETED": "Zakończona"
+    },
+    "vehicleTypeValues": {
+      "REGULAR_ABLEBODIED": "Regularny",
+      "REGULAR_HANDICAPED": "Regularny (niepełnosprawny)",
+      "EV_ABLEBODIED": "Elektryczny",
+      "EV_HANDICAPED": "Elektryczny (niepełnosprawny)"
     }
   }
 }
