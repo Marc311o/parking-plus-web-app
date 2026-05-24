@@ -7,7 +7,7 @@ export type ReservationStatus =
     | 'COMPLETED';
 
 export type ReservationDetailsDTO = {
-    id: string;
+    id: number;
     created_at: string;
     start_time: string;
     end_time: string;
