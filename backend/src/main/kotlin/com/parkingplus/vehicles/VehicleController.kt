@@ -60,4 +60,25 @@ class VehicleController(private val vehicleService: VehicleService) {
     fun getAllVehicles(): ResponseEntity<List<VehicleDTO>> {
         return ResponseEntity.ok(vehicleService.getAllVehicles())
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PutMapping("/{id}")
+    fun updateVehicle(
+        @PathVariable id: Long,
+        @Valid @RequestBody dto: UpdateVehicleDTO,
+        authentication: Authentication
+    ): ResponseEntity<VehicleDTO> {
+        val authUserId = authentication.details as? Long
+        if (authentication.authorities.none { it.authority == "ROLE_ADMIN" }) {
+            val vehicle = vehicleService.getVehicleById(id)
+                ?: return ResponseEntity.notFound().build()
+            if (vehicle.ownerId != authUserId) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
+            }
+        }
+
+        return ResponseEntity.ok(
+            vehicleService.updateVehicle(id, dto)
+        )
+    }
 }

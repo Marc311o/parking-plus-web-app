@@ -54,4 +54,27 @@ class VehicleService(
     fun getAllVehicles(): List<VehicleDTO> {
         return vehicleRepository.findAll().map { it.toDTO() }
     }
+
+    @Transactional
+    fun updateVehicle(id: Long, dto: UpdateVehicleDTO): VehicleDTO {
+
+        val vehicle = vehicleRepository.findById(id)
+            .orElseThrow {
+                NoSuchElementException("Vehicle with id $id does not exist.")
+            }
+
+        if (
+            vehicle.licensePlate != dto.licensePlate &&
+            vehicleRepository.existsByLicensePlate(dto.licensePlate)
+        ) {
+            throw IllegalArgumentException(
+                "Car with license plate ${dto.licensePlate} already exists."
+            )
+        }
+
+        vehicle.licensePlate = dto.licensePlate
+        vehicle.carType = dto.carType
+
+        return vehicle.toDTO()
+    }
 }
