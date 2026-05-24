@@ -258,7 +258,7 @@ const MyReservationsPage = () => {
             <ListView
                 items={pagedReservations}
                 isLoading={false}
-                emptyMessage="No reservations found"
+                emptyMessage={formatMessage({id: 'myReservations.emptyMessage'})}
                 columns={columns}
                 pagination={{
                     page,

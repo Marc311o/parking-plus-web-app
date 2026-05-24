@@ -452,14 +452,15 @@
     }
   },
   "myReservations": {
-      "start": "From",
-      "end": "To",
-      "status": {
-        "PENDING": "Pending",
-        "CONFIRMED": "Confirmed",
-        "CANCELLED": "Cancelled",
-        "COMPLETED": "Completed"
-      }
+    "start": "From",
+    "end": "To",
+    "emptyMessage": "No reservations found",
+    "status": {
+      "PENDING": "Pending",
+      "CONFIRMED": "Confirmed",
+      "CANCELLED": "Cancelled",
+      "COMPLETED": "Completed"
+    }
   },
   "reservationDetails": {
     "title": "Reservation details",
@@ -471,14 +472,12 @@
     "parkingPlace": "Parking place",
     "vehiclePlate": "Vehicle plate",
     "vehicleType": "Vehicle type",
-
     "statusValues": {
       "PENDING": "Pending",
       "CONFIRMED": "Confirmed",
       "CANCELLED": "Cancelled",
       "COMPLETED": "Completed"
     },
-
     "vehicleTypeValues": {
       "REGULAR_ABLEBODIED": "Regular",
       "REGULAR_HANDICAPED": "Regular (Disabled)",

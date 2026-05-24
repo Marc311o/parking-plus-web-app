@@ -454,6 +454,7 @@
   "myReservations": {
     "start": "Od",
     "end": "Do",
+    "emptyMessage": "Nie znaleziono żadnej rezerwacji",
     "status": {
       "PENDING": "Oczekująca",
       "CONFIRMED": "Potwierdzona",
@@ -471,14 +472,12 @@
     "parkingPlace": "Miejsce parkingowe",
     "vehiclePlate": "Tablica rejestracyjna",
     "vehicleType": "Typ pojazdu",
-
     "statusValues": {
       "PENDING": "Oczekująca",
       "CONFIRMED": "Potwierdzona",
       "CANCELLED": "Anulowana",
       "COMPLETED": "Zakończona"
     },
-
     "vehicleTypeValues": {
       "REGULAR_ABLEBODIED": "Regularny",
       "REGULAR_HANDICAPED": "Regularny (niepełnosprawny)",
