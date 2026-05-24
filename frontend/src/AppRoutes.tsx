@@ -59,10 +59,12 @@ const AppRoutes = () => {
                         <Route path="pricing" element={<PricesPage />} />
 
                         <Route path="statistics">
+                            <Route index element={<Navigate to="parking" replace />} />
                             <Route path="parking" element={<StatisticsParkingPage />} />
                             <Route path="places" element={<StatisticsPlacesPage />} />
                         </Route>
                     </Route>
+
 
                     {/* ================= CLIENT ONLY ================= */}
                     <Route element={<ProtectedRoute allowed={["CLIENT"]} />}>
