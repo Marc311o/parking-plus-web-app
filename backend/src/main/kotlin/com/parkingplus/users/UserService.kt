@@ -17,7 +17,8 @@ import java.math.BigDecimal
 class UserService(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
-    private val tfaService: TwoFactorAuthService
+    private val tfaService: TwoFactorAuthService,
+    private val passwordValidator: com.parkingplus.security.validation.PasswordValidator
 ) {
 
     @Transactional(readOnly = true)
@@ -47,6 +48,8 @@ class UserService(
             throw ResponseStatusException(HttpStatus.CONFLICT, "Użytkownik z mailem ${request.email} już istnieje.")
         }
 
+        passwordValidator.validate(request.password, listOf(request.name, request.surname, request.email))
+
         val hashedPassword = passwordEncoder.encode(request.password)
         val entity = request.toEntity(hashedPassword)
 
@@ -58,6 +61,8 @@ class UserService(
         if (userRepository.existsByEmail(request.email)) {
             throw ResponseStatusException(HttpStatus.CONFLICT, "Użytkownik z mailem ${request.email} już istnieje.")
         }
+
+        passwordValidator.validate(request.password, listOf(request.name, request.surname, request.email))
 
         val hashedPassword = passwordEncoder.encode(request.password)
         val entity = request.toEntity(hashedPassword).apply {

@@ -31,5 +31,8 @@ class VehicleEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "car_type", nullable = false)
-    var carType: CarType
+    var carType: CarType,
+
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
+    var isActive: Boolean = true
 )

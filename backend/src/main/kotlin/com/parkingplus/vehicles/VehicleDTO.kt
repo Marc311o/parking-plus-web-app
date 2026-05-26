@@ -14,5 +14,7 @@ data class VehicleDTO(
     val ownerId: Long = 0L,
 
     @field:NotNull(message = "Car type is required")
-    val carType: CarType = CarType.REGULAR_ABLEBODIED
+    val carType: CarType = CarType.REGULAR_ABLEBODIED,
+
+    val isActive: Boolean = true
 )

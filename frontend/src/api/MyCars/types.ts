@@ -9,6 +9,7 @@ export type VehicleDTO = {
     licensePlate: string;
     ownerId: number;
     carType: CarType;
+    isActive: boolean;
 };
 
 export type UpdateVehicleDTO = {
