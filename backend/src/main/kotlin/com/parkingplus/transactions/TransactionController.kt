@@ -1,6 +1,8 @@
 package com.parkingplus.transactions
 
 import com.parkingplus.transactions.enums.TransactionType
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,20 +12,24 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/transactions")
+@Tag(name = "Transactions", description = "Zarządzanie operacjami finansowymi (wpłaty, płatności za parking)")
 class TransactionController(
     private val transactionService: TransactionService
 ) {
 
+    @Operation(summary = "Pobierz wszystkie transakcje (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     fun getAllTransactions(): List<TransactionDTO> =
         transactionService.getAllTransactions()
 
+    @Operation(summary = "Pobierz transakcję po ID (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     fun getTransactionById(@PathVariable id: Long): TransactionDTO =
         transactionService.getTransactionById(id)
 
+    @Operation(summary = "Pobierz transakcje użytkownika")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/user/{userId}")
     fun getTransactionsByUser(@PathVariable userId: Long, authentication: Authentication): ResponseEntity<List<TransactionDTO>> {
@@ -34,11 +40,13 @@ class TransactionController(
         return ResponseEntity.ok(transactionService.getTransactionsByUser(userId))
     }
 
+    @Operation(summary = "Pobierz transakcje według typu (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/type/{type}")
     fun getTransactionsByType(@PathVariable type: TransactionType): List<TransactionDTO> =
         transactionService.getTransactionsByType(type)
 
+    @Operation(summary = "Pobierz transakcje użytkownika według typu")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/user/{userId}/type/{type}")
     fun getTransactionsByUserAndType(
@@ -53,6 +61,7 @@ class TransactionController(
         return ResponseEntity.ok(transactionService.getTransactionsByUserAndType(userId, type))
     }
 
+    @Operation(summary = "Utwórz nową transakcję", description = "Rejestruje wpłatę na saldo lub płatność.")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -66,6 +75,7 @@ class TransactionController(
         return transactionService.createTransaction(dto.copy(userId = effectiveUserId))
     }
 
+    @Operation(summary = "Usuń transakcję (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

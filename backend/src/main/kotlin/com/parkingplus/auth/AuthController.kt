@@ -6,6 +6,8 @@ import com.parkingplus.users.UserDTO
 import com.parkingplus.users.UserRepository
 import com.parkingplus.users.UserService
 import com.parkingplus.users.requests.CreateUserRequest
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Endpointy do logowania, rejestracji i resetowania hasła")
 class AuthController(
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder,
@@ -27,6 +30,7 @@ class AuthController(
         private const val INVALID_CREDENTIALS_MSG = "Nieprawidłowy email lub hasło"
     }
 
+    @Operation(summary = "Logowanie użytkownika", description = "Zwraca token JWT lub preAuthToken jeśli MFA jest włączone.")
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<Any> {
         val user = userRepository.findByEmail(request.email).orElse(null)
@@ -49,6 +53,7 @@ class AuthController(
         return ResponseEntity.ok(LoginResponse(token = token))
     }
 
+    @Operation(summary = "Weryfikacja kodu MFA", description = "Weryfikuje kod TOTP i zwraca ostateczny token JWT.")
     @PostMapping("/verify-mfa")
     fun verifyMfa(@RequestBody request: MfaVerificationRequest): ResponseEntity<Any> {
         val email = jwtService.validatePreAuthToken(request.preAuthToken)
@@ -68,12 +73,14 @@ class AuthController(
         return ResponseEntity.ok(LoginResponse(token = token))
     }
 
+    @Operation(summary = "Zapomniane hasło", description = "Wysyła link do resetu hasła na podany adres e-mail.")
     @PostMapping("/forgot-password")
     fun forgotPassword(@RequestBody request: ForgotPasswordRequest): ResponseEntity<String> {
         passwordResetService.createTokenAndSendEmail(request.email)
         return ResponseEntity.ok("Jeśli e-mail istnieje w bazie, wysłano na niego link do resetu hasła.")
     }
 
+    @Operation(summary = "Resetowanie hasła", description = "Zmienia hasło użytkownika na podstawie tokena z e-maila.")
     @PostMapping("/reset-password")
     fun resetPassword(@RequestBody request: ResetPasswordRequest): ResponseEntity<String> {
         val success = passwordResetService.resetPassword(request)
@@ -84,6 +91,7 @@ class AuthController(
         }
     }
 
+    @Operation(summary = "Rejestracja nowego użytkownika", description = "Tworzy nowe konto klienta w systemie.")
     @PostMapping("/register")
     fun register(@Valid @RequestBody request: RegisterUserRequest): ResponseEntity<UserDTO> {
         val createUserRequest = CreateUserRequest(
@@ -95,5 +103,10 @@ class AuthController(
         )
         val user = userService.createUser(createUserRequest)
         return ResponseEntity.status(HttpStatus.CREATED).body(user)
+    }
+
+    @GetMapping("/version")
+    fun getVersion(): ResponseEntity<Map<String, String>> {
+        return ResponseEntity.ok(mapOf("version" to "v2-custom-swagger"))
     }
 }
