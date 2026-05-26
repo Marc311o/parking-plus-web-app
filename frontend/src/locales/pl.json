@@ -447,13 +447,19 @@
     "fields": {
       "licensePlate": "Numer rejestracyjny",
       "carType": "Typ pojazdu",
-      "cancel": "Anuluj"
+      "cancel": "Anuluj",
+      "update": "Aktualizuj"
     },
     "carTypes": {
       "REGULAR_ABLEBODIED": "Standardowy",
       "REGULAR_HANDICAPED": "Standardowy (dla niepełnosprawnych)",
       "EV_ABLEBODIED": "Elektryczny",
       "EV_HANDICAPED": "Elektryczny (dla niepełnosprawnych)"
+    },
+    "editDialog":{
+      "title": "Edytuj informacje o pojeździe",
+      "success": "Samochód został pomyślnie zaktualizowany",
+      "duplicatePlate": "Nie można zaktualizować – rejestracja jest już zajęta"
     }
   },
   "myReservations": {

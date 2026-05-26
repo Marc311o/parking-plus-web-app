@@ -11,3 +11,8 @@ export type VehicleDTO = {
     carType: CarType;
     isActive: boolean;
 };
+
+export type UpdateVehicleDTO = {
+    licensePlate: string;
+    carType: CarType;
+}

@@ -45,56 +45,76 @@ const Sidebar = () => {
         navigate('/login');
     };
 
+    const user = useAuthStore((state) => state.user);
+
+    const isAdmin = user?.isOperator === true;
+    const isClient = !isAdmin;
+
     const menuItems = [
         {
             text: formatMessage({id: 'sidebar.menu.dashboard'}),
             icon: <DashboardIcon/>,
             path: '/',
             active: location.pathname === '/dashboard',
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.parkingPurchase'}),
             icon: <ShoppingCartOutlinedIcon/>,
             path: '/parkingPurchase',
             active: location.pathname === '/parkingPurchase',
+            visibleFor: 'CLIENT',
         },
         {
             text: formatMessage({id: 'sidebar.menu.myCars'}),
             icon: <DirectionsCarRoundedIcon/>,
             path: '/myCars',
             active: location.pathname === '/myCars',
+            visibleFor: 'CLIENT',
         },
         {
             text: formatMessage({id: 'sidebar.menu.myReservations'}),
             icon: <EventSeatIcon/>,
             path: '/myReservations',
             active: location.pathname === '/myReservations',
+            visibleFor: 'CLIENT',
         },
         {
             text: formatMessage({id: 'sidebar.menu.statistics'}),
             icon: <BarChartIcon/>,
             path: '/statistics',
             active: location.pathname.startsWith('/statistics'),
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.clients'}),
             icon: <PeopleIconOutlined/>,
             path: '/clients',
             active: location.pathname.startsWith('/clients'),
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.events'}),
             icon: <EventIcon/>,
             path: '/events',
             active: location.pathname.startsWith('/events'),
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.prices'}),
             icon: <LocalAtmIcon/>,
             path: '/pricing',
             active: location.pathname.startsWith('/pricing'),
+            visibleFor: 'ALL',
         },
     ];
+
+    const filteredMenuItems = menuItems.filter(item => {
+        if (item.visibleFor === 'ALL') return true;
+        if (item.visibleFor === 'ADMIN') return isAdmin;
+        if (item.visibleFor === 'CLIENT') return isClient;
+        return false;
+    })
 
     const secondaryItems = [
         {
@@ -102,11 +122,13 @@ const Sidebar = () => {
             icon: <SettingsIcon/>,
             path: '/settings',
             active: location.pathname.startsWith('/settings'),
+            visibleFor: 'ALL',
         },
         {
             text: formatMessage({id: 'sidebar.other.logout'}),
             icon: <LogoutIcon/>,
             onClick: handleLogout,
+            visibleFor: 'ALL',
         },
     ];
 
@@ -148,7 +170,7 @@ const Sidebar = () => {
             </Typography>
 
             <List sx={{p: 0}}>
-                {menuItems.map((item) => (
+                {filteredMenuItems.map((item) => (
                     <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
                         <ListItemButton
                             onClick={() => navigate(item.path)}

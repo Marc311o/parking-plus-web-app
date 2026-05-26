@@ -447,13 +447,19 @@
     "fields": {
       "licensePlate": "License plate",
       "carType": "Vehicle type",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "update": "Update"
     },
     "carTypes": {
       "REGULAR_ABLEBODIED": "Regular",
       "REGULAR_HANDICAPED": "Regular (Handicapped)",
       "EV_ABLEBODIED": "EV",
       "EV_HANDICAPED": "EV (Handicapped)"
+    },
+    "editDialog":{
+      "title": "Edit vehicle details",
+      "success": "Vehicle updated successfully",
+      "duplicatePlate": "Cannot update – license plate is already taken"
     }
   },
   "myReservations": {
