@@ -7,4 +7,5 @@ interface VehicleRepository : JpaRepository<VehicleEntity, Long> {
     fun existsByLicensePlate(licensePlate: String): Boolean
     fun findByLicensePlate(licensePlate: String): VehicleEntity?
     fun findAllByOwnerId(ownerId: Long): List<VehicleEntity>
+    fun findAllByOwnerIdAndIsActiveTrue(ownerId: Long): List<VehicleEntity>
 }

@@ -17,6 +17,7 @@ export interface VehicleDTO {
     licensePlate: string;
     carType: CarType;
     ownerId: number;
+    isActive: boolean;
 }
 
 export interface PageResponse<T> {
