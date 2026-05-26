@@ -48,9 +48,11 @@ class SecurityConfig(
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/static/**",
-                    "/**/*.css",
+                    "/favicon.ico",
                     "/*.css",
-                    "/favicon.ico"
+                    "/*.js",
+                    "/*.png",
+                    "/*.svg"
                 ).permitAll()
                 auth.anyRequest().authenticated()
             }

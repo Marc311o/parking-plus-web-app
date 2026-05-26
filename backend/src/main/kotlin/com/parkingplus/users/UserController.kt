@@ -45,7 +45,7 @@ class UserController(private val userService: UserService) {
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/{id:\\d+}")
     fun getById(@PathVariable id: Long, authentication: Authentication): ResponseEntity<UserDTO> {
-        val authUserId = authentication.details as? Long
+        val authUserId = (authentication.details as? Number)?.toLong()
         if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } && authUserId != id) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         }
@@ -71,7 +71,7 @@ class UserController(private val userService: UserService) {
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping("/{id}/mfa-setup")
     fun setupMfa(@PathVariable id: Long, authentication: Authentication): ResponseEntity<MfaSetupResponse> {
-        val authUserId = authentication.details as? Long
+        val authUserId = (authentication.details as? Number)?.toLong()
         if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } && authUserId != id) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         }
@@ -86,7 +86,7 @@ class UserController(private val userService: UserService) {
         @RequestBody request: com.parkingplus.auth.MfaConfirmRequest,
         authentication: Authentication
     ): ResponseEntity<String> {
-        val authUserId = authentication.details as? Long
+        val authUserId = (authentication.details as? Number)?.toLong()
         if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } && authUserId != id) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         }
@@ -102,7 +102,7 @@ class UserController(private val userService: UserService) {
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/me")
     fun getCurrentUser(authentication: Authentication): ResponseEntity<UserDTO> {
-        val authUserId = authentication.details as? Long
+        val authUserId = (authentication.details as? Number)?.toLong()
             ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
 
         return ResponseEntity.ok(userService.getUserById(authUserId))
@@ -117,7 +117,7 @@ class UserController(private val userService: UserService) {
         authentication: Authentication
     ): ResponseEntity<UserDTO> {
 
-        val authUserId = authentication.details as? Long
+        val authUserId = (authentication.details as? Number)?.toLong()
 
         if (
             authentication.authorities.none { it.authority == "ROLE_ADMIN" } &&
