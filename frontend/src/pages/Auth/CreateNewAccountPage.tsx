@@ -342,7 +342,6 @@ const CreateNewAccountPage = () => {
 
                         <ButtonWhite 
                             type="submit" 
-                            onClick={handleCreateAccount}
                             disabled={loading || !rules.minLength || !rules.noUserData || !rules.noForbiddenWords || !rules.noCommonPatterns || password !== passwordRepeat || !passwordRepeat}
                         >
                             {formatMessage({ id: 'logins.createNewAccount.createButton' })}
