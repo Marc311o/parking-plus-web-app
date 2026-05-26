@@ -56,7 +56,6 @@ const AppRoutes = () => {
                         <Route path="dashboard" element={<DashboardPage />} />
                         <Route path="clients" element={<ClientsPage />} />
                         <Route path="events" element={<EventsPage />} />
-                        <Route path="pricing" element={<PricesPage />} />
 
                         <Route path="statistics">
                             <Route index element={<Navigate to="parking" replace />} />
@@ -76,6 +75,7 @@ const AppRoutes = () => {
                     {/* ================= SHARED ================= */}
                     <Route element={<ProtectedRoute allowed={["ADMIN", "CLIENT"]} />}>
                         <Route path="settings" element={<SettingsPage />} />
+                        <Route path="pricing" element={<PricesPage />} />
                     </Route>
 
                 </Route>

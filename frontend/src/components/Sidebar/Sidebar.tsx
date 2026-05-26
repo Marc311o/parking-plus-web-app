@@ -105,7 +105,7 @@ const Sidebar = () => {
             icon: <LocalAtmIcon/>,
             path: '/pricing',
             active: location.pathname.startsWith('/pricing'),
-            visibleFor: 'ADMIN',
+            visibleFor: 'ALL',
         },
     ];
 
