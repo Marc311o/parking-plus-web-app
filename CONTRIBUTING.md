@@ -1,10 +1,10 @@
-# Contributing to Parking+ 🚀
+# Contributing to Parking+
 
 Thank you for your interest in contributing to our project! To maintain high code quality and a clean commit history, we follow a strict workflow based on the **Gitflow** model.
 
 ---
 
-## 🏗 Workflow (Gitflow)
+## Workflow (Gitflow)
 
 Our development process relies on two main branches:
 * `main` – Contains only stable, production-ready code. Every commit here is tagged with a version number.
@@ -17,7 +17,7 @@ Our development process relies on two main branches:
 
 ---
 
-## 🏷 Branch Naming Convention
+## Branch Naming Convention
 
 This repository has **Repository Rulesets** enabled. Branches that do not follow the patterns below will be rejected by the system:
 
@@ -34,7 +34,7 @@ This repository has **Repository Rulesets** enabled. Branches that do not follow
 
 ---
 
-## 📋 Pull Requests
+## Pull Requests
 
 Every PR must be verified before merging. To be accepted, it must meet the following criteria:
 1. **Description:** Clearly explain what was changed and why.
@@ -43,6 +43,6 @@ Every PR must be verified before merging. To be accepted, it must meet the follo
 
 ---
 
-## ⚖️ License
+## License
 
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. By contributing, you agree that your contributions will be licensed under the same terms.
