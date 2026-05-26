@@ -110,7 +110,8 @@ class ParkingSpaceService(
             .orElseThrow { NoSuchElementException("Parking space with id $id does not exist.") }
 
         var occupantDto: ParkingSpotOccupantDetailsDTO? = null
-        val activeHistory = parkingHistoryRepository.findByParkingSpaceIdAndEndTimeIsNull(id)
+        val now = LocalDateTime.now()
+        val activeHistory = parkingHistoryRepository.findActiveByParkingSpaceId(id, now)
 
         val actualStatus = if (activeHistory != null) ParkingSpaceStatus.OCCUPIED else space.status
 

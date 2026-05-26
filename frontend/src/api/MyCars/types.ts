@@ -10,3 +10,8 @@ export type VehicleDTO = {
     ownerId: number;
     carType: CarType;
 };
+
+export type UpdateVehicleDTO = {
+    licensePlate: string;
+    carType: CarType;
+}
