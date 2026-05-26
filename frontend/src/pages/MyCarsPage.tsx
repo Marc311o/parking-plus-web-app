@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react';
-import {Box, Avatar, Alert} from '@mui/material';
+import {Box, Avatar, Alert, Snackbar} from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import {useSearchParams} from 'react-router-dom';
 import {useIntl} from 'react-intl';
@@ -7,15 +7,18 @@ import {Button} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 import ListView, {type ListViewColumn} from '@components/Common/ListView';
 import type {CarType} from "@api/MyCars";
 import type {VehicleDTO} from "@api/MyCars";
-import {getVehiclesByOwner, addVehicle, deleteVehicle} from "@api/MyCars";
+import {getVehiclesByOwner, addVehicle, deleteVehicle, updateVehicle} from "@api/MyCars";
 import {useAuthStore} from '@store/useAuthStore';
 
 import AddCarDialog from '@components/MyCars/AddCarDialog';
+
+import EditCarDialog from '@components/MyCars/EditCarDialog';
 
 
 const MyCarsPage = () => {
@@ -33,10 +36,18 @@ const MyCarsPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+    const [selectedVehicle, setSelectedVehicle] = useState<VehicleDTO | null>(null);
+
     const [addDialogOpen, setAddDialogOpen] = useState(false);
 
     const totalElements = cars.length;
     const totalPages = Math.max(Math.ceil(totalElements / size), 1);
+
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] =
+        useState<'success' | 'error'>('success');
 
     const pagedCars = useMemo(() => {
         const start = page * size;
@@ -52,6 +63,12 @@ const MyCarsPage = () => {
     const getErrorMessage = (e: unknown): string => {
         if (e instanceof Error) return e.message;
         return 'Unexpected error occurred';
+    };
+
+    const showSnackbar = (message: string, severity: 'success' | 'error') => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
     };
 
     useEffect(() => {
@@ -128,6 +145,33 @@ const MyCarsPage = () => {
         }
     };
 
+    const handleUpdateVehicle = async (
+        id: string,
+        vehicle: Omit<VehicleDTO, 'id'>
+    ) => {
+        try {
+            const updated = await updateVehicle(id, vehicle as any);
+
+            setCars((prev) =>
+                prev.map((v) => (v.id === id ? updated : v))
+            );
+
+            setEditDialogOpen(false);
+            setSelectedVehicle(null);
+
+            showSnackbar(
+                formatMessage({ id: 'myCars.editDialog.success' }),
+                'success'
+            );
+
+        } catch (e) {
+            showSnackbar(
+                formatMessage({ id: 'myCars.editDialog.duplicatePlate' }),
+                'error'
+            );
+        }
+    };
+
     const handlePageChange = (nextPage: number) => {
         const nextParams = new URLSearchParams(searchParams);
         nextParams.set('page', String(nextPage));
@@ -139,22 +183,37 @@ const MyCarsPage = () => {
             key: 'plate',
             width: '1fr',
             render: (item) => (
-                <span style={{fontWeight: 600, color: '#7F0F96'}}>
-                    {item.licensePlate}
-                </span>
+                <span style={{ fontWeight: 600, color: '#7F0F96' }}>
+                {item.licensePlate}
+            </span>
             ),
         },
         {
             key: 'type',
             width: '1fr',
             render: (item) => (
-                <span style={{fontWeight: 600, color: '#7F0F96'}}>
-                    {formatCarType(item.carType)}
-                </span>
+                <span style={{ fontWeight: 600, color: '#7F0F96' }}>
+                {formatCarType(item.carType)}
+            </span>
             ),
         },
         {
-            key: 'actions',
+            key: 'edit',
+            width: '0.5fr',
+            render: (item) => (
+                <IconButton
+                    onClick={() => {
+                        setSelectedVehicle(item);
+                        setEditDialogOpen(true);
+                    }}
+                    sx={{ color: '#7F0F96', padding: '6px' }}
+                >
+                    <EditIcon />
+                </IconButton>
+            ),
+        },
+        {
+            key: 'delete',
             width: '0.5fr',
             render: (item) => (
                 <IconButton
@@ -166,7 +225,7 @@ const MyCarsPage = () => {
                 </IconButton>
             ),
         }
-    ], []);
+    ], [formatCarType]);
 
 
     const handleAddVehicle = async (
@@ -238,6 +297,31 @@ const MyCarsPage = () => {
                 ownerId={ownerId}
                 onSubmit={handleAddVehicle}
             />
+
+            <EditCarDialog
+                open={editDialogOpen}
+                onClose={() => {
+                    setEditDialogOpen(false);
+                    setSelectedVehicle(null);
+                }}
+                vehicle={selectedVehicle}
+                onSubmit={handleUpdateVehicle}
+            />
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    severity={snackbarSeverity}
+                    variant="filled"
+                    onClose={() => setSnackbarOpen(false)}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
 
         </Box>
     );
