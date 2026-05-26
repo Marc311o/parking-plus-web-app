@@ -10,17 +10,22 @@ import java.util.Date
 
 @Service
 class JwtService(
-
     @Value("\${jwt.secret}") private val secretKeyString: String
 ) {
-
     // Tokens expire after 1 hour (3600000 ms)
     private val jwtExpirationMs = 3_600_000L
 
     // Pre-auth tokens expire after 5 minutes (for MFA verification step)
     private val preAuthExpirationMs = 5 * 60 * 1000L
 
-    private val secretKey = Keys.hmacShaKeyFor(secretKeyString.toByteArray())
+    private val secretKey = Keys.hmacShaKeyFor(
+        if (secretKeyString.toByteArray().size < 32) {
+            // If secret is too short, pad it or hash it to ensure 256 bits
+            java.security.MessageDigest.getInstance("SHA-256").digest(secretKeyString.toByteArray())
+        } else {
+            secretKeyString.toByteArray()
+        }
+    )
 
     fun generateToken(user: UserEntity): String {
         return Jwts.builder()
