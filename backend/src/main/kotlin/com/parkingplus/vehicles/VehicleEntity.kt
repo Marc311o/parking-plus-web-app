@@ -33,6 +33,6 @@ class VehicleEntity(
     @Column(name = "car_type", nullable = false)
     var carType: CarType,
 
-    @Column(name = "is_active", nullable = false)
+    @Column(name = "is_active", nullable = false, columnDefinition = "boolean default true")
     var isActive: Boolean = true
 )
