@@ -1,6 +1,8 @@
 package com.parkingplus.parkinghistory
 
 import com.parkingplus.vehicles.VehicleService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
@@ -12,29 +14,34 @@ import java.time.LocalDate
 
 @RestController
 @RequestMapping("/api/parking-history")
+@Tag(name = "Parking History & Statistics", description = "Endpointy do historii parkowania, zdarzeń i statystyk (głównie dla Admina)")
 class ParkingHistoryController(
     private val parkingHistoryService: ParkingHistoryService,
     private val vehicleService: VehicleService
 ) {
 
+    @Operation(summary = "Dodaj wpis do historii", description = "Ręczne dodanie wpisu o parkowaniu.")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping
     fun addParkingHistory(@Valid @RequestBody dto: ParkingHistoryDTO): ResponseEntity<ParkingHistoryDTO> {
         return ResponseEntity(parkingHistoryService.createParkingHistory(dto), HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Pobierz całą historię (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     fun getAllParkingHistory(): ResponseEntity<List<ParkingHistoryDTO>> {
         return ResponseEntity.ok(parkingHistoryService.getAllParkingHistory())
     }
 
+    @Operation(summary = "Pobierz aktywne sesje parkowania (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/active")
     fun getActiveParkingHistory(): ResponseEntity<List<ParkingHistoryDTO>> {
         return ResponseEntity.ok(parkingHistoryService.getActiveParkingHistory())
     }
 
+    @Operation(summary = "Pobierz historię pojazdu", description = "Zwraca historię parkowania dla konkretnego pojazdu.")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/vehicle/{vehicleId}")
     fun getParkingHistoryByVehicle(
@@ -42,7 +49,7 @@ class ParkingHistoryController(
         authentication: Authentication
     ): ResponseEntity<List<ParkingHistoryDTO>> {
         val authUserId = authentication.details as? Long
-        if (authentication.authorities.none { it.authority == "ROLE_ADMIN" }) {
+        if (authentication.authorities.none { it.authority == "ROLE_ADMIN" } ) {
             val vehicle = vehicleService.getVehicleById(vehicleId)
                 ?: return ResponseEntity.notFound().build()
             if (vehicle.ownerId != authUserId) {
@@ -52,6 +59,7 @@ class ParkingHistoryController(
         return ResponseEntity.ok(parkingHistoryService.getParkingHistoryByVehicle(vehicleId))
     }
 
+    @Operation(summary = "Zakończ parkowanie (Admin)", description = "Rejestruje wyjazd pojazdu o danym numerze rejestracyjnym.")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/end/{licensePlate}")
     fun endParking(
@@ -60,6 +68,7 @@ class ParkingHistoryController(
         return ResponseEntity.ok(parkingHistoryService.endParking(licensePlate))
     }
 
+    @Operation(summary = "Usuń wpis historii (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     fun deleteParkingHistory(@PathVariable id: Long): ResponseEntity<Void> {
@@ -67,6 +76,7 @@ class ParkingHistoryController(
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(summary = "Wyczyść całą historię (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping()
     fun deleteAllParkingHistory(): ResponseEntity<Void> {
@@ -74,12 +84,14 @@ class ParkingHistoryController(
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(summary = "Pobierz historię miejsca parkingowego (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/parking-space/{parkingSpaceId}")
     fun getParkingHistoryByParkingSpace(@PathVariable parkingSpaceId: String): ResponseEntity<List<ParkingHistoryDTO>> {
         return ResponseEntity.ok(parkingHistoryService.getParkingHistoryByParkingSpace(parkingSpaceId))
     }
 
+    @Operation(summary = "Pobierz dzienny przychód (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/daily-revenue")
     fun getDailyRevenue(
@@ -89,6 +101,7 @@ class ParkingHistoryController(
         return ResponseEntity.ok(revenue)
     }
 
+    @Operation(summary = "Statystyki wjazdów (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/entries-stats")
     fun getEntriesStats(
@@ -98,6 +111,7 @@ class ParkingHistoryController(
         return ResponseEntity.ok(parkingHistoryService.getEntriesStatistics(date, period))
     }
 
+    @Operation(summary = "Statystyki przychodów (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/revenue-stats")
     fun getRevenueStats(
@@ -107,6 +121,7 @@ class ParkingHistoryController(
         return ResponseEntity.ok(parkingHistoryService.getRevenueStatistics(date, period))
     }
 
+    @Operation(summary = "Średni czas postoju (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/average-stay")
     fun getAverageStayStats(
@@ -116,6 +131,7 @@ class ParkingHistoryController(
         return ResponseEntity.ok(parkingHistoryService.getAverageStayStatistics(date, period))
     }
 
+    @Operation(summary = "Ranking obłożenia miejsc (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/ranking")
     fun getSpaceRanking(
@@ -125,6 +141,7 @@ class ParkingHistoryController(
         return ResponseEntity.ok(parkingHistoryService.getSpaceRanking(date, floor))
     }
 
+    @Operation(summary = "Pobierz listę zdarzeń parkingowych (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/events")
     fun getParkingEvents(): ResponseEntity<List<ParkingEventDTO>> {

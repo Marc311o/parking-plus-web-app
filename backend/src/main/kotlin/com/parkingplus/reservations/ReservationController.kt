@@ -1,5 +1,7 @@
 package com.parkingplus.reservations
 
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -9,11 +11,13 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestController
 @RequestMapping("/api/reservations")
+@Tag(name = "Reservations", description = "Endpointy do wyceny i zakupu rezerwacji/sesji parkowania")
 class ReservationController(
     private val pricingService: PricingService,
     private val reservationService: ReservationService
 ) {
 
+    @Operation(summary = "Pobierz wycenę", description = "Oblicza cenę za postój na podstawie czasu i typu pojazdu.")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @PostMapping("/quote")
     fun getQuote(
@@ -28,6 +32,7 @@ class ReservationController(
         return ResponseEntity.ok(quote)
     }
 
+    @Operation(summary = "Zakup bilet/rezerwację", description = "Finalizuje proces zakupu miejsca parkingowego.")
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/purchase")
     fun purchase(
@@ -51,6 +56,7 @@ class ReservationController(
         }
     }
 
+    @Operation(summary = "Moje rezerwacje", description = "Zwraca listę wszystkich rezerwacji zalogowanego użytkownika.")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENT')")
     @GetMapping("/my")
     fun getMyReservations(authentication: Authentication): ResponseEntity<List<ReservationDetailsDTO>> {

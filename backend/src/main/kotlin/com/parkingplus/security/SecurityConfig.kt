@@ -43,6 +43,15 @@ class SecurityConfig(
                 auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 auth.requestMatchers("/api/auth/**").permitAll()
                 auth.requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                auth.requestMatchers(
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/static/**",
+                    "/**/*.css",
+                    "/*.css",
+                    "/favicon.ico"
+                ).permitAll()
                 auth.anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)

@@ -2,6 +2,8 @@ package com.parkingplus.users
 
 import com.parkingplus.auth.MfaSetupResponse
 import com.parkingplus.users.requests.CreateUserRequest
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
@@ -14,8 +16,10 @@ import java.math.BigDecimal
 
 @RestController
 @RequestMapping("/api/users")
+@Tag(name = "Users", description = "Zarządzanie użytkownikami, operatorami i portfelem (saldo)")
 class UserController(private val userService: UserService) {
 
+    @Operation(summary = "Pobierz wszystkich użytkowników (Admin)", description = "Zwraca stronicowaną listę użytkowników z możliwością wyszukiwania.")
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     fun getAll(
@@ -31,12 +35,13 @@ class UserController(private val userService: UserService) {
         )
     }
 
-
+    @Operation(summary = "Utwórz użytkownika", description = "Publiczny endpoint do tworzenia konta.")
     @PostMapping
     fun create(@Valid @RequestBody request: CreateUserRequest): ResponseEntity<UserDTO> {
         return ResponseEntity(userService.createUser(request), HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Pobierz użytkownika po ID")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/{id:\\d+}")
     fun getById(@PathVariable id: Long, authentication: Authentication): ResponseEntity<UserDTO> {
@@ -47,6 +52,7 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.ok(userService.getUserById(id))
     }
 
+    @Operation(summary = "Usuń użytkownika (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
@@ -54,12 +60,14 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.noContent().build()
     }
 
+    @Operation(summary = "Utwórz operatora (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/operator")
     fun createOperator(@Valid @RequestBody request: CreateUserRequest): ResponseEntity<UserDTO> {
         return ResponseEntity(userService.createOperator(request), HttpStatus.CREATED)
     }
 
+    @Operation(summary = "Konfiguracja MFA", description = "Generuje sekret i QR code do włączenia 2FA.")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping("/{id}/mfa-setup")
     fun setupMfa(@PathVariable id: Long, authentication: Authentication): ResponseEntity<MfaSetupResponse> {
@@ -70,6 +78,7 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.ok(userService.generateMfaSetup(id))
     }
 
+    @Operation(summary = "Potwierdzenie MFA", description = "Weryfikuje pierwszy kod i aktywuje 2FA na koncie.")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PostMapping("/{id}/mfa-confirm")
     fun confirmMfa(
@@ -89,6 +98,7 @@ class UserController(private val userService: UserService) {
         }
     }
 
+    @Operation(summary = "Pobierz profil zalogowanego użytkownika")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/me")
     fun getCurrentUser(authentication: Authentication): ResponseEntity<UserDTO> {
@@ -98,6 +108,7 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.ok(userService.getUserById(authUserId))
     }
 
+    @Operation(summary = "Doładuj saldo / Zmień balans")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @PatchMapping("/{id}/balance")
     fun addBalance(
