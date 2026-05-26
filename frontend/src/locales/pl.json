@@ -64,7 +64,12 @@
         "emptyFields": "Wszystkie pola muszą być wypełnione",
         "invalidCode": "Niepoprawny kod 2FA!",
         "invalidEmail": "Niepoprawny adres e-mail",
-        "passwordTooShort": "Hasło powinno mieć min. 6 znaków",
+        "passwordTooShort": "Hasło powinno mieć min. 12 znaków",
+        "passwordTooShort12": "Hasło powinno mieć min. 12 znaków",
+        "passwordContainsUserData": "Hasło nie może zawierać Twoich danych osobowych",
+        "passwordContainsForbiddenWord": "Hasło zawiera niedozwolone słowa związane z aplikacją",
+        "passwordTooCommon": "Hasło zawiera zbyt proste i popularne sekwencje znaków",
+        "passwordPwned": "To hasło pojawiło się w znanych wyciekach danych. Wybierz inne.",
         "passwordsNotMatch": "Hasła nie są identyczne",
         "unknown": "Wystąpił nieznany błąd",
         "emailRequired": "Uzupełnij adres email",
@@ -442,13 +447,19 @@
     "fields": {
       "licensePlate": "Numer rejestracyjny",
       "carType": "Typ pojazdu",
-      "cancel": "Anuluj"
+      "cancel": "Anuluj",
+      "update": "Aktualizuj"
     },
     "carTypes": {
       "REGULAR_ABLEBODIED": "Standardowy",
       "REGULAR_HANDICAPED": "Standardowy (dla niepełnosprawnych)",
       "EV_ABLEBODIED": "Elektryczny",
       "EV_HANDICAPED": "Elektryczny (dla niepełnosprawnych)"
+    },
+    "editDialog":{
+      "title": "Edytuj informacje o pojeździe",
+      "success": "Samochód został pomyślnie zaktualizowany",
+      "duplicatePlate": "Nie można zaktualizować – rejestracja jest już zajęta"
     }
   },
   "myReservations": {

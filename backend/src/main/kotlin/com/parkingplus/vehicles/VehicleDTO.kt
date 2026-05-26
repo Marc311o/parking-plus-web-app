@@ -25,3 +25,4 @@ data class VehicleDTO(
     @Schema(description = "Czy pojazd jest aktywny (soft-delete)", example = "true")
     val isActive: Boolean = true
 )
+

@@ -21,7 +21,7 @@ import EventSeatIcon from '@mui/icons-material/EventSeat';
 import {useIntl} from 'react-intl';
 import {useLocation, useNavigate} from 'react-router-dom';
 import logo from '@assets/logo.png';
-import {useAuthStore} from "../../store/useAuthStore.tsx";
+import {useAuthStore} from '../../store/useAuthStore.tsx';
 
 const SidebarContainer = styled(Box)(({theme}) => ({
     width: 300,
@@ -32,6 +32,37 @@ const SidebarContainer = styled(Box)(({theme}) => ({
     padding: theme.spacing(2.5, 2),
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'hidden',
+}));
+
+const SidebarScrollContent = styled(Box)(({theme}) => ({
+    flex: 1,
+    minHeight: 0,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    paddingRight: theme.spacing(1),
+
+    scrollbarWidth: 'thin',
+    scrollbarColor: `${theme.palette.primary.main} rgba(94, 7, 110, 0.08)`,
+
+    '&::-webkit-scrollbar': {
+        width: 8,
+    },
+
+    '&::-webkit-scrollbar-track': {
+        background: 'rgba(94, 7, 110, 0.08)',
+        borderRadius: 999,
+    },
+
+    '&::-webkit-scrollbar-thumb': {
+        background: `linear-gradient(180deg, ${theme.palette.primary.main}, rgba(94, 7, 110, 0.65))`,
+        borderRadius: 999,
+        border: `2px solid ${theme.palette.background.paper}`,
+    },
+
+    '&::-webkit-scrollbar-thumb:hover': {
+        background: theme.palette.primary.dark,
+    },
 }));
 
 const Sidebar = () => {
@@ -40,10 +71,16 @@ const Sidebar = () => {
     const navigate = useNavigate();
 
     const logout = useAuthStore((state) => state.logout);
+
     const handleLogout = () => {
-        logout()
+        logout();
         navigate('/login');
     };
+
+    const user = useAuthStore((state) => state.user);
+
+    const isAdmin = user?.isOperator === true;
+    const isClient = !isAdmin;
 
     const menuItems = [
         {
@@ -51,50 +88,65 @@ const Sidebar = () => {
             icon: <DashboardIcon/>,
             path: '/',
             active: location.pathname === '/dashboard',
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.parkingPurchase'}),
             icon: <ShoppingCartOutlinedIcon/>,
             path: '/parkingPurchase',
             active: location.pathname === '/parkingPurchase',
+            visibleFor: 'CLIENT',
         },
         {
             text: formatMessage({id: 'sidebar.menu.myCars'}),
             icon: <DirectionsCarRoundedIcon/>,
             path: '/myCars',
             active: location.pathname === '/myCars',
+            visibleFor: 'CLIENT',
         },
         {
             text: formatMessage({id: 'sidebar.menu.myReservations'}),
             icon: <EventSeatIcon/>,
             path: '/myReservations',
             active: location.pathname === '/myReservations',
+            visibleFor: 'CLIENT',
         },
         {
             text: formatMessage({id: 'sidebar.menu.statistics'}),
             icon: <BarChartIcon/>,
             path: '/statistics',
             active: location.pathname.startsWith('/statistics'),
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.clients'}),
             icon: <PeopleIconOutlined/>,
             path: '/clients',
             active: location.pathname.startsWith('/clients'),
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.events'}),
             icon: <EventIcon/>,
             path: '/events',
             active: location.pathname.startsWith('/events'),
+            visibleFor: 'ADMIN',
         },
         {
             text: formatMessage({id: 'sidebar.menu.prices'}),
             icon: <LocalAtmIcon/>,
             path: '/pricing',
             active: location.pathname.startsWith('/pricing'),
+            visibleFor: 'ALL',
         },
     ];
+
+    const filteredMenuItems = menuItems.filter(item => {
+        if (item.visibleFor === 'ALL') return true;
+        if (item.visibleFor === 'ADMIN') return isAdmin;
+        if (item.visibleFor === 'CLIENT') return isClient;
+        return false;
+    })
 
     const secondaryItems = [
         {
@@ -102,127 +154,137 @@ const Sidebar = () => {
             icon: <SettingsIcon/>,
             path: '/settings',
             active: location.pathname.startsWith('/settings'),
+            visibleFor: 'ALL',
         },
         {
             text: formatMessage({id: 'sidebar.other.logout'}),
             icon: <LogoutIcon/>,
             onClick: handleLogout,
+            visibleFor: 'ALL',
         },
     ];
 
     return (
         <SidebarContainer>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    mb: 6,
-                    pt: 4,
-                }}
-            >
+            <SidebarScrollContent>
                 <Box
-                    component="img"
-                    src={logo}
-                    alt="Parking+ Logo"
                     sx={{
-                        width: '100%',
-                        maxWidth: 150,
-                        height: 'auto',
-                        objectFit: 'contain',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        mb: 6,
+                        pt: 4,
                     }}
-                />
-            </Box>
+                >
+                    <Box
+                        component="img"
+                        src={logo}
+                        alt="Parking+ Logo"
+                        sx={{
+                            width: '100%',
+                            maxWidth: 150,
+                            height: 'auto',
+                            objectFit: 'contain',
+                        }}
+                    />
+                </Box>
 
-            <Typography
-                variant="caption"
+                <Typography
+    variant="caption"
+    sx={{
+        color: 'text.secondary',
+        mb: 1.5,
+        ml: 1,
+        letterSpacing: 1.2,
+        textTransform: 'uppercase',
+        display: 'block',
+    }}
+>
+    {formatMessage({id: 'sidebar.sections.menu'})}
+</Typography>
+
+<List sx={{p: 0}}>
+    {filteredMenuItems.map((item) => (
+        <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
+            <ListItemButton
+                onClick={() => navigate(item.path)}
                 sx={{
-                    color: 'text.secondary',
-                    mb: 1.5,
-                    ml: 1,
-                    letterSpacing: 1.2,
-                    textTransform: 'uppercase',
+                    minHeight: 44,
+                    borderRadius: 2.5,
+                    color: item.active ? 'primary.main' : 'text.secondary',
+                    '& .MuiListItemIcon-root': {
+                        minWidth: 34,
+                        color: item.active ? 'primary.main' : 'text.secondary',
+                    },
+                    '& .MuiTypography-root': {
+                        fontWeight: item.active ? 700 : 500,
+                    },
+                    '&:hover': {
+                        bgcolor: 'rgba(94, 7, 110, 0.05)',
+                    },
                 }}
             >
-                {formatMessage({id: 'sidebar.sections.menu'})}
-            </Typography>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text}/>
+            </ListItemButton>
+        </ListItem>
+    ))}
+</List>
 
-            <List sx={{p: 0}}>
-                {menuItems.map((item) => (
-                    <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
-                        <ListItemButton
-                            onClick={() => navigate(item.path)}
-                            sx={{
-                                minHeight: 44,
-                                borderRadius: 2.5,
-                                color: item.active ? 'primary.main' : 'text.secondary',
-                                '& .MuiListItemIcon-root': {
-                                    minWidth: 34,
-                                    color: item.active ? 'primary.main' : 'text.secondary',
-                                },
-                                '& .MuiTypography-root': {
-                                    fontWeight: item.active ? 700 : 500,
-                                },
-                                '&:hover': {
-                                    bgcolor: 'rgba(94, 7, 110, 0.05)',
-                                },
-                            }}
+                <Box sx={{height: 32}}/>
+
+                <Typography
+                    variant="caption"
+                    sx={{
+                        color: 'text.secondary',
+                        mb: 1.5,
+                        ml: 1,
+                        letterSpacing: 1.2,
+                        textTransform: 'uppercase',
+                        display: 'block',
+                    }}
+                >
+                    {formatMessage({id: 'sidebar.sections.other'})}
+                </Typography>
+
+                <List sx={{p: 0, pb: 1}}>
+                    {secondaryItems.map((item) => (
+                        <ListItem
+                            key={item.path ?? item.text}
+                            disablePadding
+                            sx={{mb: 0.5}}
                         >
-                            <ListItemIcon>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.text}/>
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-
-            <Box sx={{flexGrow: 1}}/>
-
-            <Typography
-                variant="caption"
-                sx={{
-                    color: 'text.secondary',
-                    mb: 1.5,
-                    ml: 1,
-                    letterSpacing: 1.2,
-                    textTransform: 'uppercase',
-                }}
-            >
-                {formatMessage({id: 'sidebar.sections.other'})}
-            </Typography>
-
-            <List sx={{p: 0}}>
-                {secondaryItems.map((item) => (
-                    <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
-                        <ListItemButton
-                            onClick={() => {
-                                if (item.onClick) {
-                                    item.onClick();
-                                } else {
-                                    navigate(item.path);
-                                }
-                            }}
-                            sx={{
-                                minHeight: 44,
-                                borderRadius: 2.5,
-                                color: item.active ? 'primary.main' : 'text.secondary',
-                                '& .MuiListItemIcon-root': {
-                                    minWidth: 34,
+                            <ListItemButton
+                                onClick={() => {
+                                    if (item.onClick) {
+                                        item.onClick();
+                                    } else if (item.path) {
+                                        navigate(item.path);
+                                    }
+                                }}
+                                sx={{
+                                    minHeight: 44,
+                                    borderRadius: 2.5,
                                     color: item.active ? 'primary.main' : 'text.secondary',
-                                },
-                                '& .MuiTypography-root': {
-                                    fontWeight: item.active ? 700 : 500,
-                                },
-                                '&:hover': {
-                                    bgcolor: 'rgba(94, 7, 110, 0.05)',
-                                },
-                            }}
-                        >
-                            <ListItemIcon>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.text}/>
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
+                                    '& .MuiListItemIcon-root': {
+                                        minWidth: 34,
+                                        color: item.active ? 'primary.main' : 'text.secondary',
+                                    },
+                                    '& .MuiTypography-root': {
+                                        fontWeight: item.active ? 700 : 500,
+                                    },
+                                    '&:hover': {
+                                        bgcolor: 'rgba(94, 7, 110, 0.05)',
+                                    },
+                                }}
+                            >
+                                <ListItemIcon>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.text}/>
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </SidebarScrollContent>
         </SidebarContainer>
     );
 };

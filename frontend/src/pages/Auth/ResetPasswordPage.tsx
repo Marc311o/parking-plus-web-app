@@ -2,10 +2,12 @@ import React, {useState} from "react";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import { useIntl } from "react-intl";
 import {Alert, Box, Stack, Typography} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
 import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 import { resetPassword  } from "@api/Login/auth";
 import QuestionMark from '@assets/questionMark.svg';
+import { validatePassword, checkPasswordRules } from "@utils/passwordValidator";
 
 
 const ResetPasswordPage = () => {
@@ -18,6 +20,7 @@ const ResetPasswordPage = () => {
     const [passwordRepeat, setPasswordRepeat] = useState("");
 
     const [error, setError] = useState("");
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
 
     const [passwordEmptyError, setPasswordEmptyError] = useState(false);
@@ -25,6 +28,7 @@ const ResetPasswordPage = () => {
 
     const [success, setSuccess] = useState(false);
 
+    const rules = checkPasswordRules(password);
 
     const navigate = useNavigate();
 
@@ -35,6 +39,7 @@ const ResetPasswordPage = () => {
     const handleResetPassword = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setValidationErrors([]);
 
         if (!token) {
             setError(formatMessage({ id: 'logins.errors.auth.missingToken' }));
@@ -50,13 +55,14 @@ const ResetPasswordPage = () => {
             return;
         }
 
-        if (password.length < 6) {
-            setError(formatMessage({ id: 'logins.errors.auth.passwordTooShort' }));
+        if (password !== passwordRepeat) {
+            setError(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }));
             return;
         }
 
-        if (password !== passwordRepeat) {
-            setError(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }));
+        const validation = await validatePassword(password);
+        if (!validation.isValid) {
+            setValidationErrors(validation.errors);
             return;
         }
 
@@ -138,6 +144,35 @@ const ResetPasswordPage = () => {
                     sx={{width: '100%', maxWidth: 150, mt: 5,}}
                 />
 
+                <Stack
+                    spacing={0.5}
+                    sx={{
+                        mt: 3,
+                        width: 350,
+                    }}
+                >
+                    {password.length > 0 && !rules.minLength && (
+                        <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                            {formatMessage({ id: 'logins.errors.auth.passwordTooShort12' })}
+                        </Alert>
+                    )}
+                    {!rules.noForbiddenWords && (
+                        <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                            {formatMessage({ id: 'logins.errors.auth.passwordContainsForbiddenWord' })}
+                        </Alert>
+                    )}
+                    {!rules.noCommonPatterns && (
+                        <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                            {formatMessage({ id: 'logins.errors.auth.passwordTooCommon' })}
+                        </Alert>
+                    )}
+                    {password !== passwordRepeat && passwordRepeat.length > 0 && (
+                        <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                            {formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' })}
+                        </Alert>
+                    )}
+                </Stack>
+
                 <Box component="form" onSubmit={handleResetPassword}
                      sx={{
                          display: "flex",
@@ -149,7 +184,7 @@ const ResetPasswordPage = () => {
                     <Stack
                         spacing={2}
                         sx={{
-                            mt: "55px",
+                            mt: "25px",
                             alignItems: "flex-start",
                             width: 350,
                         }}
@@ -160,6 +195,12 @@ const ResetPasswordPage = () => {
                                 {error}
                             </Alert>
                         )}
+
+                        {validationErrors.map((errKey) => (
+                            <Alert key={errKey} severity="error" sx={{ width: "100%" }}>
+                                {formatMessage({ id: errKey })}
+                            </Alert>
+                        ))}
 
                         {success && (
                             <Alert severity="success" sx={{ width: "100%" }}>
@@ -202,7 +243,10 @@ const ResetPasswordPage = () => {
                         }}
                     >
 
-                        <ButtonWhite type="submit">
+                        <ButtonWhite 
+                            type="submit"
+                            disabled={loading || !rules.minLength || !rules.noForbiddenWords || !rules.noCommonPatterns || password !== passwordRepeat || !passwordRepeat}
+                        >
                             {loading ? formatMessage({ id: "logins.resetPassword.resetButton" }) : formatMessage({ id: "logins.resetPassword.verifyButton" })}
                         </ButtonWhite>
 

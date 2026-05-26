@@ -3,16 +3,19 @@ import {useNavigate} from "react-router-dom";
 import { useIntl } from "react-intl";
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Alert, Box, Stack, Typography} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import AuthPasswordField from "@components/Login/AuthPasswordField.tsx";
 import AuthDefaultField from "@components/Login/AuthDefaultField.tsx";
 import ButtonWhite from "@components/Login/ButtonWhite.tsx";
 import { createNewAccount } from "@api/Login/auth";
+import { validatePassword, checkPasswordRules } from "@utils/passwordValidator";
 
 
 const CreateNewAccountPage = () => {
     const {formatMessage} = useIntl();
 
     const [error, setError] = useState("");
+    const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState("");
@@ -20,6 +23,8 @@ const CreateNewAccountPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordRepeat, setPasswordRepeat] = useState("");
+
+    const rules = checkPasswordRules(password, [name, surname, email]);
 
     const [nameEmptyError, setNameEmptyError] = useState(false);
     const [surnameEmptyError, setSurnameEmptyError] = useState(false);
@@ -115,6 +120,7 @@ const CreateNewAccountPage = () => {
 
         setLoading(true);
         setError("");
+        setValidationErrors([]);
 
         resetEmptyFieldErrors()
 
@@ -122,19 +128,22 @@ const CreateNewAccountPage = () => {
         try {
 
             if (areEmptyFields()) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.emptyFields' }));
+                throw new Error('logins.errors.auth.emptyFields');
             }
 
             if (!isValidEmail(email)) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.invalidEmail' }));
-            }
-
-            if (password.length < 6) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.passwordTooShort' }))
+                throw new Error('logins.errors.auth.invalidEmail');
             }
 
             if (password !== passwordRepeat) {
-                throw new Error(formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' }))
+                throw new Error('logins.errors.auth.passwordsNotMatch')
+            }
+
+            const validation = await validatePassword(password, [name, surname, email]);
+            if (!validation.isValid) {
+                setValidationErrors(validation.errors);
+                setLoading(false);
+                return;
             }
 
             // const result =
@@ -209,9 +218,43 @@ const CreateNewAccountPage = () => {
                     />
 
                     <Stack
+                        spacing={0.5}
+                        sx={{
+                            mt: 3,
+                            width: 350,
+                        }}
+                    >
+                        {password.length > 0 && !rules.minLength && (
+                            <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                                {formatMessage({ id: 'logins.errors.auth.passwordTooShort12' })}
+                            </Alert>
+                        )}
+                        {!rules.noUserData && (
+                            <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                                {formatMessage({ id: 'logins.errors.auth.passwordContainsUserData' })}
+                            </Alert>
+                        )}
+                        {!rules.noForbiddenWords && (
+                            <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                                {formatMessage({ id: 'logins.errors.auth.passwordContainsForbiddenWord' })}
+                            </Alert>
+                        )}
+                        {!rules.noCommonPatterns && (
+                            <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                                {formatMessage({ id: 'logins.errors.auth.passwordTooCommon' })}
+                            </Alert>
+                        )}
+                        {password !== passwordRepeat && passwordRepeat.length > 0 && (
+                            <Alert severity="error" icon={<CloseIcon fontSize="inherit" />} sx={{ py: 0 }}>
+                                {formatMessage({ id: 'logins.errors.auth.passwordsNotMatch' })}
+                            </Alert>
+                        )}
+                    </Stack>
+
+                    <Stack
                         spacing={2}
                         sx={{
-                            mt: "55px",
+                            mt: "25px",
                             alignItems: "flex-start",
                             width: 350,
                         }}
@@ -222,6 +265,12 @@ const CreateNewAccountPage = () => {
                                 {error}
                             </Alert>
                         )}
+
+                        {validationErrors.map((errKey) => (
+                            <Alert key={errKey} severity="error" sx={{ width: "100%" }}>
+                                {formatMessage({ id: errKey })}
+                            </Alert>
+                        ))}
 
                         {/*name*/}
                         <AuthDefaultField
@@ -291,7 +340,10 @@ const CreateNewAccountPage = () => {
                         }}
                     >
 
-                        <ButtonWhite type="submit" onClick={handleCreateAccount}>
+                        <ButtonWhite 
+                            type="submit" 
+                            disabled={loading || !rules.minLength || !rules.noUserData || !rules.noForbiddenWords || !rules.noCommonPatterns || password !== passwordRepeat || !passwordRepeat}
+                        >
                             {formatMessage({ id: 'logins.createNewAccount.createButton' })}
                         </ButtonWhite>
 

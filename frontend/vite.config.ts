@@ -30,6 +30,7 @@ export default defineConfig({
             '@locales': path.resolve(__dirname, './src/locales'),
             '@pages': path.resolve(__dirname, './src/pages'),
             '@store': path.resolve(__dirname, './src/store'),
+            '@utils': path.resolve(__dirname, './src/utils'),
         },
     },
 })
