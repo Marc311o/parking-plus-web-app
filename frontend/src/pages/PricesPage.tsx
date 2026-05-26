@@ -5,6 +5,8 @@ import {getTariffs, updateTariff, type TariffDTO} from '@api/Tariffs';
 import TariffSchedule from '@components/Pricing/TariffSchedule';
 import TariffEditor from '@components/Pricing/TariffEditor';
 import type {TariffVisualBlock} from '@components/Pricing/TariffScheduleTile';
+import {useAuthStore} from "@store/useAuthStore.tsx";
+
 
 type TariffBlock = {
     key: string;
@@ -121,6 +123,9 @@ const PricesPage = () => {
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [saveError, setSaveError] = useState<string | null>(null);
+
+    const user = useAuthStore((state) => state.user);
+    const isAdmin = user?.isOperator === true;
 
     useEffect(() => {
         let isMounted = true;
@@ -273,16 +278,18 @@ const PricesPage = () => {
                 onBlockClick={handleSelectBlock}
             />
 
-            <TariffEditor
-                selectedBlock={selectedBlock}
-                firstHourPrice={firstHourPrice}
-                nextHourPrice={nextHourPrice}
-                isSaving={isSaving}
-                saveError={saveError}
-                onFirstHourPriceChange={setFirstHourPrice}
-                onNextHourPriceChange={setNextHourPrice}
-                onSave={handleSave}
-            />
+            {isAdmin && (
+                <TariffEditor
+                    selectedBlock={selectedBlock}
+                    firstHourPrice={firstHourPrice}
+                    nextHourPrice={nextHourPrice}
+                    isSaving={isSaving}
+                    saveError={saveError}
+                    onFirstHourPriceChange={setFirstHourPrice}
+                    onNextHourPriceChange={setNextHourPrice}
+                    onSave={handleSave}
+                />
+            )}
         </Box>
     );
 };
