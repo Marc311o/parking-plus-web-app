@@ -7,6 +7,7 @@ import {
     Snackbar,
     Alert,
 } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 import {useIntl} from 'react-intl';
 import {useState} from 'react';
@@ -80,8 +81,9 @@ const DateFilterCard = ({
                     <Box
                         sx={{
                             display: 'grid',
-                            gridTemplateColumns: '1fr 1fr',
-                            gap: 2,
+                            gridTemplateColumns: '1fr auto 1fr',
+                            gap: 1,
+                            alignItems: 'center',
                         }}
                     >
                         <TextField
@@ -102,6 +104,13 @@ const DateFilterCard = ({
                             }}
                             InputLabelProps={{shrink: true}}
                             sx={inputSx}
+                        />
+
+                        <ArrowForwardIcon
+                            sx={{
+                                fontSize: 18,
+                                color: '#9a9aa1',
+                            }}
                         />
 
                         <TextField
