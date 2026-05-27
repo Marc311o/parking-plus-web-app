@@ -111,6 +111,15 @@
       "value": "{value} PLN",
       "label": "Today's revenue"
     },
+    "reservations": {
+      "filters": {
+        "dateRange": "Date range",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "showAll": "Show all reservations",
+        "invalidDateRange": "End date cannot be earlier than start date"
+      }
+    },
     "clients": {
       "filters": {
         "searchPlaceholder": "Search client",

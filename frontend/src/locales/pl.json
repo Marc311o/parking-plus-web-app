@@ -113,6 +113,15 @@
       "value": "{value} PLN",
       "label": "Przychód dzisiaj"
     },
+    "reservations": {
+      "filters": {
+        "dateRange": "Zakres dat",
+        "startDate": "Data początkowa",
+        "endDate": "Data końcowa",
+        "showAll": "Pokaż wszystkie rezerwacje",
+        "invalidDateRange": "Data końcowa nie może być wcześniejsza niż początkowa"
+      }
+    },
     "clients": {
       "filters": {
         "searchPlaceholder": "Wyszukaj klienta",

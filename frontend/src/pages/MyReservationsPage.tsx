@@ -35,11 +35,15 @@ const MyReservationsPage = () => {
 
     const size = 10;
 
+    const startDate =
+        searchParams.get('startDate') ?? '';
 
-    const totalPages = Math.max(
-        Math.ceil(reservations.length / size),
-        1
-    );
+    const endDate =
+        searchParams.get('endDate') ?? '';
+
+    const showAll =
+        searchParams.get('showAll') === 'true';
+
 
     const [selectedReservation, setSelectedReservation] =
         useState<ReservationDetailsDTO | null>(null);
@@ -107,10 +111,43 @@ const MyReservationsPage = () => {
         setDialogOpen(true);
     };
 
+    const filteredReservations = useMemo(() => {
+        if (showAll) {
+            return reservations;
+        }
+
+        return reservations.filter((reservation) => {
+            const reservationStart = new Date(reservation.start_time);
+
+            if (startDate) {
+                const start = new Date(startDate);
+                if (reservationStart < start) return false;
+            }
+
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999);
+                if (reservationStart > end) return false;
+            }
+
+            return true;
+        });
+    }, [reservations, startDate, endDate, showAll]);
+
+    const totalPages = Math.max(
+        Math.ceil(filteredReservations.length / size),
+        1
+    );
+
     const pagedReservations = useMemo(() => {
         const start = page * size;
-        return reservations.slice(start, start + size);
-    }, [reservations, page]);
+
+        return filteredReservations.slice(
+            start,
+            start + size
+        );
+    }, [filteredReservations, page]);
+
 
     const getStatusColor = (status: ReservationStatus) => {
         switch (status) {
@@ -202,7 +239,7 @@ const MyReservationsPage = () => {
                             color: getStatusColor(item.status),
                         }}
                     >
-            { formatReservationStatus(item.status) }
+            {formatReservationStatus(item.status)}
         </span>
                 ),
             },
@@ -247,7 +284,7 @@ const MyReservationsPage = () => {
                 <Alert
                     severity="error"
                     onClose={() => setError(null)}
-                    sx={{ mb: 2 }}
+                    sx={{mb: 2}}
                 >
                     {error}
                 </Alert>

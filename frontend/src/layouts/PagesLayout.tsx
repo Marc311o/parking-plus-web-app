@@ -8,6 +8,7 @@ import DefaultNavbar from '@components/Navbar/DefaultNavbar.tsx';
 import EventsNavbar from '@components/Navbar/EventsNavbar.tsx';
 import PricingNavbar from '@components/Navbar/PricingNavbar.tsx';
 import SettingsNavbar from '@components/Navbar/SettingsNavbar.tsx';
+import MyReservationsNavbar from '@components/Navbar/MyReservationsNavbar.tsx';
 
 const PagesLayout = () => {
     const location = useLocation();
@@ -21,7 +22,7 @@ const PagesLayout = () => {
         {prefix: '/settings', navbar: <SettingsNavbar/>},
         {prefix: '/dashboard', navbar: <DashboardNavbar/>},
         {prefix: '/parkingPurchase', navbar: <SettingsNavbar/>},
-        {prefix: '/myReservations', navbar: <SettingsNavbar/>},
+        {prefix: '/myReservations', navbar: <MyReservationsNavbar/>},
         {prefix: '/myCars', navbar: <SettingsNavbar/>},
         {prefix: '/', navbar: <DashboardNavbar/>},
     ];
