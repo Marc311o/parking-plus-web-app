@@ -156,3 +156,6 @@ We maintain high code quality through rigorous standards and a structured workfl
 
 ---
 
+**TODO**
+* add images and diagrams for architecture and workflow
+* check installation instructions for accuracy
