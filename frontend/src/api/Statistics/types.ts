@@ -1,5 +1,5 @@
 // ENTRIES
-export type EntriesPeriod = 'DAILY' | 'WEEKLY' | 'YEARLY';
+export type EntriesPeriod = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
 export type EntriesPoint = {
     label: string;
@@ -15,7 +15,7 @@ export type EntriesResponse = {
 };
 
 //REVENUE
-export type RevenuePeriod = 'DAILY' | 'WEEKLY' | 'YEARLY';
+export type RevenuePeriod = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
 export type RevenuePoint = {
     label: string;
@@ -34,7 +34,7 @@ export type RevenueResponse = {
 };
 
 //AVARAGE STAY
-export type AverageStayPeriod = 'DAILY' | 'WEEKLY' | 'YEARLY';
+export type AverageStayPeriod = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 
 export type ParkingSpaceType =
     | 'REGULAR_ABLEBODIED'
@@ -67,6 +67,9 @@ export type ParkingSpaceRankingPoint = {
 
 export type ParkingSpaceRankingResponse = {
     floor: ParkingFloor;
+    period: EntriesPeriod;
+    from: string;
+    to: string;
     total: number;
     points: ParkingSpaceRankingPoint[];
 };

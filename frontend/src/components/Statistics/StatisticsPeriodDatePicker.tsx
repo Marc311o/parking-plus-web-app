@@ -6,7 +6,7 @@ type PeriodOption<TPeriod extends string> = {
     label: string;
 };
 
-type StatisticsPeriodDatePickerMode = 'day' | 'week' | 'year';
+type StatisticsPeriodDatePickerMode = 'day' | 'week' | 'month' | 'year';
 
 type StatisticsPeriodDatePickerProps<TPeriod extends string> = {
     periods: PeriodOption<TPeriod>[];
@@ -25,35 +25,37 @@ export const StatisticsPeriodDatePicker = <TPeriod extends string>({
                                                                        onPeriodChange,
                                                                        onDateChange,
                                                                    }: StatisticsPeriodDatePickerProps<TPeriod>) => {
+    const commonWidth = {
+        xs: '100%',
+        sm: 390,
+    };
+    const commonHeight = 54;
+
     return (
         <Box
             sx={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: 1.2,
-                flexWrap: {
-                    xs: 'wrap',
-                    xl: 'nowrap',
-                },
-                justifyContent: {
+                flexDirection: 'column',
+                gap: 1.5,
+                alignItems: {
                     xs: 'flex-start',
                     lg: 'flex-end',
                 },
-                minWidth: {
-                    xs: '100%',
-                    lg: 620,
-                },
+                width: commonWidth,
+                flexShrink: 0,
             }}
         >
             <Box
                 sx={{
                     display: 'flex',
                     bgcolor: '#F7F5FD',
-                    borderRadius: '18px',
-                    p: 0.6,
-                    gap: 0.4,
+                    borderRadius: '22px',
+                    p: 0.8,
+                    gap: 0.6,
                     border: '1px solid #EEEAF8',
-                    flexShrink: 0,
+                    width: '100%',
+                    height: commonHeight,
+                    boxSizing: 'border-box'
                 }}
             >
                 {periods.map((period) => {
@@ -64,17 +66,16 @@ export const StatisticsPeriodDatePicker = <TPeriod extends string>({
                             key={period.value}
                             onClick={() => onPeriodChange(period.value)}
                             sx={{
-                                px: 2,
-                                height: 36,
-                                minWidth: 76,
-                                borderRadius: '13px',
+                                flex: 1,
+                                height: '100%',
+                                borderRadius: '16px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'pointer',
                                 bgcolor: isSelected ? '#211C43' : 'transparent',
                                 color: isSelected ? '#FFFFFF' : '#9B96B7',
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: 900,
                                 transition: '0.2s ease',
                                 userSelect: 'none',
@@ -90,33 +91,16 @@ export const StatisticsPeriodDatePicker = <TPeriod extends string>({
                 })}
             </Box>
 
-            <Box
+            <StatisticsDatePicker
+                mode={getMode(selectedPeriod)}
+                value={selectedDate}
+                onChange={onDateChange}
                 sx={{
-                    width: {
-                        xs: '100%',
-                        sm: 390,
-                    },
-                    flexShrink: 0,
-                    '& > div:first-of-type': {
-                        width: '100%',
-                        display: 'flex',
-                    },
-                    '& > div:first-of-type > button': {
-                        flexShrink: 0,
-                    },
-                    '& > div:first-of-type > div:nth-of-type(2)': {
-                        flex: 1,
-                        minWidth: 0,
-                        maxWidth: 'none',
-                    },
+                    width: '100%',
+                    height: commonHeight,
+                    boxSizing: 'border-box'
                 }}
-            >
-                <StatisticsDatePicker
-                    mode={getMode(selectedPeriod)}
-                    value={selectedDate}
-                    onChange={onDateChange}
-                />
-            </Box>
+            />
         </Box>
     );
 };

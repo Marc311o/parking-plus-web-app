@@ -136,9 +136,10 @@ class ParkingHistoryController(
     @GetMapping("/ranking")
     fun getSpaceRanking(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate,
+        @RequestParam period: AggregationPeriod,
         @RequestParam floor: ParkingFloor
     ): ResponseEntity<ParkingSpaceRankingResponseDTO> {
-        return ResponseEntity.ok(parkingHistoryService.getSpaceRanking(date, floor))
+        return ResponseEntity.ok(parkingHistoryService.getSpaceRanking(date, period, floor))
     }
 
     @Operation(summary = "Pobierz listę zdarzeń parkingowych (Admin)")

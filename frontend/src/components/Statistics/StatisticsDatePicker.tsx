@@ -5,17 +5,19 @@ import {
     Popover,
     Typography,
 } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import {useIntl} from 'react-intl';
 
-type StatisticsDatePickerMode = 'year' | 'week' | 'day';
+type StatisticsDatePickerMode = 'year' | 'month' | 'week' | 'day';
 
 type StatisticsDatePickerProps = {
     mode: StatisticsDatePickerMode;
     value: string;
     onChange: (value: string) => void;
+    sx?: SxProps<Theme>;
 };
 
 const toIsoDate = (date: Date) => {
@@ -50,272 +52,178 @@ const getMonday = (date: Date) => {
     return copiedDate;
 };
 
-const addDays = (date: Date, days: number) => {
-    const copiedDate = normalizeDate(date);
+const getSunday = (monday: Date) => {
+    const sunday = new Date(monday);
 
-    copiedDate.setDate(copiedDate.getDate() + days);
+    sunday.setDate(monday.getDate() + 6);
 
-    return copiedDate;
-};
-
-const addMonths = (date: Date, months: number) => {
-    const copiedDate = normalizeDate(date);
-
-    copiedDate.setMonth(copiedDate.getMonth() + months);
-
-    return copiedDate;
-};
-
-const formatDate = (date: string) => {
-    const [year, month, day] = date.split('-');
-
-    return `${day}.${month}.${year}`;
-};
-
-const formatDateRange = (from: string, to: string) => {
-    return `${formatDate(from)} - ${formatDate(to)}`;
-};
-
-const isSameDay = (firstDate: Date, secondDate: Date) => {
-    return toIsoDate(firstDate) === toIsoDate(secondDate);
-};
-
-const isDateInWeek = (date: Date, weekStart: Date) => {
-    const dateIso = toIsoDate(date);
-    const weekStartIso = toIsoDate(getMonday(weekStart));
-    const weekEndIso = toIsoDate(addDays(getMonday(weekStart), 6));
-
-    return dateIso >= weekStartIso && dateIso <= weekEndIso;
-};
-
-const isWeekStart = (date: Date, weekStart: Date) => {
-    return toIsoDate(date) === toIsoDate(getMonday(weekStart));
-};
-
-const isWeekEnd = (date: Date, weekStart: Date) => {
-    return toIsoDate(date) === toIsoDate(addDays(getMonday(weekStart), 6));
-};
-
-const getMonthDays = (visibleMonth: Date) => {
-    const year = visibleMonth.getFullYear();
-    const month = visibleMonth.getMonth();
-
-    const firstDayOfMonth = new Date(year, month, 1, 12, 0, 0, 0);
-    const firstCalendarDay = getMonday(firstDayOfMonth);
-
-    return Array.from({length: 42}, (_, index) => addDays(firstCalendarDay, index));
-};
-
-const getMonthLabel = (date: Date, locale: string) => {
-    return new Intl.DateTimeFormat(locale, {
-        month: 'long',
-        year: 'numeric',
-    }).format(date);
-};
-
-const getDisplayValue = (mode: StatisticsDatePickerMode, value: string) => {
-    const date = getDateFromIso(value);
-
-    if (mode === 'year') {
-        return String(date.getFullYear());
-    }
-
-    if (mode === 'week') {
-        const weekStart = getMonday(date);
-        const weekEnd = addDays(weekStart, 6);
-
-        return formatDateRange(toIsoDate(weekStart), toIsoDate(weekEnd));
-    }
-
-    return formatDate(value);
+    return sunday;
 };
 
 export const StatisticsDatePicker = ({
                                          mode,
                                          value,
                                          onChange,
+                                         sx
                                      }: StatisticsDatePickerProps) => {
-    const {formatMessage, locale} = useIntl();
+    const intl = useIntl();
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
-    const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
-    const [visibleMonth, setVisibleMonth] = useState(getDateFromIso(value));
-    const [hoveredWeekStart, setHoveredWeekStart] = useState<string | null>(null);
+    const date = useMemo(() => getDateFromIso(value), [value]);
 
-    const selectedDate = useMemo(() => getDateFromIso(value), [value]);
-    const selectedWeekStart = useMemo(() => getMonday(getDateFromIso(value)), [value]);
-    const monthDays = useMemo(() => getMonthDays(visibleMonth), [visibleMonth]);
-
-    const weekdays = useMemo(
-        () => [
-            formatMessage({id: 'statistics.weekday.mondayShort'}),
-            formatMessage({id: 'statistics.weekday.tuesdayShort'}),
-            formatMessage({id: 'statistics.weekday.wednesdayShort'}),
-            formatMessage({id: 'statistics.weekday.thursdayShort'}),
-            formatMessage({id: 'statistics.weekday.fridayShort'}),
-            formatMessage({id: 'statistics.weekday.saturdayShort'}),
-            formatMessage({id: 'statistics.weekday.sundayShort'}),
-        ],
-        [formatMessage]
-    );
-
-    const isOpen = Boolean(anchorElement);
-
-    const currentYear = selectedDate.getFullYear();
-    const yearOptions = Array.from({length: 9}, (_, index) => currentYear - 4 + index);
-
-    const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElement(event.currentTarget);
-        setVisibleMonth(getDateFromIso(value));
-    };
-
-    const handleClose = () => {
-        setAnchorElement(null);
-        setHoveredWeekStart(null);
-    };
-
-    const handlePrevious = () => {
+    const label = useMemo(() => {
         if (mode === 'year') {
-            onChange(`${selectedDate.getFullYear() - 1}-01-01`);
-            return;
+            return date.getFullYear().toString();
+        }
+
+        if (mode === 'month') {
+            return intl.formatDate(date, {month: 'long', year: 'numeric'});
         }
 
         if (mode === 'week') {
-            onChange(toIsoDate(addDays(getMonday(selectedDate), -7)));
-            return;
+            const monday = getMonday(date);
+            const sunday = getSunday(monday);
+
+            return `${intl.formatDate(monday, {
+                day: 'numeric',
+                month: 'short',
+            })} - ${intl.formatDate(sunday, {day: 'numeric', month: 'short'})}`;
         }
 
-        onChange(toIsoDate(addDays(selectedDate, -1)));
+        return intl.formatDate(date, {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+    }, [mode, date, intl]);
+
+    const handlePrevious = () => {
+        const nextDate = new Date(date);
+
+        if (mode === 'year') {
+            nextDate.setFullYear(date.getFullYear() - 1);
+        } else if (mode === 'month') {
+            nextDate.setMonth(date.getMonth() - 1);
+        } else if (mode === 'week') {
+            nextDate.setDate(date.getDate() - 7);
+        } else {
+            nextDate.setDate(date.getDate() - 1);
+        }
+
+        onChange(toIsoDate(nextDate));
     };
 
     const handleNext = () => {
+        const nextDate = new Date(date);
+
         if (mode === 'year') {
-            onChange(`${selectedDate.getFullYear() + 1}-01-01`);
-            return;
+            nextDate.setFullYear(date.getFullYear() + 1);
+        } else if (mode === 'month') {
+            nextDate.setMonth(date.getMonth() + 1);
+        } else if (mode === 'week') {
+            nextDate.setDate(date.getDate() + 7);
+        } else {
+            nextDate.setDate(date.getDate() + 1);
         }
 
-        if (mode === 'week') {
-            onChange(toIsoDate(addDays(getMonday(selectedDate), 7)));
-            return;
-        }
-
-        onChange(toIsoDate(addDays(selectedDate, 1)));
+        onChange(toIsoDate(nextDate));
     };
 
-    const handleDayClick = (date: Date) => {
-        if (mode === 'week') {
-            onChange(toIsoDate(getMonday(date)));
-            handleClose();
-            return;
-        }
+    const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-        onChange(toIsoDate(date));
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleDateSelect = (newDate: Date) => {
+        onChange(toIsoDate(newDate));
         handleClose();
     };
 
-    const handleDayMouseEnter = (date: Date) => {
-        if (mode !== 'week') {
-            return;
-        }
-
-        setHoveredWeekStart(toIsoDate(getMonday(date)));
-    };
-
-    const handleYearClick = (year: number) => {
-        onChange(`${year}-01-01`);
-        handleClose();
-    };
+    const open = Boolean(anchorEl);
 
     return (
-        <>
-            <Box
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                bgcolor: '#F7F5FD',
+                borderRadius: '22px',
+                p: 0.8,
+                border: '1px solid #EEEAF8',
+                ...sx
+            }}
+        >
+            <IconButton
+                onClick={handlePrevious}
+                size="small"
                 sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1.2,
-                    bgcolor: '#F7F5FD',
-                    borderRadius: '22px',
-                    p: 1,
-                    border: '1px solid #EEEAF8',
-                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8)',
+                    bgcolor: '#FFFFFF',
+                    boxShadow: '0 4px 10px rgba(31,26,61,0.05)',
+                    '&:hover': {bgcolor: '#F1E9FF'},
+                    flexShrink: 0,
                 }}
             >
-                <IconButton
-                    onClick={handlePrevious}
+                <ChevronLeftIcon sx={{fontSize: 20, color: '#7A2DFF'}}/>
+            </IconButton>
+
+            <Box
+                component="button"
+                onClick={handleOpen}
+                sx={{
+                    border: 'none',
+                    bgcolor: 'transparent',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 1.2,
+                    px: 1.2,
+                    py: 0.6,
+                    borderRadius: '14px',
+                    transition: '0.2s',
+                    flex: 1,
+                    minWidth: 0,
+                    '&:hover': {
+                        bgcolor: 'rgba(122,45,255,0.06)',
+                    },
+                }}
+            >
+                <CalendarMonthIcon sx={{fontSize: 18, color: '#7A2DFF', flexShrink: 0}}/>
+                <Typography
                     sx={{
-                        width: 38,
-                        height: 38,
-                        bgcolor: '#FFFFFF',
-                        color: '#5C577A',
-                        boxShadow: '0 6px 14px rgba(31,26,61,0.08)',
-                        '&:hover': {
-                            bgcolor: '#FFFFFF',
-                            color: '#7A2DFF',
-                        },
+                        color: '#1F1A3D',
+                        fontSize: 13,
+                        fontWeight: 900,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        textAlign: 'center'
                     }}
                 >
-                    <ChevronLeftIcon/>
-                </IconButton>
-
-                <Box
-                    onClick={handleOpen}
-                    sx={{
-                        width: '100%',
-                        height: 44,
-                        px: 1.8,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 1.2,
-                        cursor: 'pointer',
-                        borderRadius: '16px',
-                        transition: '0.2s ease',
-                        '&:hover': {
-                            bgcolor: '#FFFFFF',
-                            boxShadow: '0 6px 14px rgba(31,26,61,0.06)',
-                        },
-                    }}
-                >
-                    <CalendarMonthIcon
-                        sx={{
-                            fontSize: 24,
-                            color: '#7A2DFF',
-                            flexShrink: 0,
-                        }}
-                    />
-
-                    <Typography
-                        sx={{
-                            color: '#1F1A3D',
-                            fontSize: 15,
-                            fontWeight: 500,
-                            whiteSpace: 'nowrap',
-                        }}
-                    >
-                        {getDisplayValue(mode, value)}
-                    </Typography>
-                </Box>
-
-                <IconButton
-                    onClick={handleNext}
-                    sx={{
-                        width: 38,
-                        height: 38,
-                        bgcolor: '#FFFFFF',
-                        color: '#5C577A',
-                        boxShadow: '0 6px 14px rgba(31,26,61,0.08)',
-                        '&:hover': {
-                            bgcolor: '#FFFFFF',
-                            color: '#7A2DFF',
-                        },
-                    }}
-                >
-                    <ChevronRightIcon/>
-                </IconButton>
+                    {label}
+                </Typography>
             </Box>
 
+            <IconButton
+                onClick={handleNext}
+                size="small"
+                sx={{
+                    bgcolor: '#FFFFFF',
+                    boxShadow: '0 4px 10px rgba(31,26,61,0.05)',
+                    '&:hover': {bgcolor: '#F1E9FF'},
+                    flexShrink: 0,
+                }}
+            >
+                <ChevronRightIcon sx={{fontSize: 20, color: '#7A2DFF'}}/>
+            </IconButton>
+
             <Popover
-                open={isOpen}
-                anchorEl={anchorElement}
+                open={open}
+                anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
                     vertical: 'bottom',
@@ -325,268 +233,161 @@ export const StatisticsDatePicker = ({
                     vertical: 'top',
                     horizontal: 'center',
                 }}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            mt: 1.5,
+                            borderRadius: '24px',
+                            boxShadow: '0 24px 70px rgba(31,26,61,0.18)',
+                            border: '1px solid #EEEAF8',
+                            p: 2,
+                        },
+                    }
+                }}
             >
-                {mode === 'year' ? (
-                    <Box
-                        sx={{
-                            minWidth: 220,
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(3, 1fr)',
-                            gap: 1,
-                        }}
-                    >
-                        {yearOptions.map((year) => {
-                            const isSelected = year === currentYear;
+                <CalendarView
+                    mode={mode}
+                    selectedDate={date}
+                    onSelect={handleDateSelect}
+                />
+            </Popover>
+        </Box>
+    );
+};
 
-                            return (
-                                <Box
-                                    key={year}
-                                    onClick={() => handleYearClick(year)}
-                                    sx={{
-                                        height: 48,
-                                        borderRadius: '16px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        cursor: 'pointer',
-                                        bgcolor: isSelected ? '#7A2DFF' : '#F7F5FD',
-                                        color: isSelected ? '#FFFFFF' : '#1F1A3D',
-                                        fontWeight: 900,
-                                        transition: '0.15s ease',
-                                        '&:hover': {
-                                            bgcolor: isSelected ? '#7A2DFF' : '#F1E9FF',
-                                            color: isSelected ? '#FFFFFF' : '#7A2DFF',
-                                        },
-                                    }}
-                                >
-                                    {year}
-                                </Box>
-                            );
-                        })}
-                    </Box>
-                ) : (
-                    <>
+const CalendarView = ({
+                          mode,
+                          selectedDate,
+                          onSelect,
+                      }: {
+    mode: StatisticsDatePickerMode;
+    selectedDate: Date;
+    onSelect: (date: Date) => void;
+}) => {
+    const [viewDate, setViewDate] = useState(new Date(selectedDate));
+
+    const handlePrev = () => {
+        const next = new Date(viewDate);
+        next.setMonth(viewDate.getMonth() - 1);
+        setViewDate(next);
+    };
+
+    const handleNext = () => {
+        const next = new Date(viewDate);
+        next.setMonth(viewDate.getMonth() + 1);
+        setViewDate(next);
+    };
+
+    const daysInMonth = useMemo(() => {
+        const year = viewDate.getFullYear();
+        const month = viewDate.getMonth();
+        const firstDay = new Date(year, month, 1).getDay();
+        const days = new Date(year, month + 1, 0).getDate();
+
+        const offset = firstDay === 0 ? 6 : firstDay - 1;
+        const result: (Date | null)[] = Array(offset).fill(null);
+
+        for (let i = 1; i <= days; i++) {
+            result.push(new Date(year, month, i, 12, 0, 0, 0));
+        }
+
+        return result;
+    }, [viewDate]);
+
+    const intl = useIntl();
+
+    if (mode === 'year') {
+        const currentYear = viewDate.getFullYear();
+        const years = Array.from({length: 12}, (_, i) => currentYear - 5 + i);
+
+        return (
+            <Box sx={{width: 280}}>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', mb: 2, px: 1}}>
+                    <Typography sx={{fontWeight: 900, color: '#1F1A3D'}}>Wybierz rok</Typography>
+                </Box>
+                <Box sx={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 1}}>
+                    {years.map(year => {
+                        const active = year === selectedDate.getFullYear();
+                        return (
+                            <Box
+                                key={year}
+                                onClick={() => onSelect(new Date(year, 0, 1, 12, 0, 0, 0))}
+                                sx={{
+                                    p: 1.5,
+                                    borderRadius: '12px',
+                                    textAlign: 'center',
+                                    cursor: 'pointer',
+                                    fontWeight: 800,
+                                    fontSize: 14,
+                                    bgcolor: active ? '#7A2DFF' : 'transparent',
+                                    color: active ? '#FFF' : '#1F1A3D',
+                                    '&:hover': {bgcolor: active ? '#7A2DFF' : '#F1E9FF'}
+                                }}
+                            >
+                                {year}
+                            </Box>
+                        );
+                    })}
+                </Box>
+            </Box>
+        );
+    }
+
+    return (
+        <Box sx={{width: 280}}>
+            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2, px: 1}}>
+                <Typography sx={{fontWeight: 900, color: '#1F1A3D', textTransform: 'capitalize'}}>
+                    {intl.formatDate(viewDate, {month: 'long', year: 'numeric'})}
+                </Typography>
+                <Box sx={{display: 'flex', gap: 0.5}}>
+                    <IconButton size="small" onClick={handlePrev}><ChevronLeftIcon fontSize="small"/></IconButton>
+                    <IconButton size="small" onClick={handleNext}><ChevronRightIcon fontSize="small"/></IconButton>
+                </Box>
+            </Box>
+
+            <Box sx={{display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 0.5}}>
+                {['PN', 'WT', 'ŚR', 'CZ', 'PT', 'SB', 'ND'].map(d => (
+                    <Typography key={d} sx={{fontSize: 10, fontWeight: 900, color: '#9B96B7', textAlign: 'center', mb: 1}}>
+                        {d}
+                    </Typography>
+                ))}
+                {daysInMonth.map((day, i) => {
+                    if (!day) return <Box key={`empty-${i}`}/>;
+
+                    const isSelected = mode === 'day'
+                        ? day.getTime() === normalizeDate(selectedDate).getTime()
+                        : mode === 'week'
+                            ? day.getTime() >= getMonday(selectedDate).getTime() && day.getTime() <= getSunday(getMonday(selectedDate)).getTime()
+                            : mode === 'month'
+                                ? day.getMonth() === selectedDate.getMonth() && day.getFullYear() === selectedDate.getFullYear()
+                                : false;
+
+                    const isToday = day.toDateString() === new Date().toDateString();
+
+                    return (
                         <Box
+                            key={day.getTime()}
+                            onClick={() => onSelect(day)}
                             sx={{
-                                minWidth: 500,
+                                height: 34,
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'space-between',
-                                mb: 2,
+                                justifyContent: 'center',
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                fontSize: 13,
+                                fontWeight: 800,
+                                bgcolor: isSelected ? '#7A2DFF' : 'transparent',
+                                color: isSelected ? '#FFF' : '#1F1A3D',
+                                border: isToday && !isSelected ? '1px solid #7A2DFF' : 'none',
+                                '&:hover': {bgcolor: isSelected ? '#7A2DFF' : '#F1E9FF'}
                             }}
                         >
-                            <IconButton
-                                onClick={() =>
-                                    setVisibleMonth((current) => addMonths(current, -1))
-                                }
-                                sx={{
-                                    width: 34,
-                                    height: 34,
-                                    bgcolor: '#F7F5FD',
-                                    color: '#5C577A',
-                                    '&:hover': {
-                                        bgcolor: '#F1E9FF',
-                                        color: '#7A2DFF',
-                                    },
-                                }}
-                            >
-                                <ChevronLeftIcon/>
-                            </IconButton>
-
-                            <Typography
-                                sx={{
-                                    color: '#1F1A3D',
-                                    fontSize: 15,
-                                    fontWeight: 900,
-                                    textTransform: 'capitalize',
-                                }}
-                            >
-                                {getMonthLabel(visibleMonth, locale)}
-                            </Typography>
-
-                            <IconButton
-                                onClick={() =>
-                                    setVisibleMonth((current) => addMonths(current, 1))
-                                }
-                                sx={{
-                                    width: 34,
-                                    height: 34,
-                                    bgcolor: '#F7F5FD',
-                                    color: '#5C577A',
-                                    '&:hover': {
-                                        bgcolor: '#F1E9FF',
-                                        color: '#7A2DFF',
-                                    },
-                                }}
-                            >
-                                <ChevronRightIcon/>
-                            </IconButton>
+                            {day.getDate()}
                         </Box>
-
-                        <Box
-                            sx={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(7, 1fr)',
-                                mb: 1,
-                            }}
-                        >
-                            {weekdays.map((day) => (
-                                <Typography
-                                    key={day}
-                                    sx={{
-                                        color: '#9B96B7',
-                                        fontSize: 11,
-                                        fontWeight: 900,
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    {day}
-                                </Typography>
-                            ))}
-                        </Box>
-
-                        <Box
-                            onMouseLeave={() => setHoveredWeekStart(null)}
-                            sx={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(7, 1fr)',
-                                rowGap: 0.8,
-                            }}
-                        >
-                            {monthDays.map((date) => {
-                                const hoveredWeekStartDate = hoveredWeekStart
-                                    ? getDateFromIso(hoveredWeekStart)
-                                    : null;
-
-                                const isCurrentMonth =
-                                    date.getMonth() === visibleMonth.getMonth();
-
-                                const isSelectedDay = isSameDay(date, selectedDate);
-
-                                const isSelectedWeek =
-                                    mode === 'week' && isDateInWeek(date, selectedWeekStart);
-
-                                const isHoveredWeek =
-                                    mode === 'week' && hoveredWeekStartDate
-                                        ? isDateInWeek(date, hoveredWeekStartDate)
-                                        : false;
-
-                                const isSelectedWeekStart =
-                                    mode === 'week' && isWeekStart(date, selectedWeekStart);
-
-                                const isSelectedWeekEnd =
-                                    mode === 'week' && isWeekEnd(date, selectedWeekStart);
-
-                                const isHoveredWeekStart =
-                                    mode === 'week' && hoveredWeekStartDate
-                                        ? isWeekStart(date, hoveredWeekStartDate)
-                                        : false;
-
-                                const isHoveredWeekEnd =
-                                    mode === 'week' && hoveredWeekStartDate
-                                        ? isWeekEnd(date, hoveredWeekStartDate)
-                                        : false;
-
-                                const isActiveWeek = isSelectedWeek || isHoveredWeek;
-                                const isActiveWeekStart =
-                                    isSelectedWeekStart || isHoveredWeekStart;
-                                const isActiveWeekEnd =
-                                    isSelectedWeekEnd || isHoveredWeekEnd;
-
-                                const isToday = isSameDay(date, new Date());
-
-                                return (
-                                    <Box
-                                        key={toIsoDate(date)}
-                                        onClick={() => handleDayClick(date)}
-                                        onMouseEnter={() => handleDayMouseEnter(date)}
-                                        sx={{
-                                            height: 38,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            position: 'relative',
-                                            bgcolor:
-                                                mode === 'week' && isActiveWeek
-                                                    ? isHoveredWeek
-                                                        ? 'rgba(122, 45, 255, 0.18)'
-                                                        : 'rgba(122, 45, 255, 0.12)'
-                                                    : 'transparent',
-                                            color:
-                                                isActiveWeek || isSelectedDay
-                                                    ? '#7A2DFF'
-                                                    : isCurrentMonth
-                                                        ? '#1F1A3D'
-                                                        : '#C5C0D6',
-                                            fontSize: 13,
-                                            fontWeight:
-                                                isActiveWeek || isSelectedDay ? 900 : 700,
-                                            transition: '0.15s ease',
-                                            borderTopLeftRadius:
-                                                isActiveWeekStart ? '14px' : 0,
-                                            borderBottomLeftRadius:
-                                                isActiveWeekStart ? '14px' : 0,
-                                            borderTopRightRadius:
-                                                isActiveWeekEnd ? '14px' : 0,
-                                            borderBottomRightRadius:
-                                                isActiveWeekEnd ? '14px' : 0,
-                                            '&:hover': {
-                                                color: '#7A2DFF',
-                                                bgcolor:
-                                                    mode === 'day'
-                                                        ? '#F1E9FF'
-                                                        : undefined,
-                                            },
-                                            '&::before':
-                                                isSelectedDay || isSelectedWeekStart
-                                                    ? {
-                                                        content: '""',
-                                                        position: 'absolute',
-                                                        width: 28,
-                                                        height: 28,
-                                                        borderRadius: '50%',
-                                                        bgcolor: '#7A2DFF',
-                                                        zIndex: 0,
-                                                    }
-                                                    : undefined,
-                                            '&::after': isToday
-                                                ? {
-                                                    content: '""',
-                                                    position: 'absolute',
-                                                    bottom: 5,
-                                                    width: 4,
-                                                    height: 4,
-                                                    borderRadius: '50%',
-                                                    bgcolor:
-                                                        isSelectedDay || isSelectedWeekStart
-                                                            ? '#FFFFFF'
-                                                            : '#7A2DFF',
-                                                    zIndex: 2,
-                                                }
-                                                : undefined,
-                                        }}
-                                    >
-                                        <Box
-                                            component="span"
-                                            sx={{
-                                                position: 'relative',
-                                                zIndex: 1,
-                                                color:
-                                                    isSelectedDay || isSelectedWeekStart
-                                                        ? '#FFFFFF'
-                                                        : 'inherit',
-                                            }}
-                                        >
-                                            {date.getDate()}
-                                        </Box>
-                                    </Box>
-                                );
-                            })}
-                        </Box>
-                    </>
-                )}
-            </Popover>
-        </>
+                    );
+                })}
+            </Box>
+        </Box>
     );
 };
