@@ -1,5 +1,6 @@
-import {Box, Typography} from '@mui/material';
+import {Box, Typography, IconButton} from '@mui/material';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {useIntl} from 'react-intl';
 import type {TariffDTO} from '@api/Tariffs';
 
@@ -15,17 +16,23 @@ export type TariffVisualBlock = {
 };
 
 type TariffScheduleTileProps = {
+    view: 'hourly' | 'daily';
     block: TariffVisualBlock;
     selected: boolean;
     highlighted: boolean;
-    onClick: () => void;
+    isAdmin: boolean;
+    onClick: (event: React.MouseEvent<HTMLElement>) => void;
+    onDelete: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
 const TariffScheduleTile = ({
+                                view,
                                 block,
                                 selected,
                                 highlighted,
+                                isAdmin,
                                 onClick,
+                                onDelete,
                             }: TariffScheduleTileProps) => {
     const intl = useIntl();
 
@@ -35,11 +42,6 @@ const TariffScheduleTile = ({
 
     const isCompact = hourCount <= 1 || dayCount <= 1;
     const isVeryCompact = hourCount <= 1 && dayCount <= 1;
-
-    const left = `${((firstDay - 1) / 7) * 100}%`;
-    const width = `${(dayCount / 7) * 100}%`;
-    const top = `${(block.startHour / 24) * 100}%`;
-    const height = `${(hourCount / 24) * 100}%`;
 
     const formatPrice = (value: number) =>
         intl.formatMessage(
@@ -62,19 +64,18 @@ const TariffScheduleTile = ({
         {price: formatPrice(block.nextHourPrice)}
     );
 
+    const dailyPriceLabel = formatPrice(block.firstHourPrice);
+
     return (
         <Box
             onClick={onClick}
             sx={{
-                position: 'absolute',
-                left,
-                top,
-                width,
-                height,
+                gridColumn: `${firstDay} / span ${dayCount}`,
+                gridRow: `${block.startHour + 1} / span ${hourCount}`,
                 p: isVeryCompact ? '1px' : '2px',
                 boxSizing: 'border-box',
                 cursor: 'pointer',
-                zIndex: 1,
+                zIndex: selected ? 3 : highlighted ? 2 : 1,
             }}
         >
             <Box
@@ -115,17 +116,42 @@ const TariffScheduleTile = ({
                     },
                 }}
             >
-                {!isVeryCompact && (
-                    <EditRoundedIcon
-                        sx={{
-                            position: 'absolute',
-                            top: 4,
-                            right: 4,
-                            fontSize: isCompact ? 12 : 16,
-                            color: '#7B158F',
-                            opacity: selected ? 1 : 0.6,
-                        }}
-                    />
+                {isAdmin && !isVeryCompact && (
+                    <>
+                        <EditRoundedIcon
+                            sx={{
+                                position: 'absolute',
+                                top: 4,
+                                left: 4,
+                                fontSize: isCompact ? 12 : 16,
+                                color: '#7B158F',
+                                opacity: selected ? 1 : 0.6,
+                            }}
+                        />
+                        <IconButton
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(e);
+                            }}
+                            aria-label={intl.formatMessage({id: 'prices.errors.deleteTariff'})}
+                            size="small"
+                            sx={{
+                                position: 'absolute',
+                                top: 2,
+                                right: 2,
+                                color: '#DC2626',
+                                opacity: 0.7,
+                                transition: '0.2s',
+                                '&:hover': {
+                                    opacity: 1,
+                                    transform: 'scale(1.1)',
+                                    bgcolor: 'rgba(220, 38, 38, 0.08)',
+                                }
+                            }}
+                        >
+                            <CloseRoundedIcon sx={{ fontSize: isCompact ? 16 : 20 }} />
+                        </IconButton>
+                    </>
                 )}
 
                 <Box
@@ -135,24 +161,42 @@ const TariffScheduleTile = ({
                         textAlign: 'right',
                     }}
                 >
-                    {[firstHourLabel, nextHourLabel].map((label) => (
+                    {view === 'daily' ? (
                         <Typography
-                            key={label}
-                            title={label}
+                            title={dailyPriceLabel}
                             sx={{
                                 width: '100%',
                                 minWidth: 0,
                                 color: '#6B007B',
-                                fontSize: isVeryCompact ? 10 : isCompact ? 11 : 13,
-                                fontWeight: 500,
+                                fontSize: isVeryCompact ? 12 : isCompact ? 14 : 16,
+                                fontWeight: 700,
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                             }}
                         >
-                            {label}
+                            {dailyPriceLabel}
                         </Typography>
-                    ))}
+                    ) : (
+                        [firstHourLabel, nextHourLabel].map((label) => (
+                            <Typography
+                                key={label}
+                                title={label}
+                                sx={{
+                                    width: '100%',
+                                    minWidth: 0,
+                                    color: '#6B007B',
+                                    fontSize: isVeryCompact ? 10 : isCompact ? 11 : 13,
+                                    fontWeight: 500,
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                }}
+                            >
+                                {label}
+                            </Typography>
+                        ))
+                    )}
                 </Box>
             </Box>
         </Box>

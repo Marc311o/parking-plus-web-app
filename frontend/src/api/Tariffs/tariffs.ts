@@ -15,6 +15,21 @@ export const getTariffs = async (): Promise<TariffDTO[]> => {
     return response.json();
 };
 
+export const createTariff = async (payload: TariffDTO): Promise<TariffDTO> => {
+    const response = await fetch(`${API_URL}/tariffs`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+        const body = await response.text();
+        throw new Error(`Failed to create tariff. Status: ${response.status}. Body: ${body}`);
+    }
+
+    return response.json();
+};
+
 export const updateTariff = async (
     id: number,
     payload: TariffDTO
@@ -31,4 +46,16 @@ export const updateTariff = async (
     }
 
     return response.json();
+};
+
+export const deleteTariff = async (id: number): Promise<void> => {
+    const response = await fetch(`${API_URL}/tariffs/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+    });
+
+    if (!response.ok) {
+        const body = await response.text();
+        throw new Error(`Failed to delete tariff. Status: ${response.status}. Body: ${body}`);
+    }
 };
