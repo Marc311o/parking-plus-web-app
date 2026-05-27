@@ -48,6 +48,29 @@ const SettingsPage = () => {
     const [mfaSecret, setMfaSecret] = useState<string | null>(null);
     const [mfaError, setMfaError] = useState<string | null>(null);
 
+    const primaryButtonSx = {
+        minWidth: 120,
+        height: 34,
+        borderRadius: 1.5,
+        textTransform: 'none',
+        fontSize: 13,
+        fontWeight: 600,
+        boxShadow: 'none',
+        color: '#FFFFFF',
+        background: 'linear-gradient(90deg, #C13BDB 0%, #8B1F9E 100%)',
+        transition: 'all 0.2s ease',
+
+        '&:hover': {
+            boxShadow: 'none',
+            background: 'linear-gradient(90deg, #b232ca 0%, #7d1b8f 100%)',
+        },
+
+        '&.Mui-disabled': {
+            color: '#9E9E9E',
+            background: 'linear-gradient(90deg, #E5E5E5 0%, #CFCFCF 100%)',
+        },
+    };
+
     useEffect(() => {
         return () => {
             resetMfaState();
@@ -205,6 +228,7 @@ const SettingsPage = () => {
                                                     variant="contained"
                                                     onClick={handleMfaSetup}
                                                     disabled={loading}
+                                                    sx={primaryButtonSx}
                                                 >
                                                     {intl.formatMessage({id: 'settings.mfa.enable'})}
                                                 </Button>
@@ -225,10 +249,11 @@ const SettingsPage = () => {
                                         </Typography>
 
                                         <Button
-                                            variant="outlined"
+                                            variant="contained"
                                             onClick={() =>
                                                 setMfaStep('confirm')
                                             }
+                                            sx={primaryButtonSx}
                                         >
                                             {intl.formatMessage({id: 'settings.mfa.next'})}
                                         </Button>
@@ -264,6 +289,7 @@ const SettingsPage = () => {
                                                 variant="contained"
                                                 onClick={handleMfaConfirm}
                                                 disabled={loading}
+                                                sx={primaryButtonSx}
                                             >
                                                 {intl.formatMessage({id: 'settings.mfa.confirm'})}
                                             </Button>
@@ -273,6 +299,7 @@ const SettingsPage = () => {
                                                     setMfaStep('idle');
                                                     resetMfaState();
                                                 }}
+                                                sx={primaryButtonSx}
                                             >
                                                 {intl.formatMessage({id: 'settings.mfa.cancel'})}
                                             </Button>
