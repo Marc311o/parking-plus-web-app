@@ -132,6 +132,12 @@ const getDefaultSelectedPointIndex = (
         return index >= 0 ? index : 0;
     }
 
+    if (period === 'MONTHLY') {
+        const currentDay = now.getDate().toString();
+        const index = points.findIndex(p => p.label === currentDay);
+        return index >= 0 ? index : points.length - 1;
+    }
+
     if (period === 'YEARLY') {
         const currentMonthLabel = monthLabels[now.getMonth()];
 
@@ -207,6 +213,10 @@ export const ParkingRevenueChart = ({
             label: formatMessage({id: 'statistics.revenue.periods.weekly'}),
         },
         {
+            value: 'MONTHLY' as RevenuePeriod,
+            label: formatMessage({id: 'statistics.revenue.periods.monthly'}),
+        },
+        {
             value: 'YEARLY' as RevenuePeriod,
             label: formatMessage({id: 'statistics.revenue.periods.yearly'}),
         },
@@ -215,6 +225,10 @@ export const ParkingRevenueChart = ({
     const getRevenueDatePickerMode = (period: RevenuePeriod) => {
         if (period === 'YEARLY') {
             return 'year';
+        }
+
+        if (period === 'MONTHLY') {
+            return 'month';
         }
 
         if (period === 'WEEKLY') {
@@ -576,6 +590,7 @@ export const ParkingRevenueChart = ({
 
                         {chartPoints.map((point, index) => {
                             const isSelected = index === selectedPointIndex;
+                            const showLabel = selectedPeriod === 'MONTHLY' ? index % 3 === 0 : true;
 
                             return (
                                 <text
@@ -583,10 +598,10 @@ export const ParkingRevenueChart = ({
                                     x={point.x}
                                     y={chartHeight - 5}
                                     fill={isSelected ? '#1F1A3D' : '#777196'}
-                                    fontSize="11"
+                                    fontSize={selectedPeriod === 'MONTHLY' ? "9" : "11"}
                                     fontWeight="900"
                                     textAnchor="middle"
-                                    style={{cursor: 'pointer'}}
+                                    style={{cursor: 'pointer', visibility: showLabel || isSelected ? 'visible' : 'hidden'}}
                                     onClick={() => setSelectedPointIndex(index)}
                                 >
                                     {point.label}
@@ -611,6 +626,7 @@ export const ParkingRevenueChart = ({
                                 textAlign: 'center',
                                 boxShadow: '0 12px 24px rgba(33,28,67,0.18)',
                                 pointerEvents: 'none',
+                                zIndex: 10
                             }}
                         >
                             <Typography

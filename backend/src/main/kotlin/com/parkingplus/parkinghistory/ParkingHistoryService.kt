@@ -11,6 +11,7 @@ import java.time.LocalTime
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 import kotlin.math.round
 
 @Service
@@ -107,307 +108,175 @@ class ParkingHistoryService(
 
     @Transactional(readOnly = true)
     fun getEntriesStatistics(date: LocalDate, period: AggregationPeriod): EntriesResponseDTO {
+        val from: LocalDate
+        val to: LocalDate
 
-        return when (period) {
-            AggregationPeriod.WEEKLY -> {
-                val startOfWeek = date.with(DayOfWeek.MONDAY)
-                val endOfWeek = date.with(DayOfWeek.SUNDAY)
-
-
-                val entryTimes = parkingHistoryRepository.findStartTimesBetween(
-                    startOfWeek.atStartOfDay(),
-                    endOfWeek.atTime(LocalTime.MAX)
-                )
-
-                val pointsMap = linkedMapOf(
-                    "MON" to 0L,
-                    "TUE" to 0L,
-                    "WED" to 0L,
-                    "THU" to 0L,
-                    "FRI" to 0L,
-                    "SAT" to 0L,
-                    "SUN" to 0L
-                )
-
-                entryTimes.forEach { time ->
-                    val day = time.dayOfWeek.name.substring(0, 3)
-                    pointsMap[day] = pointsMap.getOrDefault(day, 0) + 1
-                }
-
-                EntriesResponseDTO(
-                    period = period,
-                    from = startOfWeek,
-                    to = endOfWeek,
-                    total = entryTimes.size.toLong(),
-                    points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
-                )
-            }
-
+        val pointsMap = when (period) {
             AggregationPeriod.DAILY -> {
-                val entryTimes = parkingHistoryRepository.findStartTimesBetween(
-                    date.atStartOfDay(),
-                    date.atTime(LocalTime.MAX)
-                )
-
-                val pointsMap = linkedMapOf<String, Long>()
-                for (i in 0..22 step 2) {
-                    pointsMap["$i:00"] = 0L
-                }
-
-                entryTimes.forEach { time ->
-                    val hour = time.hour
-                    val bucket = hour - (hour % 2)
-                    pointsMap["$bucket:00"] = pointsMap.getOrDefault("$bucket:00", 0) + 1
-                }
-
-                EntriesResponseDTO(
-                    period = period,
-                    from = date,
-                    to = date,
-                    total = entryTimes.size.toLong(),
-                    points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
-                )
+                from = date
+                to = date
+                val map = linkedMapOf<String, Long>()
+                for (i in 0..22 step 2) map["$i:00"] = 0L
+                map
             }
-
+            AggregationPeriod.WEEKLY -> {
+                from = date.with(DayOfWeek.MONDAY)
+                to = date.with(DayOfWeek.SUNDAY)
+                linkedMapOf("MON" to 0L, "TUE" to 0L, "WED" to 0L, "THU" to 0L, "FRI" to 0L, "SAT" to 0L, "SUN" to 0L)
+            }
+            AggregationPeriod.MONTHLY -> {
+                from = date.withDayOfMonth(1)
+                to = date.with(TemporalAdjusters.lastDayOfMonth())
+                val map = linkedMapOf<String, Long>()
+                for (d in 1..from.lengthOfMonth()) map[d.toString()] = 0L
+                map
+            }
             AggregationPeriod.YEARLY -> {
-                val startOfYear = date.withDayOfYear(1)
-                val endOfYear = date.withDayOfYear(date.lengthOfYear())
-
-                val entryTimes = parkingHistoryRepository.findStartTimesBetween(
-                    startOfYear.atStartOfDay(),
-                    endOfYear.atTime(LocalTime.MAX)
-                )
-
-                val pointsMap = linkedMapOf(
-                    "JAN" to 0L,
-                    "FEB" to 0L,
-                    "MAR" to 0L,
-                    "APR" to 0L,
-                    "MAY" to 0L,
-                    "JUN" to 0L,
-                    "JUL" to 0L,
-                    "AUG" to 0L,
-                    "SEP" to 0L,
-                    "OCT" to 0L,
-                    "NOV" to 0L,
-                    "DEC" to 0L
-                )
-
-                entryTimes.forEach { time ->
-                    val month = time.month.name.substring(0, 3)
-                    pointsMap[month] = pointsMap.getOrDefault(month, 0) + 1
-                }
-
-                EntriesResponseDTO(
-                    period = period,
-                    from = startOfYear,
-                    to = endOfYear,
-                    total = entryTimes.size.toLong(),
-                    points = pointsMap.map { EntriesPointDTO(it.key, it.value) }
-                )
+                from = date.withDayOfYear(1)
+                to = date.withDayOfYear(date.lengthOfYear())
+                linkedMapOf("JAN" to 0L, "FEB" to 0L, "MAR" to 0L, "APR" to 0L, "MAY" to 0L, "JUN" to 0L, "JUL" to 0L, "AUG" to 0L, "SEP" to 0L, "OCT" to 0L, "NOV" to 0L, "DEC" to 0L)
             }
         }
+
+        val entries = parkingHistoryRepository.findStartTimesBetween(from.atStartOfDay(), to.atTime(LocalTime.MAX))
+        entries.forEach { time ->
+            val key = when (period) {
+                AggregationPeriod.DAILY -> "${time.hour - (time.hour % 2)}:00"
+                AggregationPeriod.WEEKLY -> time.dayOfWeek.name.substring(0, 3)
+                AggregationPeriod.MONTHLY -> time.dayOfMonth.toString()
+                AggregationPeriod.YEARLY -> time.month.name.substring(0, 3)
+            }
+            pointsMap[key] = (pointsMap[key] ?: 0L) + 1
+        }
+
+        return EntriesResponseDTO(period, from, to, entries.size.toLong(), pointsMap.map { EntriesPointDTO(it.key, it.value) })
     }
 
     @Transactional(readOnly = true)
     fun getRevenueStatistics(date: LocalDate, period: AggregationPeriod): RevenueStatsResponseDTO {
-        val currentStart: LocalDateTime
-        val currentEnd: LocalDateTime
+        val currentStart: LocalDate
+        val currentEnd: LocalDate
         val previousStart: LocalDateTime
         val previousEnd: LocalDateTime
 
-        when (period) {
+        val pointsMap = when (period) {
             AggregationPeriod.DAILY -> {
-                currentStart = date.atStartOfDay()
-                currentEnd = date.atTime(LocalTime.MAX)
-                previousStart = currentStart.minusDays(1)
-                previousEnd = currentEnd.minusDays(1)
+                currentStart = date
+                currentEnd = date
+                previousStart = currentStart.minusDays(1).atStartOfDay()
+                previousEnd = currentStart.minusDays(1).atTime(LocalTime.MAX)
+                val map = linkedMapOf<String, Double>()
+                for (i in 0..22 step 2) map["$i:00"] = 0.0
+                map
             }
-
             AggregationPeriod.WEEKLY -> {
-                currentStart = date.with(DayOfWeek.MONDAY).atStartOfDay()
-                currentEnd = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
-                previousStart = currentStart.minusWeeks(1)
-                previousEnd = currentEnd.minusWeeks(1)
+                currentStart = date.with(DayOfWeek.MONDAY)
+                currentEnd = date.with(DayOfWeek.SUNDAY)
+                previousStart = currentStart.minusWeeks(1).atStartOfDay()
+                previousEnd = currentEnd.minusWeeks(1).atTime(LocalTime.MAX)
+                linkedMapOf("MON" to 0.0, "TUE" to 0.0, "WED" to 0.0, "THU" to 0.0, "FRI" to 0.0, "SAT" to 0.0, "SUN" to 0.0)
             }
-
+            AggregationPeriod.MONTHLY -> {
+                currentStart = date.withDayOfMonth(1)
+                currentEnd = date.with(TemporalAdjusters.lastDayOfMonth())
+                previousStart = currentStart.minusMonths(1).atStartOfDay()
+                previousEnd = currentStart.minusMonths(1).with(TemporalAdjusters.lastDayOfMonth()).atTime(LocalTime.MAX)
+                val map = linkedMapOf<String, Double>()
+                for (d in 1..currentStart.lengthOfMonth()) map[d.toString()] = 0.0
+                map
+            }
             AggregationPeriod.YEARLY -> {
-                currentStart = date.withDayOfYear(1).atStartOfDay()
-                currentEnd = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
-                previousStart = currentStart.minusYears(1)
-                previousEnd = currentEnd.minusYears(1)
+                currentStart = date.withDayOfYear(1)
+                currentEnd = date.withDayOfYear(date.lengthOfYear())
+                previousStart = currentStart.minusYears(1).atStartOfDay()
+                previousEnd = currentEnd.minusYears(1).atTime(LocalTime.MAX)
+                linkedMapOf("JAN" to 0.0, "FEB" to 0.0, "MAR" to 0.0, "APR" to 0.0, "MAY" to 0.0, "JUN" to 0.0, "JUL" to 0.0, "AUG" to 0.0, "SEP" to 0.0, "OCT" to 0.0, "NOV" to 0.0, "DEC" to 0.0)
             }
         }
 
-        val currentData = parkingHistoryRepository.findRevenueBetween(currentStart, currentEnd)
+        val currentData = parkingHistoryRepository.findRevenueBetween(currentStart.atStartOfDay(), currentEnd.atTime(LocalTime.MAX))
         val previousTotal = parkingHistoryRepository.sumPriceByEndTimeBetween(previousStart, previousEnd)
         var currentTotal = 0.0
 
-        val pointsMap = when (period) {
-            AggregationPeriod.DAILY -> {
-                val map = linkedMapOf<String, Double>()
-                for (i in 0..22 step 2) map["$i:00"] = 0.0
-                currentData.forEach {
-                    val hour = it.endTime.hour
-                    val bucket = hour - (hour % 2)
-                    map["$bucket:00"] = (map["$bucket:00"] ?: 0.0) + it.price
-                    currentTotal += it.price
-                }
-                map
+        currentData.forEach {
+            val key = when (period) {
+                AggregationPeriod.DAILY -> "${it.endTime.hour - (it.endTime.hour % 2)}:00"
+                AggregationPeriod.WEEKLY -> it.endTime.dayOfWeek.name.substring(0, 3)
+                AggregationPeriod.MONTHLY -> it.endTime.dayOfMonth.toString()
+                AggregationPeriod.YEARLY -> it.endTime.month.name.substring(0, 3)
             }
-
-            AggregationPeriod.WEEKLY -> {
-                val map = linkedMapOf(
-                    "MON" to 0.0,
-                    "TUE" to 0.0,
-                    "WED" to 0.0,
-                    "THU" to 0.0,
-                    "FRI" to 0.0,
-                    "SAT" to 0.0,
-                    "SUN" to 0.0
-                )
-                currentData.forEach {
-                    val day = it.endTime.dayOfWeek.name.substring(0, 3)
-                    map[day] = (map[day] ?: 0.0) + it.price
-                    currentTotal += it.price
-                }
-                map
-            }
-
-            AggregationPeriod.YEARLY -> {
-                val map = linkedMapOf(
-                    "JAN" to 0.0,
-                    "FEB" to 0.0,
-                    "MAR" to 0.0,
-                    "APR" to 0.0,
-                    "MAY" to 0.0,
-                    "JUN" to 0.0,
-                    "JUL" to 0.0,
-                    "AUG" to 0.0,
-                    "SEP" to 0.0,
-                    "OCT" to 0.0,
-                    "NOV" to 0.0,
-                    "DEC" to 0.0
-                )
-                currentData.forEach {
-                    val month = it.endTime.month.name.substring(0, 3)
-                    map[month] = (map[month] ?: 0.0) + it.price
-                    currentTotal += it.price
-                }
-                map
-            }
+            pointsMap[key] = (pointsMap[key] ?: 0.0) + it.price
+            currentTotal += it.price
         }
 
-        val percentChange = if (previousTotal > 0.0) {
-            ((currentTotal - previousTotal) / previousTotal) * 100.0
-        } else if (currentTotal > 0.0) {
-            100.0
-        } else {
-            0.0
-        }
-
-        val roundedPercentChange = round(percentChange * 10) / 10.0
-        val roundedTotal = round(currentTotal * 100) / 100.0
+        val percentChange = if (previousTotal > 0.0) ((currentTotal - previousTotal) / previousTotal) * 100.0 else if (currentTotal > 0.0) 100.0 else 0.0
 
         return RevenueStatsResponseDTO(
-            period = period,
-            from = currentStart.toLocalDate(),
-            to = currentEnd.toLocalDate(),
-            total = roundedTotal,
-            previousPeriodChangePercent = roundedPercentChange,
-            currency = "PLN", // TODO: Hardcoded for now, consider making it dynamic in the future
-            points = pointsMap.map {
-                RevenuePointDTO(it.key, round(it.value * 100) / 100.0)
-            }
+            period = period, from = currentStart, to = currentEnd, total = round(currentTotal * 100) / 100.0,
+            previousPeriodChangePercent = round(percentChange * 10) / 10.0, currency = "PLN",
+            points = pointsMap.map { RevenuePointDTO(it.key, round(it.value * 100) / 100.0) }
         )
     }
 
     @Transactional(readOnly = true)
     fun getAverageStayStatistics(date: LocalDate, period: AggregationPeriod): AverageStayResponseDTO {
-        val currentStart: LocalDateTime
-        val currentEnd: LocalDateTime
+        val from: LocalDate
+        val to: LocalDate
 
         when (period) {
-            AggregationPeriod.DAILY -> {
-                currentStart = date.atStartOfDay()
-                currentEnd = date.atTime(LocalTime.MAX)
-            }
-
-            AggregationPeriod.WEEKLY -> {
-                currentStart = date.with(DayOfWeek.MONDAY).atStartOfDay()
-                currentEnd = date.with(DayOfWeek.SUNDAY).atTime(LocalTime.MAX)
-            }
-
-            AggregationPeriod.YEARLY -> {
-                currentStart = date.withDayOfYear(1).atStartOfDay()
-                currentEnd = date.withDayOfYear(date.lengthOfYear()).atTime(LocalTime.MAX)
-            }
+            AggregationPeriod.DAILY -> { from = date; to = date }
+            AggregationPeriod.WEEKLY -> { from = date.with(DayOfWeek.MONDAY); to = date.with(DayOfWeek.SUNDAY) }
+            AggregationPeriod.MONTHLY -> { from = date.withDayOfMonth(1); to = date.with(TemporalAdjusters.lastDayOfMonth()) }
+            AggregationPeriod.YEARLY -> { from = date.withDayOfYear(1); to = date.withDayOfYear(date.lengthOfYear()) }
         }
 
-        val stays = parkingHistoryRepository.findCompletedStaysBetween(currentStart, currentEnd)
-
+        val stays = parkingHistoryRepository.findCompletedStaysBetween(from.atStartOfDay(), to.atTime(LocalTime.MAX))
         var totalMinutesOverall = 0L
         var validStayCount = 0L
-
         val typeTotalMinutes = mutableMapOf<SpaceType, Long>()
         val typeCounts = mutableMapOf<SpaceType, Int>()
 
         stays.forEach { stay ->
             if (stay.endTime.isAfter(stay.startTime)) {
                 val minutes = Duration.between(stay.startTime, stay.endTime).toMinutes()
-
                 totalMinutesOverall += minutes
                 validStayCount++
-
                 typeTotalMinutes[stay.spaceType] = (typeTotalMinutes[stay.spaceType] ?: 0L) + minutes
                 typeCounts[stay.spaceType] = (typeCounts[stay.spaceType] ?: 0) + 1
             }
         }
 
         val overallAverage = if (validStayCount > 0) totalMinutesOverall / validStayCount else 0L
+        val categories = typeTotalMinutes.entries.sortedBy { it.key.name }.map { (type, total) ->
+            val count = typeCounts[type] ?: 0
+            AverageStayCategoryItemDTO(type, if (count > 0) total / count else 0L)
+        }
 
-        val categories = typeTotalMinutes.entries
-            .sortedBy { it.key.name }
-            .map { (spaceType, totalMinutes) ->
-                val count = typeCounts[spaceType] ?: 0
-                val avg = if (count > 0) totalMinutes / count else 0L
-                AverageStayCategoryItemDTO(spaceType, avg)
-            }
-
-        return AverageStayResponseDTO(
-            period = period,
-            from = currentStart.toLocalDate(),
-            to = currentEnd.toLocalDate(),
-            overallAverageMinutes = overallAverage,
-            categories = categories
-        )
+        return AverageStayResponseDTO(period, from, to, overallAverage, categories)
     }
 
     @Transactional(readOnly = true)
-    fun getSpaceRanking(date: LocalDate, floor: ParkingFloor): ParkingSpaceRankingResponseDTO {
-        val startOfDay = date.atStartOfDay()
-        val endOfDay = date.atTime(LocalTime.MAX)
+    fun getSpaceRanking(date: LocalDate, period: AggregationPeriod, floor: ParkingFloor): ParkingSpaceRankingResponseDTO {
+        val from: LocalDate
+        val to: LocalDate
+
+        when (period) {
+            AggregationPeriod.DAILY -> { from = date; to = date }
+            AggregationPeriod.WEEKLY -> { from = date.with(DayOfWeek.MONDAY); to = date.with(DayOfWeek.SUNDAY) }
+            AggregationPeriod.MONTHLY -> { from = date.withDayOfMonth(1); to = date.with(TemporalAdjusters.lastDayOfMonth()) }
+            AggregationPeriod.YEARLY -> { from = date.withDayOfYear(1); to = date.withDayOfYear(date.lengthOfYear()) }
+        }
 
         val rankingData = parkingHistoryRepository.findSpaceRankingForLevelAndDate(
             level = floor.level,
-            start = startOfDay,
-            end = endOfDay
+            start = from.atStartOfDay(),
+            end = to.atTime(LocalTime.MAX)
         )
 
         val totalEntries = rankingData.sumOf { it.usageCount }
+        val points = rankingData.map { ParkingSpaceRankingPointDTO(it.spaceId, it.usageCount) }
 
-        val points = rankingData.map {
-            ParkingSpaceRankingPointDTO(
-                spaceId = it.spaceId,
-                value = it.usageCount
-            )
-        }
-
-        return ParkingSpaceRankingResponseDTO(
-            floor = floor,
-            total = totalEntries,
-            points = points
-        )
+        return ParkingSpaceRankingResponseDTO(floor, period, from, to, totalEntries, points)
     }
 
     @Transactional(readOnly = true)
@@ -419,32 +288,9 @@ class ParkingHistoryService(
             val owner = entry.vehicle.owner
             val entryId = entry.id ?: continue
 
-            events.add(
-                ParkingEventDTO(
-                    id = entryId * 10,
-                    plateNumber = entry.vehicle.licensePlate,
-                    eventType = ParkingEventType.ENTRY,
-                    eventDate = entry.startTime,
-                    ownerName = owner.name,
-                    ownerSurname = owner.surname,
-                    ownerEmail = owner.email,
-                    carPhotoPath = entry.photoPath
-                )
-            )
-
+            events.add(ParkingEventDTO(entryId * 10, entry.vehicle.licensePlate, ParkingEventType.ENTRY, entry.startTime, owner.name, owner.surname, owner.email, entry.photoPath))
             if (entry.endTime != null) {
-                events.add(
-                    ParkingEventDTO(
-                        id = entryId * 10 + 1,
-                        plateNumber = entry.vehicle.licensePlate,
-                        eventType = ParkingEventType.EXIT,
-                        eventDate = entry.endTime!!,
-                        ownerName = owner.name,
-                        ownerSurname = owner.surname,
-                        ownerEmail = owner.email,
-                        carPhotoPath = entry.photoPath
-                    )
-                )
+                events.add(ParkingEventDTO(entryId * 10 + 1, entry.vehicle.licensePlate, ParkingEventType.EXIT, entry.endTime!!, owner.name, owner.surname, owner.email, entry.photoPath))
             }
         }
 

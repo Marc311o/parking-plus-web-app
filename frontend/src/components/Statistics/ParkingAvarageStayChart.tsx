@@ -25,6 +25,10 @@ const getAverageStayDatePickerMode = (period: AverageStayPeriod) => {
         return 'year';
     }
 
+    if (period === 'MONTHLY') {
+        return 'month';
+    }
+
     if (period === 'WEEKLY') {
         return 'week';
     }
@@ -173,6 +177,10 @@ export const ParkingAverageStayChart = ({
         {
             value: 'WEEKLY' as AverageStayPeriod,
             label: formatMessage({id: 'statistics.averageStay.periods.weekly'}),
+        },
+        {
+            value: 'MONTHLY' as AverageStayPeriod,
+            label: formatMessage({id: 'statistics.averageStay.periods.monthly'}),
         },
         {
             value: 'YEARLY' as AverageStayPeriod,

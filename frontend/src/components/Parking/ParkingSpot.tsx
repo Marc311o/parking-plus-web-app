@@ -35,10 +35,6 @@ const getMainColor = (
         return SELECTED_SPOT_COLOR;
     }
 
-    if (variant === 'statistics') {
-        return STATISTICS_SPOT_COLOR;
-    }
-
     switch (status) {
         case 'occupied':
             return DASHBOARD_OCCUPIED_COLOR;

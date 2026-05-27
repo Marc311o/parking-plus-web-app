@@ -5,6 +5,7 @@ import java.time.LocalDate
 enum class AggregationPeriod {
     DAILY,
     WEEKLY,
+    MONTHLY,
     YEARLY
 }
 

@@ -195,9 +195,8 @@ export const ParkingMap = ({
                         position: 'relative',
                         minWidth: 0,
                         minHeight: 620,
-                        bgcolor: isStatisticsVariant ? '#FFFFFF' : '#232328',
-                        border: isStatisticsVariant ? '6px solid #8E24AA' : 'none',
-                        borderRight: 'none',
+                        bgcolor: '#232328',
+                        border: 'none',
                         borderTopLeftRadius: 16,
                         borderBottomLeftRadius: 16,
                         overflow: 'hidden',
@@ -210,7 +209,7 @@ export const ParkingMap = ({
                             top: 330,
                             width: 20,
                             height: 150,
-                            bgcolor: isStatisticsVariant ? '#E5C9EA' : '#2C2C33',
+                            bgcolor: '#2C2C33',
                         }}
                     />
 
@@ -221,7 +220,7 @@ export const ParkingMap = ({
                             top: 54,
                             width: 96,
                             height: 320,
-                            bgcolor: isStatisticsVariant ? '#E5C9EA' : '#2C2C33',
+                            bgcolor: '#2C2C33',
                         }}
                     />
 

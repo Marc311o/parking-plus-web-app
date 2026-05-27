@@ -15,7 +15,6 @@ const ParkingLevelSwitch = ({
                                 variant = 'dashboard',
                             }: ParkingLevelSwitchProps) => {
     const levels: ParkingLevel[] = ['B', 'A'];
-    const isStatisticsVariant = variant === 'statistics';
 
     return (
         <Box
@@ -25,7 +24,7 @@ const ParkingLevelSwitch = ({
                 minWidth: 44,
                 display: 'flex',
                 flexDirection: 'column',
-                bgcolor: isStatisticsVariant ? '#D8D8D8' : '#D9D9DE',
+                bgcolor: '#D9D9DE',
                 borderTopRightRadius: 16,
                 borderBottomRightRadius: 16,
                 overflow: 'hidden',
@@ -46,21 +45,15 @@ const ParkingLevelSwitch = ({
                             alignItems: 'center',
                             justifyContent: 'center',
                             bgcolor: active
-                                ? isStatisticsVariant
-                                    ? '#B6B6B6'
-                                    : '#BFC0C5'
+                                ? '#BFC0C5'
                                 : 'transparent',
                             borderTop:
                                 index === 1 ? '1px solid rgba(0,0,0,0.08)' : 'none',
                             transition: 'background-color 0.2s ease',
                             '&:hover': {
                                 bgcolor: active
-                                    ? isStatisticsVariant
-                                        ? '#B6B6B6'
-                                        : '#BFC0C5'
-                                    : isStatisticsVariant
-                                        ? '#C9C9C9'
-                                        : '#CECFD4',
+                                    ? '#BFC0C5'
+                                    : '#CECFD4',
                             },
                         }}
                     >
@@ -68,7 +61,7 @@ const ParkingLevelSwitch = ({
                             sx={{
                                 fontSize: 18,
                                 fontWeight: 700,
-                                color: isStatisticsVariant ? '#8E24AA' : '#111111',
+                                color: '#111111',
                                 lineHeight: 1,
                             }}
                         >
