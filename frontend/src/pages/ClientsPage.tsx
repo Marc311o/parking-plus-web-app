@@ -51,12 +51,21 @@ export default function ClientsPage() {
         {
             key: 'fullName',
             width: '1fr',
-            render: (client) => `${client.name} ${client.surname}`,
+            render: (client) => (
+
+                <span style={{ fontWeight: 600, color: '#7F0F96' }}>
+                {client.name} {client.surname}
+            </span>
+            ),
         },
         {
             key: 'email',
             width: '1.4fr',
-            render: (client) => client.email,
+            render: (client) => (
+                <span style={{ fontWeight: 600, color: '#7F0F96' }}>
+                {client.email}
+            </span>
+            ),
         },
     ], []);
 
@@ -164,11 +173,11 @@ export default function ClientsPage() {
                         sx={{
                             width: 38,
                             height: 38,
-                            bgcolor: '#FFFFFF',
+                            bgcolor: '#F3F4F6',
                             color: '#000000',
                         }}
                     >
-                        <PersonIcon/>
+                        <PersonIcon sx={{ color: '#7F0F96' }} />
                     </Avatar>
                 )}
                 columns={columns}

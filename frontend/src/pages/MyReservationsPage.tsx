@@ -206,16 +206,17 @@ const MyReservationsPage = () => {
                 key: 'start_time',
                 width: '1.2fr',
                 render: (item) => (
-                    <span>
+                    <span style={{fontWeight: 600, color: '#7F0F96'}}>
                         {formatMessage({id: `myReservations.start`,})}: {item.start_time}
                     </span>
+
                 ),
             },
             {
                 key: 'end_time',
                 width: '1.2fr',
                 render: (item) => (
-                    <span>
+                    <span style={{fontWeight: 600, color: '#7F0F96'}}>
                         {formatMessage({id: `myReservations.end`,})}: {item.end_time}
                     </span>
                 ),
@@ -224,8 +225,8 @@ const MyReservationsPage = () => {
                 key: 'price',
                 width: '0.7fr',
                 render: (item) => (
-                    <span>
-                        {item.price.toFixed(2)} zł
+                    <span style={{fontWeight: 600, color: '#7F0F96'}}>
+                       {item.price.toFixed(2)} zł
                     </span>
                 ),
             },
