@@ -284,7 +284,7 @@
   "clients": {
     "list": {
       "empty": "Brak klientów",
-      "vehiclesButton": "pojazdy"
+      "vehiclesButton": "Pojazdy"
     },
     "vehiclesDialog": {
       "title": "Pojazdy",

@@ -284,7 +284,7 @@
   "clients": {
     "list": {
       "empty": "No clients found",
-      "vehiclesButton": "vehicles"
+      "vehiclesButton": "Vehicles"
     },
     "vehiclesDialog": {
       "title": "Vehicles",
