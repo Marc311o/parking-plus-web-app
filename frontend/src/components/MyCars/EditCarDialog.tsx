@@ -13,6 +13,7 @@ import {
     Typography,
     IconButton,
     Avatar,
+    Alert,
 } from '@mui/material';
 
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -37,6 +38,13 @@ const CAR_TYPES: CarType[] = [
     'EV_HANDICAPED',
 ];
 
+const LICENSE_PLATE_REGEX =
+    /^([A-Z]{1,3}) ([0-9]{4,5}|[0-9A-Z]{4,5}|[0-9A-Z]{3,5})$/;
+
+const isValidLicensePlate = (plate: string): boolean => {
+    return LICENSE_PLATE_REGEX.test(plate.trim().toUpperCase());
+};
+
 export default function EditCarDialog({
                                           open,
                                           onClose,
@@ -47,38 +55,57 @@ export default function EditCarDialog({
 
     const [licensePlate, setLicensePlate] = useState('');
     const [carType, setCarType] = useState<CarType>('REGULAR_ABLEBODIED');
+
     const [loading, setLoading] = useState(false);
+    const [plateError, setPlateError] = useState(false);
 
     useEffect(() => {
         if (vehicle) {
             setLicensePlate(vehicle.licensePlate);
             setCarType(vehicle.carType);
+            setPlateError(false);
         }
     }, [vehicle]);
 
+    const handleClose = () => {
+        setPlateError(false);
+        setLicensePlate('');
+        setCarType('REGULAR_ABLEBODIED');
+        onClose();
+    };
+
     const handleSubmit = async () => {
         if (!vehicle) return;
+
+        const normalizedPlate = licensePlate.trim().toUpperCase();
+
+        if (!isValidLicensePlate(normalizedPlate)) {
+            setPlateError(true);
+            return;
+        }
+
+        setPlateError(false);
 
         try {
             setLoading(true);
 
             await onSubmit(vehicle.id, {
-                licensePlate: licensePlate.trim(),
+                licensePlate: normalizedPlate,
                 carType,
                 ownerId: vehicle.ownerId,
             } as any);
 
-            onClose();
+            handleClose();
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
 
             <IconButton
-                onClick={onClose}
+                onClick={handleClose}
                 disableRipple
                 sx={{
                     position: 'absolute',
@@ -129,13 +156,25 @@ export default function EditCarDialog({
             <DialogContent sx={{ bgcolor: '#FBF7FC', pt: '24px !important' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
 
+                    {plateError && (
+                        <Alert severity="error" sx={{ width: '100%' }}>
+                            {formatMessage({
+                                id: 'myCars.addDialog.licensePlateFormatError',
+                            })}
+                        </Alert>
+                    )}
+
                     <TextField
                         fullWidth
                         label={formatMessage({
                             id: 'myCars.fields.licensePlate',
                         })}
                         value={licensePlate}
-                        onChange={(e) => setLicensePlate(e.target.value)}
+                        onChange={(e) => {
+                            setLicensePlate(e.target.value);
+                            setPlateError(false);
+                        }}
+                        error={plateError}
                     />
 
                     <FormControl fullWidth>
@@ -168,7 +207,7 @@ export default function EditCarDialog({
             </DialogContent>
 
             <DialogActions sx={{ px: 3, pb: 3, bgcolor: '#FBF7FC' }}>
-                <Button onClick={onClose} color="inherit">
+                <Button onClick={handleClose} color="inherit">
                     {formatMessage({ id: 'myCars.fields.cancel' })}
                 </Button>
 

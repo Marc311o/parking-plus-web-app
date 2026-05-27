@@ -451,7 +451,8 @@
     },
     "addCar": "Dodaj samochód",
     "addDialog": {
-      "title": "Dodaj pojazd"
+      "title": "Dodaj pojazd",
+      "incorrectPlateFormat": "Tablica rejestracyjna powinna mieć format: 2–3 litery, spacja, 3–5 znaków (np. WA 12345)."
     },
     "fields": {
       "licensePlate": "Numer rejestracyjny",

@@ -451,7 +451,8 @@
     },
     "addCar": "Add car",
     "addDialog": {
-      "title": "Add vehicle"
+      "title": "Add vehicle",
+      "licensePlateFormatError": "The license plate should follow the format: 2–3 letters, a space, and 3–5 characters (e.g. WA 12345)."
     },
     "fields": {
       "licensePlate": "License plate",

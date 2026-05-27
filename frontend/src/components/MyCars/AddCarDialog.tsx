@@ -13,6 +13,7 @@ import {
     Typography,
     IconButton,
     Avatar,
+    Alert,
 } from '@mui/material';
 
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -45,30 +46,53 @@ export default function AddCarDialog({
                                      }: Props) {
     const {formatMessage} = useIntl();
 
+    const [plateError, setPlateError] = useState(false);
+
     const [licensePlate, setLicensePlate] = useState('');
     const [carType, setCarType] =
         useState<CarType>('REGULAR_ABLEBODIED');
 
     const [loading, setLoading] = useState(false);
 
+    const handleClose = () => {
+        setPlateError(false);
+        setLicensePlate('');
+        setCarType('REGULAR_ABLEBODIED');
+        onClose();
+    };
+
+    const LICENSE_PLATE_REGEX =
+        /^([A-Z]{1,3}) ([0-9]{4,5}|[0-9A-Z]{4,5}|[0-9A-Z]{3,5})$/;
+
+    const isValidLicensePlate = (plate: string): boolean => {
+        return LICENSE_PLATE_REGEX.test(plate.trim().toUpperCase());
+    };
+
     const handleSubmit = async () => {
-        if (ownerId == null) {
+        if (ownerId == null) return;
+
+        const normalizedPlate = licensePlate.trim().toUpperCase();
+
+        if (!isValidLicensePlate(normalizedPlate)) {
+            setPlateError(true);
             return;
         }
+
+        setPlateError(false);
+
 
         try {
             setLoading(true);
 
             await onSubmit({
-                licensePlate: licensePlate.trim(),
+                licensePlate: normalizedPlate,
                 ownerId,
                 carType,
             });
 
             setLicensePlate('');
             setCarType('REGULAR_ABLEBODIED');
-
-            onClose();
+            handleClose();
         } finally {
             setLoading(false);
         }
@@ -77,7 +101,7 @@ export default function AddCarDialog({
     return (
         <Dialog
             open={open}
-            onClose={onClose}
+            onClose={handleClose}
             fullWidth
             maxWidth="xs"
         >
@@ -156,6 +180,14 @@ export default function AddCarDialog({
                         gap: 2,
                     }}
                 >
+
+                    {plateError && (
+                        <Alert severity="error" sx={{ width: '100%' }}>
+                            {formatMessage({
+                                id: 'myCars.addDialog.licensePlateFormatError',
+                            })}
+                        </Alert>
+                    )}
                     <TextField
                         fullWidth
                         label={formatMessage({
