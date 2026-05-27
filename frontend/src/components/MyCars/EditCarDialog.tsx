@@ -19,10 +19,10 @@ import {
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 
-import {useIntl} from 'react-intl';
-import {useEffect, useState} from 'react';
+import { useIntl } from 'react-intl';
+import { useEffect, useState } from 'react';
 
-import type {CarType, VehicleDTO} from '@api/MyCars';
+import type { CarType, VehicleDTO } from '@api/MyCars';
 
 interface Props {
     open: boolean;
@@ -41,9 +41,8 @@ const CAR_TYPES: CarType[] = [
 const LICENSE_PLATE_REGEX =
     /^([A-Z]{1,3}) ([0-9]{4,5}|[0-9A-Z]{4,5}|[0-9A-Z]{3,5})$/;
 
-const isValidLicensePlate = (plate: string): boolean => {
-    return LICENSE_PLATE_REGEX.test(plate.trim().toUpperCase());
-};
+const isValidLicensePlate = (plate: string): boolean =>
+    LICENSE_PLATE_REGEX.test(plate.trim().toUpperCase());
 
 export default function EditCarDialog({
                                           open,
@@ -51,20 +50,20 @@ export default function EditCarDialog({
                                           onSubmit,
                                           vehicle,
                                       }: Props) {
-    const {formatMessage} = useIntl();
+    const { formatMessage } = useIntl();
 
-    const [licensePlate, setLicensePlate] = useState('');
-    const [carType, setCarType] = useState<CarType>('REGULAR_ABLEBODIED');
-
-    const [loading, setLoading] = useState(false);
     const [plateError, setPlateError] = useState(false);
+    const [licensePlate, setLicensePlate] = useState('');
+    const [carType, setCarType] =
+        useState<CarType>('REGULAR_ABLEBODIED');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (vehicle) {
-            setLicensePlate(vehicle.licensePlate);
-            setCarType(vehicle.carType);
-            setPlateError(false);
-        }
+        if (!vehicle) return;
+
+        setLicensePlate(vehicle.licensePlate);
+        setCarType(vehicle.carType);
+        setPlateError(false);
     }, [vehicle]);
 
     const handleClose = () => {
@@ -93,7 +92,7 @@ export default function EditCarDialog({
                 licensePlate: normalizedPlate,
                 carType,
                 ownerId: vehicle.ownerId,
-            } as any);
+            });
 
             handleClose();
         } finally {
@@ -103,27 +102,32 @@ export default function EditCarDialog({
 
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
-
+            {/* CLOSE BUTTON */}
             <IconButton
                 onClick={handleClose}
                 disableRipple
                 sx={{
                     position: 'absolute',
                     top: 22,
-                    right: 0,
+                    right: 16,
                     zIndex: 2,
                     color: '#FFFFFF',
                     p: 0,
-                    '&:hover': { bgcolor: 'transparent', opacity: 0.75 },
+                    '&:hover': {
+                        bgcolor: 'transparent',
+                        opacity: 0.75,
+                    },
                 }}
             >
                 <CloseRoundedIcon />
             </IconButton>
 
+            {/* HEADER */}
             <DialogTitle
                 sx={{
                     p: 0,
-                    background: 'linear-gradient(135deg, #5E076E 0%, #C13BDB 100%)',
+                    background:
+                        'linear-gradient(135deg, #5E076E 0%, #C13BDB 100%)',
                     color: '#FFFFFF',
                 }}
             >
@@ -153,11 +157,18 @@ export default function EditCarDialog({
                 </Box>
             </DialogTitle>
 
-            <DialogContent sx={{ bgcolor: '#FBF7FC', pt: '24px !important' }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-
+            {/* CONTENT */}
+            <DialogContent sx={{ p: 0, bgcolor: '#FBF7FC' }}>
+                <Box
+                    sx={{
+                        p: 3,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2,
+                    }}
+                >
                     {plateError && (
-                        <Alert severity="error" sx={{ width: '100%' }}>
+                        <Alert severity="error">
                             {formatMessage({
                                 id: 'myCars.addDialog.licensePlateFormatError',
                             })}
@@ -174,7 +185,6 @@ export default function EditCarDialog({
                             setLicensePlate(e.target.value);
                             setPlateError(false);
                         }}
-                        error={plateError}
                     />
 
                     <FormControl fullWidth>
@@ -202,10 +212,10 @@ export default function EditCarDialog({
                             ))}
                         </Select>
                     </FormControl>
-
                 </Box>
             </DialogContent>
 
+            {/* ACTIONS */}
             <DialogActions sx={{ px: 3, pb: 3, bgcolor: '#FBF7FC' }}>
                 <Button onClick={handleClose} color="inherit">
                     {formatMessage({ id: 'myCars.fields.cancel' })}

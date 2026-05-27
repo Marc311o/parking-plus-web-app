@@ -69,7 +69,7 @@ export default function ClientVehiclesDialog({
                 sx={{
                     position: 'absolute',
                     top: 22,
-                    right: 0,
+                    right: 16,
                     zIndex: 2,
                     color: '#FFFFFF',
                     p: 0,
@@ -277,24 +277,24 @@ export default function ClientVehiclesDialog({
                                                 />
                                             </Box>
 
-                                            <Divider sx={{my: 1.2}}/>
+                                            {/*<Divider sx={{my: 1.2}}/>*/}
 
-                                            <Box
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: 0.8,
-                                                    color: '#777777',
-                                                }}
-                                            >
-                                                <ConfirmationNumberRoundedIcon sx={{fontSize: 17}}/>
-                                                <Typography sx={{fontSize: 13, fontWeight: 600}}>
-                                                    {formatMessage(
-                                                        {id: 'clients.vehiclesDialog.vehicleId'},
-                                                        {id: vehicle.id ?? '-'},
-                                                    )}
-                                                </Typography>
-                                            </Box>
+                                            {/*<Box*/}
+                                            {/*    sx={{*/}
+                                            {/*        display: 'flex',*/}
+                                            {/*        alignItems: 'center',*/}
+                                            {/*        gap: 0.8,*/}
+                                            {/*        color: '#777777',*/}
+                                            {/*    }}*/}
+                                            {/*>*/}
+                                            {/*    <ConfirmationNumberRoundedIcon sx={{fontSize: 17}}/>*/}
+                                            {/*    <Typography sx={{fontSize: 13, fontWeight: 600}}>*/}
+                                            {/*        {formatMessage(*/}
+                                            {/*            {id: 'clients.vehiclesDialog.vehicleId'},*/}
+                                            {/*            {id: vehicle.id ?? '-'},*/}
+                                            {/*        )}*/}
+                                            {/*    </Typography>*/}
+                                            {/*</Box>*/}
                                         </Box>
                                     </Box>
                                 </Paper>
