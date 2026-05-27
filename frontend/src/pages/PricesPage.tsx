@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {Alert, Box, Popover, Button, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
 import {getTariffs, updateTariff, createTariff, deleteTariff, type TariffDTO} from '@api/Tariffs';
@@ -97,7 +97,7 @@ const PricesPage = () => {
     const [workingTariffs, setWorkingTariffs] = useState<TariffDTO[]>([]);
 
     const [selectedBlockKey, setSelectedBlockKey] = useState<string | null>(null);
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [anchorEl, setAnchorEl] = useState<any | null>(null);
 
     const [editState, setEditState] = useState<EditState>({
         firstHourPrice: '0',
@@ -116,24 +116,24 @@ const PricesPage = () => {
     const user = useAuthStore((state) => state.user);
     const isAdmin = user?.isOperator === true;
 
-    const fetchTariffs = async () => {
+    const fetchTariffs = useCallback(async () => {
         setIsLoading(true);
         setError(null);
         try {
             const result = await getTariffs();
             setServerTariffs(result);
-            setWorkingTariffs(JSON.parse(JSON.stringify(result)));
+            setWorkingTariffs(result.map(t => ({...t})));
         } catch (err) {
             console.error(err);
             setError(intl.formatMessage({id: 'prices.errors.fetchTariffs'}));
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [intl]);
 
     useEffect(() => {
         void fetchTariffs();
-    }, [intl]);
+    }, [fetchTariffs]);
 
     const filteredTariffs = useMemo(() => {
         return workingTariffs.filter(t => {
@@ -178,7 +178,10 @@ const PricesPage = () => {
         });
         setEditorError(null);
         if (isAdmin) {
-            setAnchorEl(event.currentTarget);
+            const rect = event.currentTarget.getBoundingClientRect();
+            setAnchorEl({
+                getBoundingClientRect: () => rect,
+            });
         }
     };
 
@@ -260,7 +263,10 @@ const PricesPage = () => {
         });
         setEditorError(null);
         if (isAdmin) {
-            setAnchorEl(event.currentTarget);
+            const rect = event.currentTarget.getBoundingClientRect();
+            setAnchorEl({
+                getBoundingClientRect: () => rect,
+            });
         }
     };
 
@@ -284,13 +290,11 @@ const PricesPage = () => {
         if (!nextState.originalKey) return;
         const [origDay, , origStart, origEnd] = nextState.originalKey.split('-').map(Number);
 
-        // Overlap check (only within same view, respecting tiered structure)
         const overlaps = filteredTariffs.some(t => {
             const isMatch = t.dayOfWeek === origDay && t.startHour === origStart && t.endHour === origEnd;
-            if (isMatch) return false; // Ignore records of the slot we are currently editing
+            if (isMatch) return false;
 
             if (t.dayOfWeek !== nextState.selectedDay) return false;
-            // Range check: t1.start < t2.end && t1.end > t2.start
             return (nextState.startHour < t.endHour) && (nextState.endHour > t.startHour);
         });
 
@@ -366,12 +370,10 @@ const PricesPage = () => {
         setIsSaving(true);
         setError(null);
         try {
-            // 1. Deletions
             const currentIds = workingTariffs.map(t => t.id).filter(id => id !== undefined);
             const toDelete = serverTariffs.filter(t => t.id !== undefined && !currentIds.includes(t.id));
             for (const t of toDelete) await deleteTariff(t.id!);
 
-            // 2. Creations & Updates
             for (const t of workingTariffs) {
                 if (t.id === undefined) {
                     await createTariff(t);

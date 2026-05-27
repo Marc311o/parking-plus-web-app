@@ -1,4 +1,4 @@
-import {Box, Typography} from '@mui/material';
+import {Box, Typography, IconButton} from '@mui/material';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import {useIntl} from 'react-intl';
@@ -128,25 +128,29 @@ const TariffScheduleTile = ({
                                 opacity: selected ? 1 : 0.6,
                             }}
                         />
-                        <CloseRoundedIcon
+                        <IconButton
                             onClick={(e) => {
                                 e.stopPropagation();
                                 onDelete(e);
                             }}
+                            aria-label={intl.formatMessage({id: 'prices.errors.deleteTariff'})}
+                            size="small"
                             sx={{
                                 position: 'absolute',
-                                top: 4,
-                                right: 4,
-                                fontSize: isCompact ? 14 : 18,
+                                top: 2,
+                                right: 2,
                                 color: '#DC2626',
                                 opacity: 0.7,
                                 transition: '0.2s',
                                 '&:hover': {
                                     opacity: 1,
                                     transform: 'scale(1.1)',
+                                    bgcolor: 'rgba(220, 38, 38, 0.08)',
                                 }
                             }}
-                        />
+                        >
+                            <CloseRoundedIcon sx={{ fontSize: isCompact ? 16 : 20 }} />
+                        </IconButton>
                     </>
                 )}
 

@@ -18,7 +18,7 @@ data class TariffDTO(
     @field:Min(0) @field:Max(23)
     var startHour: Int = 0,
 
-    @field:Min(0) @field:Max(24)
+    @field:Min(1) @field:Max(24)
     var endHour: Int = 24,
 
     var isFirstHour: Boolean = true,
