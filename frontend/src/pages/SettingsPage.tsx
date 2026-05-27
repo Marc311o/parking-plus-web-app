@@ -10,7 +10,6 @@ import {
     Box,
     Tabs,
     Tab,
-    Paper,
     Typography,
     Stack,
     Divider,
@@ -118,51 +117,49 @@ const SettingsPage = () => {
         <Box
             sx={{
                 width: '100%',
-                minHeight: '100vh',
+                height: '100%',
                 p: 3,
                 boxSizing: 'border-box',
+                overflow: 'hidden',
             }}
         >
-            <Paper
+            <Tabs
+                value={tab}
+                onChange={(_, v) => {
+                    setTab(v);
+                    setMfaError(null);
+                }}
+                variant="fullWidth"
                 sx={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: 3,
-                    overflow: 'hidden',
+                    mb: 3,
+                    borderBottom: '1px solid',
+                    borderColor: 'divider',
                 }}
             >
-                <Tabs
-                    value={tab}
-                    onChange={(_, v) => {
-                        setTab(v);
-                        setMfaError(null);
-                    }}
-                    variant="fullWidth"
-                >
-                    <Tab label={<FormattedMessage id="settings.tabs_general"/>}/>
-                    <Tab label={<FormattedMessage id="settings.tabs_account"/>}/>
-                </Tabs>
+                <Tab label={<FormattedMessage id="settings.tabs_general" />} />
+                <Tab label={<FormattedMessage id="settings.tabs_account" />} />
+            </Tabs>
 
-                <Box sx={{p: 4}}>
-                    {/* ================= GENERAL ================= */}
-                    {tab === 0 && (
-                        <TextField
-                            select
-                            fullWidth
-                            label={intl.formatMessage({
-                                id: 'settings.language',
-                            })}
-                            value={locale}
-                            onChange={(e) =>
-                                setLocale(e.target.value as 'pl' | 'en')
-                            }
-                        >
-                            <MenuItem value="pl">🇵🇱 Polski</MenuItem>
-                            <MenuItem value="en">🇬🇧 English</MenuItem>
-                        </TextField>
-                    )}
+            <Box sx={{ width: '100%' }}>
+                {/* ================= GENERAL ================= */}
+                {tab === 0 && (
+                    <TextField
+                        select
+                        fullWidth
+                        label={intl.formatMessage({
+                            id: 'settings.language',
+                        })}
+                        value={locale}
+                        onChange={(e) =>
+                            setLocale(e.target.value as 'pl' | 'en')
+                        }
+                    >
+                        <MenuItem value="pl">🇵🇱 Polski</MenuItem>
+                        <MenuItem value="en">🇬🇧 English</MenuItem>
+                    </TextField>
+                )}
 
-                    {/* ================= ACCOUNT ================= */}
+                {/* ================= ACCOUNT ================= */}
                     {tab === 1 && (
                         <Stack spacing={3}>
 
@@ -293,7 +290,6 @@ const SettingsPage = () => {
                         </Stack>
                     )}
                 </Box>
-            </Paper>
         </Box>
     );
 };
