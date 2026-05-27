@@ -173,11 +173,11 @@ export default function ClientsPage() {
                         sx={{
                             width: 38,
                             height: 38,
-                            bgcolor: '#FFFFFF',
+                            bgcolor: '#F3F4F6',
                             color: '#000000',
                         }}
                     >
-                        <PersonIcon/>
+                        <PersonIcon sx={{ color: '#7F0F96' }} />
                     </Avatar>
                 )}
                 columns={columns}
