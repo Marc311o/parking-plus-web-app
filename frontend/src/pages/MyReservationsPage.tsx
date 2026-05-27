@@ -1,5 +1,5 @@
 import {useEffect, useMemo} from 'react';
-import {Box, Avatar, Alert} from '@mui/material';
+import {Box, Avatar, Alert, Button} from '@mui/material';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
 import {useSearchParams} from 'react-router-dom';
 import {useState} from 'react';
@@ -245,28 +245,6 @@ const MyReservationsPage = () => {
                 ),
             },
 
-            {
-                key: 'actions',
-                width: '0.8fr',
-                render: (item) => (
-                    <button
-                        onClick={() =>
-                            handleOpenDetails(item)
-                        }
-                        style={{
-                            background: '#7F0F96',
-                            color: '#FFFFFF',
-                            border: 'none',
-                            borderRadius: 8,
-                            padding: '6px 12px',
-                            cursor: 'pointer',
-                            fontWeight: 600,
-                        }}
-                    >
-                        Details
-                    </button>
-                ),
-            },
 
         ],
         [formatMessage, handleOpenDetails, getStatusColor, formatReservationStatus]
@@ -315,6 +293,11 @@ const MyReservationsPage = () => {
                         <EventSeatIcon/>
                     </Avatar>
                 )}
+
+                action={{
+                    label: formatMessage({id: 'events.list.details'}),
+                    onClick: (e) => handleOpenDetails(e),
+                }}
             />
 
 

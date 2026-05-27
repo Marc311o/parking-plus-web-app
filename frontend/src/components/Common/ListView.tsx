@@ -256,19 +256,17 @@ export default function ListView<T extends { id: number | string }>({
                             size="small"
                             onClick={() => action.onClick(item)}
                             sx={{
-                                minWidth: 74,
-                                height: 28,
-                                px: 1.5,
-                                borderRadius: '8px',
+                                minWidth: 120,
+                                height: 34,
+                                borderRadius: 1.5,
                                 textTransform: 'none',
-                                fontSize: 12,
-                                fontWeight: 700,
-                                color: '#FFFFFF',
+                                fontSize: 13,
+                                fontWeight: 600,
                                 boxShadow: 'none',
                                 background: 'linear-gradient(90deg, #C13BDB 0%, #8B1F9E 100%)',
                                 '&:hover': {
                                     boxShadow: 'none',
-                                    background: 'linear-gradient(90deg, #B632CF 0%, #7D1B8F 100%)',
+                                    background: 'linear-gradient(90deg, #b232ca 0%, #7d1b8f 100%)',
                                 },
                             }}
                         >
