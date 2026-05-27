@@ -93,7 +93,7 @@ const EventsPage = () => {
                 const date = parseDate(item.eventDate);
 
                 return (
-                    <span style={{color, fontWeight: 600}}>
+                    <span style={{ fontWeight: 600, color: '#7F0F96' }}>
             {date.toLocaleDateString('pl-PL')}
         </span>
                 );
@@ -108,7 +108,7 @@ const EventsPage = () => {
                 const date = parseDate(item.eventDate);
 
                 return (
-                    <span style={{color, fontWeight: 600}}>
+                    <span style={{ fontWeight: 600, color: '#7F0F96' }}>
                         {date.toLocaleTimeString('pl-PL', {
                             hour: '2-digit',
                             minute: '2-digit',
@@ -134,7 +134,7 @@ const EventsPage = () => {
             width: '1fr',
             render: (item) => {
                 const color = '#000000';
-                return <span style={{color, fontWeight: 600}}>{item.plateNumber}</span>;
+                return <span style={{ fontWeight: 600, color: '#7F0F96' }}>{item.plateNumber}</span>;
             },
         },
     ], [formatMessage]);

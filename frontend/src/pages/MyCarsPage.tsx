@@ -193,8 +193,8 @@ const MyCarsPage = () => {
             width: '1fr',
             render: (item) => (
                 <span style={{ fontWeight: 600, color: '#7F0F96' }}>
-                {formatCarType(item.carType)}
-            </span>
+                    {formatCarType(item.carType)}
+                </span>
             ),
         },
         {

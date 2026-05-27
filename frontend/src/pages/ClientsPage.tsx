@@ -52,7 +52,8 @@ export default function ClientsPage() {
             key: 'fullName',
             width: '1fr',
             render: (client) => (
-                <span style={{ fontWeight: 600, color: '#000000' }}>
+
+                <span style={{ fontWeight: 600, color: '#7F0F96' }}>
                 {client.name} {client.surname}
             </span>
             ),
@@ -61,7 +62,7 @@ export default function ClientsPage() {
             key: 'email',
             width: '1.4fr',
             render: (client) => (
-                <span style={{ fontWeight: 600, color: '#000000' }}>
+                <span style={{ fontWeight: 600, color: '#7F0F96' }}>
                 {client.email}
             </span>
             ),
