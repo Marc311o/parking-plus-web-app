@@ -1,32 +1,35 @@
 import {useEffect, useState} from 'react';
 import {
     Box,
-    MenuItem,
     Paper,
-    Select,
     Typography,
 } from '@mui/material';
 import {useIntl} from 'react-intl';
 import {
     type ParkingFloor,
     type ParkingSpaceRankingResponse,
+    type EntriesPeriod,
 } from '@api/Statistics';
-import {StatisticsDatePicker} from './StatisticsDatePicker';
+import {StatisticsPeriodDatePicker} from './StatisticsPeriodDatePicker';
 
 type ParkingSpaceRankingChartProps = {
     data: ParkingSpaceRankingResponse;
+    selectedPeriod: EntriesPeriod;
     selectedDate: string;
     selectedFloor: ParkingFloor;
     floors: ParkingFloor[];
+    onPeriodChange: (period: EntriesPeriod) => void;
     onDateChange: (date: string) => void;
     onFloorChange: (floor: ParkingFloor) => void;
 };
 
 export const ParkingSpaceRankingChart = ({
                                              data,
+                                             selectedPeriod,
                                              selectedDate,
                                              selectedFloor,
                                              floors,
+                                             onPeriodChange,
                                              onDateChange,
                                              onFloorChange,
                                          }: ParkingSpaceRankingChartProps) => {
@@ -49,6 +52,32 @@ export const ParkingSpaceRankingChart = ({
     const selectedPoint =
         data.points.find((point) => point.spaceId === selectedSpaceId) ??
         data.points[0];
+
+    const periods = [
+        {
+            value: 'DAILY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.daily'}),
+        },
+        {
+            value: 'WEEKLY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.weekly'}),
+        },
+        {
+            value: 'MONTHLY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.monthly'}),
+        },
+        {
+            value: 'YEARLY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.yearly'}),
+        },
+    ];
+
+    const getRankingDatePickerMode = (period: EntriesPeriod) => {
+        if (period === 'YEARLY') return 'year';
+        if (period === 'MONTHLY') return 'month';
+        if (period === 'WEEKLY') return 'week';
+        return 'day';
+    };
 
     return (
         <Paper
@@ -125,11 +154,11 @@ export const ParkingSpaceRankingChart = ({
                 <Box
                     sx={{
                         display: 'flex',
-                        alignItems: 'center',
-                        gap: 1.2,
+                        alignItems: 'stretch',
+                        gap: 1.5,
                         flexWrap: {
                             xs: 'wrap',
-                            xl: 'nowrap',
+                            lg: 'nowrap',
                         },
                         justifyContent: {
                             xs: 'flex-start',
@@ -139,48 +168,56 @@ export const ParkingSpaceRankingChart = ({
                 >
                     <Box
                         sx={{
-                            minWidth: 170,
+                            width: { xs: '100%', sm: 80 },
+                            height: { lg: 120 },
                             bgcolor: '#F7F5FD',
                             borderRadius: '22px',
-                            p: 1,
+                            p: 0.8,
+                            display: 'flex',
+                            flexDirection: { xs: 'row', lg: 'column' },
+                            gap: 0.6,
                             border: '1px solid #EEEAF8',
+                            boxSizing: 'border-box'
                         }}
                     >
-                        <Select
-                            value={selectedFloor}
-                            onChange={(event) =>
-                                onFloorChange(event.target.value as ParkingFloor)
-                            }
-                            size="small"
-                            fullWidth
-                            sx={{
-                                height: 44,
-                                borderRadius: '16px',
-                                bgcolor: '#FFFFFF',
-                                color: '#1F1A3D',
-                                fontSize: 13,
-                                fontWeight: 900,
-                                boxShadow: '0 6px 14px rgba(31,26,61,0.06)',
-                                '& fieldset': {
-                                    border: 'none',
-                                },
-                            }}
-                        >
-                            {floors.map((floor) => (
-                                <MenuItem key={floor} value={floor}>
-                                    {formatMessage(
-                                        {id: 'statistics.spaceRanking.floor'},
-                                        {floor}
-                                    )}
-                                </MenuItem>
-                            ))}
-                        </Select>
+                        {floors.map((floor) => {
+                            const isSelected = floor === selectedFloor;
+                            return (
+                                <Box
+                                    key={floor}
+                                    onClick={() => onFloorChange(floor)}
+                                    sx={{
+                                        flex: 1,
+                                        borderRadius: '16px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        bgcolor: isSelected ? '#211C43' : 'transparent',
+                                        color: isSelected ? '#FFFFFF' : '#9B96B7',
+                                        fontSize: 16,
+                                        fontWeight: 900,
+                                        transition: '0.2s ease',
+                                        userSelect: 'none',
+                                        '&:hover': {
+                                            bgcolor: isSelected ? '#211C43' : '#FFFFFF',
+                                            color: isSelected ? '#FFFFFF' : '#7A2DFF',
+                                        },
+                                    }}
+                                >
+                                    {floor}
+                                </Box>
+                            );
+                        })}
                     </Box>
 
-                    <StatisticsDatePicker
-                        mode="day"
-                        value={selectedDate}
-                        onChange={onDateChange}
+                    <StatisticsPeriodDatePicker
+                        periods={periods}
+                        selectedPeriod={selectedPeriod}
+                        selectedDate={selectedDate}
+                        getMode={getRankingDatePickerMode}
+                        onPeriodChange={onPeriodChange}
+                        onDateChange={onDateChange}
                     />
                 </Box>
             </Box>

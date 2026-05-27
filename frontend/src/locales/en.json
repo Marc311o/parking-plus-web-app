@@ -6,14 +6,14 @@
       "emailPlaceholder": "Email",
       "passwordLabel": "Password",
       "passwordPlaceholder": "Password",
-      "passwordForgot": "Forgot password",
-      "loginButton": "Log in",
+      "passwordForgot": "Forgot password?",
+      "loginButton": "Log In",
       "newAccButton": "Create account"
     },
     "2fa": {
       "title": "2FA VERIFICATION",
       "description": "Enter the code from your Authenticator app",
-      "codeLabel": "2FA code",
+      "codeLabel": "2FA Code",
       "codePlaceholder": "6-digit code",
       "verifyButton": "Verify",
       "backButton": "Back"
@@ -34,18 +34,18 @@
       "backButton": "Back"
     },
     "resetPassword": {
-      "title": "RESET PASSWORD",
+      "title": "PASSWORD RESET",
       "passwordLabel": "New password",
       "passwordPlaceholder": "New password",
       "confirmPasswordLabel": "Confirm password",
       "confirmPasswordPlaceholder": "Confirm password",
       "verifyButton": "Verify",
-      "resetButton": "Resetting...",
+      "resetButton": "Resetting ...",
       "backButton": "Back",
-      "success": "Password has been successfully changed"
+      "success": "Password has been changed successfully"
     },
     "forgotPassword": {
-      "title": "FORGOT PASSWORD",
+      "title": "PASSWORD RESET",
       "description": "Enter your email address to reset your password",
       "emailLabel": "Email",
       "emailPlaceholder": "Email",
@@ -58,28 +58,30 @@
       "auth": {
         "invalidCredentials": "Invalid email or password",
         "mfaFailed": "Login error",
-        "emailTaken": "An account with this email already exists",
-        "forgotPasswordFailed": "Sending failed",
-        "resetTokenInvalid": "Token is invalid or expired",
-        "emptyFields": "All fields must be filled in",
-        "invalidCode": "Invalid 2FA code",
+        "emailTaken": "An account already exists for this email address!",
+        "forgotPasswordFailed": "Sending error",
+        "resetTokenInvalid": "The token is invalid or has expired",
+        "emptyFields": "All fields must be filled",
+        "invalidCode": "Invalid 2FA code!",
         "invalidEmail": "Invalid email address",
-        "passwordTooShort": "Password should be at least 12 characters",
-        "passwordTooShort12": "Password should be at least 12 characters",
+        "passwordTooShort": "Password should have at least 12 characters",
+        "passwordTooShort12": "Password should have at least 12 characters",
         "passwordContainsUserData": "Password cannot contain your personal data",
-        "passwordContainsForbiddenWord": "Password contains forbidden words related to the application",
+        "passwordContainsForbiddenWord": "Password contains prohibited words related to the app",
         "passwordTooCommon": "Password contains too simple and popular character sequences",
-        "passwordPwned": "This password has appeared in known data leaks. Choose another one.",
-        "passwordsNotMatch": "Passwords are not identical",
+        "passwordPwned": "This password has appeared in known data breaches. Please choose another.",
+        "passwordsNotMatch": "Passwords do not match",
         "unknown": "An unknown error occurred",
-        "missingToken": "Missing reset token",
-        "emailRequired": "Email is required",
-        "sendEmailFailed": "Failed to send email"
+        "emailRequired": "Fill in the email address",
+        "sendEmailFailed": "Failed to send email",
+        "missingToken": "Reset token is missing"
       }
     }
   },
+  "common": {
+    "lackOfData": "No data"
+  },
   "sidebar": {
-    "test": "test",
     "sections": {
       "menu": "Menu",
       "other": "Other"
@@ -89,9 +91,9 @@
       "statistics": "Statistics",
       "clients": "Clients",
       "events": "Events",
-      "prices": "Prices",
-      "parkingPurchase": "Buy spot",
-      "myCars": "My cars",
+      "prices": "Pricing",
+      "parkingPurchase": "Purchase space",
+      "myCars": "My vehicles",
       "myReservations": "My reservations"
     },
     "other": {
@@ -109,7 +111,7 @@
     },
     "revenue": {
       "value": "{value} PLN",
-      "label": "Today's revenue"
+      "label": "Revenue today"
     },
     "reservations": {
       "filters": {
@@ -122,7 +124,7 @@
     },
     "clients": {
       "filters": {
-        "searchPlaceholder": "Search client",
+        "searchPlaceholder": "Search for client",
         "searchButton": "Search",
         "sortLabel": "Sort by",
         "sortButton": "Sort",
@@ -138,7 +140,7 @@
     },
     "events": {
       "filters": {
-        "searchPlaceholder": "Search event",
+        "searchPlaceholder": "Search for event",
         "searchButton": "Search",
         "checkboxes": {
           "entries": "entries",
@@ -154,14 +156,14 @@
       "labels": {
         "type": "Type",
         "status": "Status",
-        "level": "Level",
-        "ownerData": "Owner",
+        "level": "Floor",
+        "ownerData": "Details",
         "email": "Email",
         "phone": "Phone",
         "entry": "Entry",
         "plate": "Plate",
         "parkingTime": "Parking time",
-        "amountDue": "Amount due"
+        "amountDue": "Due"
       },
       "statuses": {
         "FREE": "Free",
@@ -169,11 +171,11 @@
         "RESERVED": "Reserved"
       },
       "spaceTypes": {
-        "REGULAR_ABLEBODIED": "Regular",
-        "REGULAR_HANDICAPED": "Handicapped",
+        "REGULAR_ABLEBODIED": "Standard",
+        "REGULAR_HANDICAPED": "Disabled",
         "EV_ABLEBODIED": "Electric",
-        "EV_HANDICAPED": "Electric + handicapped",
-        "REGULAR_BOTH": "Regular + both",
+        "EV_HANDICAPED": "Electric + disabled",
+        "REGULAR_BOTH": "Standard + both",
         "EV_BOTH": "Electric + both"
       }
     }
@@ -188,7 +190,7 @@
       "next": "Next month"
     },
     "weekPicker": {
-      "helper": "Click any day to select the whole week from Monday to Sunday."
+      "helper": "Click any day to select the full week from Monday to Sunday."
     },
     "weekday": {
       "mondayShort": "MON",
@@ -200,85 +202,89 @@
       "sundayShort": "SUN"
     },
     "entries": {
-      "title": "Parking entries",
-      "description": "Number of entries split by days of the selected week",
-      "descriptionDaily": "Number of entries grouped hourly for the selected day",
-      "descriptionWeekly": "Number of entries split by days of the selected week",
-      "descriptionYearly": "Number of entries split by months of the selected year",
+      "title": "Parking Entries",
+      "description": "Number of entries in the selected period",
+      "descriptionDaily": "Number of vehicles entering the parking lot by hour.",
+      "descriptionWeekly": "Number of vehicles entering the parking lot by day of the week.",
+      "descriptionMonthly": "Number of vehicles entering the parking lot by day of the month.",
+      "descriptionYearly": "Number of vehicles entering the parking lot by month of the year.",
       "totalLabel": "Total",
-      "totalDescription": "entries this week",
-      "totalDescriptionDaily": "entries on selected day",
-      "totalDescriptionWeekly": "entries this week",
-      "totalDescriptionYearly": "entries this year",
+      "totalDescription": "entries in the selected period",
+      "totalDescriptionDaily": "Vehicles today",
+      "totalDescriptionWeekly": "Vehicles this week",
+      "totalDescriptionMonthly": "Vehicles this month",
+      "totalDescriptionYearly": "Vehicles this year",
       "averageLabel": "Average",
-      "averageDescription": "entries per day",
-      "averageDescriptionDaily": "entries per interval",
-      "averageDescriptionWeekly": "entries per day",
-      "averageDescriptionYearly": "entries per month",
+      "averageDescription": "entries daily",
+      "averageDescriptionDaily": "Average per hour",
+      "averageDescriptionWeekly": "Average per day",
+      "averageDescriptionMonthly": "Average per day",
+      "averageDescriptionYearly": "Average per month",
       "tileTitle": "Parking entries",
       "tileDescription": "Number of entries in the selected period",
       "periods": {
         "daily": "Daily",
         "weekly": "Weekly",
+        "monthly": "Monthly",
         "yearly": "Yearly"
       }
     },
     "revenue": {
-      "tileTitle": "Revenue",
-      "tileDescription": "Parking revenue in the selected period",
       "title": "Revenue",
       "description": "Parking revenue in the selected period",
       "totalLabel": "Revenue",
-      "totalDescription": "total for period",
+      "totalDescription": "total in the period",
       "changeLabel": "Change",
-      "changeDescription": "vs previous period",
+      "changeDescription": "to the previous period",
       "periods": {
         "daily": "Daily",
         "weekly": "Weekly",
+        "monthly": "Monthly",
         "yearly": "Yearly"
       }
     },
     "averageStay": {
-      "tileTitle": "Average stay time",
-      "tileDescription": "Average parking stay time in the selected period",
-      "totalDescription": "Average stay time for the selected period",
-      "title": "Average stay time",
-      "description": "Average stay time by parking space type",
+      "tileTitle": "Average stay duration",
+      "tileDescription": "Average stay duration in the selected period",
+      "totalDescription": "Average stay duration in the selected period",
+      "title": "Average stay duration",
+      "description": "Average stay duration by space type",
       "periods": {
         "daily": "Daily",
         "weekly": "Weekly",
+        "monthly": "Monthly",
         "yearly": "Yearly"
       },
       "spaceTypes": {
-        "REGULAR_ABLEBODIED": "Regular parking space",
-        "REGULAR_HANDICAPED": "Disabled parking space",
-        "EV_ABLEBODIED": "EV parking space",
-        "EV_HANDICAPED": "Disabled EV parking space",
-        "REGULAR_BOTH": "Regular space with facilities",
-        "EV_BOTH": "EV space with facilities"
+        "REGULAR_ABLEBODIED": "Regular space",
+        "REGULAR_HANDICAPED": "Space for disabled",
+        "EV_ABLEBODIED": "Space with EV charger",
+        "EV_HANDICAPED": "EV space for disabled",
+        "REGULAR_BOTH": "Regular space with both amenities",
+        "EV_BOTH": "EV space with both amenities"
       }
     },
     "spaceRanking": {
       "tileTitle": "Parking space ranking",
-      "tileDescription": "Most frequently selected spaces on the chosen level",
+      "tileDescription": "Most frequently chosen spaces on the selected floor",
       "title": "Parking space ranking",
-      "description": "Most used parking spaces on the selected level for a given day",
-      "level": "Level {level}",
+      "description": "Most frequently used spaces on the selected floor in the selected period",
+      "level": "Floor {level}",
       "totalLabel": "Total",
-      "totalDescription": "space usages on level",
+      "totalDescription": "space usages on floor",
       "topLabel": "Most used",
       "topDescription": "{value} usages",
       "value": "{value} usages",
       "floor": "Floor {floor}"
     },
     "parkingSpaces": {
-      "title": "Parking spaces statistics",
-      "description": "Select a parking space on the map to check its occupancy and reservation history.",
-      "timelineDescription": "Occupancy and reservation history for the selected day",
+      "title": "Parking space statistics",
+      "description": "Choose a parking space on the map to check its occupancy and reservation history.",
+      "timelineDescription": "Occupancy and reservation history on selected day",
       "occupied": "Occupied",
       "reserved": "Reserved",
-      "noSpaceSelectedTitle": "Select a parking space",
-      "noSpaceSelectedDescription": "Click a parking space on the map to see occupancy and reservation history for the selected day."
+      "noSpaceSelectedTitle": "Choose a parking space",
+      "noSpaceSelectedDescription": "Click a space on the map to see its occupancy and reservation history on the selected day."
     }
   },
   "clients": {
@@ -289,9 +295,9 @@
     "vehiclesDialog": {
       "title": "Vehicles",
       "loading": "Loading vehicles...",
-      "error": "Could not load vehicles for this client.",
-      "emptyTitle": "No vehicles yet",
-      "emptyDescription": "This client does not have any assigned cars.",
+      "error": "Failed to fetch vehicles for this client.",
+      "emptyTitle": "No vehicles",
+      "emptyDescription": "This client has no assigned vehicles yet.",
       "vehiclesCount": "{count, plural, one {# vehicle} other {# vehicles}}",
       "vehicleId": "Vehicle ID: {id}",
       "closeButton": "Close",
@@ -305,20 +311,20 @@
   },
   "events": {
     "list": {
-      "empty": "No events found",
+      "empty": "No events",
       "details": "Details"
     },
     "entry": "Entry",
     "exit": "Exit",
     "details": {
       "title": "Event details",
-      "plate": "Plate number",
+      "plate": "Registration",
       "date": "Date",
       "type": "Type",
       "id": "ID",
-      "ownerName": "Owner name",
-      "ownerSurname": "Owner surname",
-      "ownerEmail": "Owner e-mail"
+      "ownerName": "Owner first name",
+      "ownerSurname": "Owner last name",
+      "ownerEmail": "Owner email"
     }
   },
   "prices": {
@@ -373,81 +379,81 @@
   },
   "parkingPurchase": {
     "title": "Buy or reserve a parking space",
-    "subtitle": "Choose your vehicle and parking time, and we will assign a suitable space for you.",
+    "subtitle": "Choose a car and parking time, and we will find the right place for you.",
     "loading": "Loading data...",
     "formModeTitle": "Parking type",
-    "formModeDescription": "Start parking immediately or schedule it for a selected date.",
+    "formModeDescription": "Start parking immediately or plan it for a selected date.",
     "modePurchase": "Buy from now",
     "modeReservation": "Reserve",
-    "vehicleSectionTitle": "Vehicle",
-    "vehicleSectionDescription": "Choose the vehicle you want to park or reserve a space for.",
-    "vehicleLabel": "Vehicle",
+    "vehicleSectionTitle": "Car",
+    "vehicleSectionDescription": "Choose a vehicle for which you want to buy or reserve a space.",
+    "vehicleLabel": "Car",
     "timeSectionTitle": "Parking time",
-    "purchaseTimeDescription": "Parking starts immediately. Choose the date and time when it should end.",
-    "reservationTimeDescription": "Choose the exact start and end time for your planned parking.",
+    "purchaseTimeDescription": "Parking will start immediately. Choose the end date and time.",
+    "reservationTimeDescription": "Choose the exact start and end of the planned parking.",
     "purchaseEndDate": "End date",
     "purchaseEndTime": "End time",
     "parkingStartDate": "Start date",
     "parkingStartTime": "Start time",
     "parkingEndDate": "End date",
     "parkingEndTime": "End time",
-    "invalidParkingTime": "The end date and time must be later than the start.",
-    "noVehiclesTitle": "You do not have any vehicles yet",
-    "noVehiclesDescription": "Add a vehicle to quickly buy parking spaces and create reservations.",
-    "addVehicle": "Add vehicle",
+    "invalidParkingTime": "End date and time must be later than start.",
+    "noVehiclesTitle": "You don't have any cars yet",
+    "noVehiclesDescription": "Add a car to quickly buy parking spaces and plan reservations.",
+    "addVehicle": "Add car",
     "balance": "Your balance",
     "summaryTitle": "Summary",
-    "summaryDescription": "Review the details before confirming your parking.",
+    "summaryDescription": "Check the details before confirming the stay.",
     "summaryMode": "Type",
-    "summaryVehicle": "Vehicle",
+    "summaryVehicle": "Car",
     "summaryStart": "From",
     "summaryEnd": "To",
-    "summaryPrice": "To pay",
+    "summaryPrice": "Amount to pay",
     "summaryBalanceAfter": "Balance after payment",
     "now": "Now",
     "buyButton": "Buy space",
     "reserveButton": "Reserve space",
     "processingButton": "Processing...",
-    "successTitle": "Space assigned",
-    "reservationSuccessTitle": "Reservation created",
-    "successDescription": "Your parking details are shown below.",
+    "successTitle": "Space has been assigned",
+    "reservationSuccessTitle": "Reservation has been created",
+    "successDescription": "Below you will find the details of your stay.",
     "assignedSpace": "Space",
     "level": "Level {level}",
     "validTime": "Parking time",
     "to": "to",
     "paid": "Paid",
     "errors": {
-      "initialData": "Could not load the data needed to prepare parking.",
-      "quote": "Could not calculate the price for the selected time.",
-      "purchase": "Could not confirm parking."
+      "initialData": "Failed to fetch data needed to prepare the stay.",
+      "quote": "Failed to calculate price for the selected time.",
+      "purchase": "Failed to confirm the stay."
     },
-    "completedButton": "Parking confirmed",
-    "backToFormButton": "Back to parking selection"
+    "completedButton": "Parking purchased",
+    "backToFormButton": "Back to selection"
   },
   "settings": {
     "tabs_general": "General",
     "tabs_account": "My account",
     "general_title": "General settings",
     "account_title": "My account",
-    "language": "Website language",
+    "language": "Language",
     "first_name": "First name",
     "last_name": "Last name",
     "email": "Email address",
-    "lang_pl": "Polish",
+    "lang_pl": "Polski",
     "lang_en": "English",
     "mfa": {
-      "title": "2FA verification",
-      "already_enabled": "2FA is already enabled on your account",
+      "title": "2FA Verification",
+      "already_enabled": "2FA is already active on your account",
       "secret": "Secret",
       "next": "Next",
       "enable": "Enable 2FA",
       "code_label": "Code from app",
       "confirm": "Confirm",
       "cancel": "Cancel",
-      "enabled": "2FA enabled",
-      "setup_mfa": "Set up your authenticator app",
+      "enabled": "2FA active",
+      "setup_mfa": "Set up authenticator app",
       "invalid_code": "Invalid code",
-      "success": "Two-factor authentication has been enabled successfully"
+      "success": "Two-factor authentication enabled successfully"
     }
   },
   "userBalanceDialog": {
@@ -456,10 +462,10 @@
     "enterAmount": "Enter amount",
     "placeholder": "0.01",
     "topUp": "Top up",
-    "minAmountError": "Minimum top up amount is 0.01 PLN",
+    "minAmountError": "Minimum top-up amount is 0.01 PLN",
     "invalidAmountError": "Enter a valid amount",
-    "genericError": "Top up failed",
-    "success": "Balance has been successfully topped up"
+    "genericError": "Top-up failed",
+    "success": "Balance topped up successfully"
   },
   "myCars": {
     "list": {
@@ -468,24 +474,24 @@
     "addCar": "Add car",
     "addDialog": {
       "title": "Add vehicle",
-      "licensePlateFormatError": "The license plate should follow the format: 2–3 letters, a space, and 3–5 characters (e.g. WA 12345)."
+      "incorrectPlateFormat": "License plate should have format: 2–3 letters, space, 3–5 characters (e.g., WA 12345)."
     },
     "fields": {
-      "licensePlate": "License plate",
+      "licensePlate": "Registration number",
       "carType": "Vehicle type",
       "cancel": "Cancel",
       "update": "Update"
     },
     "carTypes": {
-      "REGULAR_ABLEBODIED": "Regular",
-      "REGULAR_HANDICAPED": "Regular (Handicapped)",
-      "EV_ABLEBODIED": "EV",
-      "EV_HANDICAPED": "EV (Handicapped)"
+      "REGULAR_ABLEBODIED": "Standard",
+      "REGULAR_HANDICAPED": "Standard (disabled)",
+      "EV_ABLEBODIED": "Electric",
+      "EV_HANDICAPED": "Electric (disabled)"
     },
-    "editDialog":{
-      "title": "Edit vehicle details",
-      "success": "Vehicle updated successfully",
-      "duplicatePlate": "Cannot update – license plate is already taken"
+    "editDialog": {
+      "title": "Edit vehicle info",
+      "success": "Car updated successfully",
+      "duplicatePlate": "Could not update – registration plate is already taken"
     }
   },
   "myReservations": {
@@ -503,11 +509,11 @@
     "title": "Reservation details",
     "status": "Status",
     "createdAt": "Created at",
-    "startTime": "Start time",
-    "endTime": "End time",
+    "startTime": "Start",
+    "endTime": "End",
     "price": "Price",
-    "parkingPlace": "Parking place",
-    "vehiclePlate": "Vehicle plate",
+    "parkingPlace": "Parking space",
+    "vehiclePlate": "License plate",
     "vehicleType": "Vehicle type",
     "statusValues": {
       "PENDING": "Pending",
@@ -517,9 +523,9 @@
     },
     "vehicleTypeValues": {
       "REGULAR_ABLEBODIED": "Regular",
-      "REGULAR_HANDICAPED": "Regular (Disabled)",
+      "REGULAR_HANDICAPED": "Regular (disabled)",
       "EV_ABLEBODIED": "Electric",
-      "EV_HANDICAPED": "Electric (Disabled)"
+      "EV_HANDICAPED": "Electric (disabled)"
     }
   }
 }

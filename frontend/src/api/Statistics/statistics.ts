@@ -97,11 +97,13 @@ export const getAverageStayStats = async (
 
 export const getParkingSpaceRanking = async (
     date: string,
+    period: EntriesPeriod,
     floor: ParkingFloor
 ): Promise<ParkingSpaceRankingResponse> => {
     const params = new URLSearchParams();
 
     params.set('date', date);
+    params.set('period', period);
     params.set('floor', floor);
 
     const response = await fetch(

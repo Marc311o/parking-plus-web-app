@@ -13,6 +13,7 @@ import MyReservationsNavbar from '@components/Navbar/MyReservationsNavbar.tsx';
 const PagesLayout = () => {
     const location = useLocation();
     const isDashboard = location.pathname === '/' || location.pathname.startsWith('/dashboard');
+    const isStatistics = location.pathname.startsWith('/statistics');
 
     const navbarByRoutePrefix = [
         {prefix: '/statistics', navbar: <StatisticsNavbar/>},
@@ -97,7 +98,7 @@ const PagesLayout = () => {
                             sx={{
                                 flex: 1,
                                 minHeight: 0,
-                                bgcolor: 'background.paper',
+                                bgcolor: isStatistics ? 'transparent' : 'background.paper',
                                 borderRadius: 1,
                                 overflow: 'hidden',
                                 display: 'flex',
@@ -111,7 +112,7 @@ const PagesLayout = () => {
                                     height: '100%',
                                     overflowY: 'auto',
                                     overflowX: 'hidden',
-                                    p: 2,
+                                    p: isStatistics ? 0 : 2,
                                 }}
                             >
                                 <Box

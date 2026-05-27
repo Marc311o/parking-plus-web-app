@@ -53,6 +53,10 @@ export const ParkingEntriesChart = ({
             label: formatMessage({id: 'statistics.entries.periods.weekly'}),
         },
         {
+            value: 'MONTHLY' as EntriesPeriod,
+            label: formatMessage({id: 'statistics.entries.periods.monthly'}),
+        },
+        {
             value: 'YEARLY' as EntriesPeriod,
             label: formatMessage({id: 'statistics.entries.periods.yearly'}),
         },
@@ -61,6 +65,10 @@ export const ParkingEntriesChart = ({
     const getEntriesDatePickerMode = (period: EntriesPeriod) => {
         if (period === 'YEARLY') {
             return 'year';
+        }
+
+        if (period === 'MONTHLY') {
+            return 'month';
         }
 
         if (period === 'WEEKLY') {
@@ -163,7 +171,9 @@ export const ParkingEntriesChart = ({
                             ? formatMessage({id: 'statistics.entries.descriptionDaily'})
                             : selectedPeriod === 'WEEKLY'
                                 ? formatMessage({id: 'statistics.entries.descriptionWeekly'})
-                                : formatMessage({id: 'statistics.entries.descriptionYearly'})}
+                                : selectedPeriod === 'MONTHLY'
+                                    ? formatMessage({id: 'statistics.entries.descriptionMonthly'})
+                                    : formatMessage({id: 'statistics.entries.descriptionYearly'})}
                     </Typography>
                 </Box>
 
@@ -243,7 +253,9 @@ export const ParkingEntriesChart = ({
                                     ? formatMessage({id: 'statistics.entries.totalDescriptionDaily'})
                                     : selectedPeriod === 'WEEKLY'
                                         ? formatMessage({id: 'statistics.entries.totalDescriptionWeekly'})
-                                        : formatMessage({id: 'statistics.entries.totalDescriptionYearly'})}
+                                        : selectedPeriod === 'MONTHLY'
+                                            ? formatMessage({id: 'statistics.entries.totalDescriptionMonthly'})
+                                            : formatMessage({id: 'statistics.entries.totalDescriptionYearly'})}
                             </Typography>
                         </Box>
                     </Box>
@@ -293,7 +305,9 @@ export const ParkingEntriesChart = ({
                                 ? formatMessage({id: 'statistics.entries.averageDescriptionDaily'})
                                 : selectedPeriod === 'WEEKLY'
                                     ? formatMessage({id: 'statistics.entries.averageDescriptionWeekly'})
-                                    : formatMessage({id: 'statistics.entries.averageDescriptionYearly'})}
+                                    : selectedPeriod === 'MONTHLY'
+                                        ? formatMessage({id: 'statistics.entries.averageDescriptionMonthly'})
+                                        : formatMessage({id: 'statistics.entries.averageDescriptionYearly'})}
                         </Typography>
                     </Box>
                 </Box>
@@ -373,10 +387,10 @@ export const ParkingEntriesChart = ({
                             bottom: 30,
                             height: chartHeight + 42,
                             display: 'grid',
-                            gridTemplateColumns: `repeat(${data.points.length}, minmax(42px, 1fr))`,
+                            gridTemplateColumns: `repeat(${data.points.length}, minmax(1px, 1fr))`,
                             gap: {
-                                xs: 1,
-                                md: selectedPeriod === 'DAILY' ? 1.4 : 2.8,
+                                xs: 0.5,
+                                md: (selectedPeriod === 'DAILY' || selectedPeriod === 'MONTHLY') ? 0.8 : 2.8,
                             },
                             alignItems: 'end',
                             zIndex: 2,
@@ -453,10 +467,7 @@ export const ParkingEntriesChart = ({
 
                                         <Box
                                             sx={{
-                                                width: {
-                                                    xs: selectedPeriod === 'DAILY' ? 24 : 34,
-                                                    md: selectedPeriod === 'DAILY' ? 30 : 42,
-                                                },
+                                                width: '100%',
                                                 height: barHeight,
                                                 borderRadius: '14px 14px 5px 5px',
                                                 background: isHighlighted
@@ -484,7 +495,7 @@ export const ParkingEntriesChart = ({
                                             color: isHighlighted
                                                 ? '#1F1A3D'
                                                 : '#777196',
-                                            fontSize: selectedPeriod === 'DAILY' ? 10 : 12,
+                                            fontSize: (selectedPeriod === 'DAILY' || selectedPeriod === 'MONTHLY') ? 10 : 12,
                                             fontWeight: 900,
                                             letterSpacing: 0.4,
                                         }}

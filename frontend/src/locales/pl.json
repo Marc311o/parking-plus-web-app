@@ -203,26 +203,30 @@
     },
     "entries": {
       "title": "Wjazdy na parking",
-      "description": "Liczba wjazdów rozbita na dni wybranego tygodnia",
-      "descriptionDaily": "Liczba wjazdów rozbita godzinowo dla wybranego dnia",
-      "descriptionWeekly": "Liczba wjazdów rozbita na dni wybranego tygodnia",
-      "descriptionYearly": "Liczba wjazdów rozbita na miesiące wybranego roku",
+      "description": "Liczba wjazdów w wybranym okresie",
+      "descriptionDaily": "Liczba pojazdów wjeżdżających na parking w podziale na godziny.",
+      "descriptionWeekly": "Liczba pojazdów wjeżdżających na parking w poszczególne dni tygodnia.",
+      "descriptionMonthly": "Liczba pojazdów wjeżdżających na parking w poszczególne dni miesiąca.",
+      "descriptionYearly": "Liczba pojazdów wjeżdżających na parking w poszczególne miesiące roku.",
       "totalLabel": "Łącznie",
-      "totalDescription": "wjazdów w tygodniu",
-      "totalDescriptionDaily": "wjazdów w wybranym dniu",
-      "totalDescriptionWeekly": "wjazdów w tygodniu",
-      "totalDescriptionYearly": "wjazdów w roku",
+      "totalDescription": "wjazdów w wybranym okresie",
+      "totalDescriptionDaily": "Pojazdów dzisiaj",
+      "totalDescriptionWeekly": "Pojazdów w tym tygodniu",
+      "totalDescriptionMonthly": "Pojazdów w tym miesiącu",
+      "totalDescriptionYearly": "Pojazdów w tym roku",
       "averageLabel": "Średnio",
       "averageDescription": "wjazdów dziennie",
-      "averageDescriptionDaily": "wjazdów na przedział",
-      "averageDescriptionWeekly": "wjazdów dziennie",
-      "averageDescriptionYearly": "wjazdów miesięcznie",
+      "averageDescriptionDaily": "Średnio na godzinę",
+      "averageDescriptionWeekly": "Średnio na dzień",
+      "averageDescriptionMonthly": "Średnio na dzień",
+      "averageDescriptionYearly": "Średnio na miesiąc",
       "tileTitle": "Wjazdy na parking",
       "tileDescription": "Liczba wjazdów w wybranym okresie",
       "periods": {
-        "daily": "Dziennie",
-        "weekly": "Tygodniowo",
-        "yearly": "Rocznie"
+        "daily": "Dzienny",
+        "weekly": "Tygodniowy",
+        "monthly": "Miesięczny",
+        "yearly": "Roczny"
       }
     },
     "revenue": {
@@ -233,9 +237,10 @@
       "changeLabel": "Zmiana",
       "changeDescription": "do poprzedniego okresu",
       "periods": {
-        "daily": "Dziennie",
-        "weekly": "Tygodniowo",
-        "yearly": "Rocznie"
+        "daily": "Dzienny",
+        "weekly": "Tygodniowy",
+        "monthly": "Miesięczny",
+        "yearly": "Roczny"
       }
     },
     "averageStay": {
@@ -245,9 +250,10 @@
       "title": "Średni czas postoju",
       "description": "Średni czas postoju z podziałem na typ miejsca",
       "periods": {
-        "daily": "Dziennie",
-        "weekly": "Tygodniowo",
-        "yearly": "Rocznie"
+        "daily": "Dzienny",
+        "weekly": "Tygodniowy",
+        "monthly": "Miesięczny",
+        "yearly": "Roczny"
       },
       "spaceTypes": {
         "REGULAR_ABLEBODIED": "Zwykłe miejsce parkingowe",
@@ -262,7 +268,7 @@
       "tileTitle": "Ranking miejsc parkingowych",
       "tileDescription": "Najczęściej wybierane miejsca na wybranym piętrze",
       "title": "Ranking miejsc parkingowych",
-      "description": "Najczęściej używane miejsca na wybranym piętrze danego dnia",
+      "description": "Najczęściej używane miejsca na wybranym piętrze w wybranym okresie",
       "level": "Piętro {level}",
       "totalLabel": "Łącznie",
       "totalDescription": "użyć miejsc na piętrze",

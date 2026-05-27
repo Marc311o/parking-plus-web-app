@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react';
-import {Box} from '@mui/material';
+import React, {useEffect, useState, useCallback} from 'react';
+import {Box, CircularProgress, Alert, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
 import {
     ParkingAverageStayChart,
@@ -9,26 +9,21 @@ import {
     StatisticsAccordionTile,
 } from '@components/Statistics';
 import {
-    type AverageStayPeriod,
-    type AverageStayResponse,
     getAverageStayStats,
-    type EntriesPeriod,
-    type EntriesResponse,
     getEntriesStats,
-    type ParkingFloor,
-    type ParkingSpaceRankingResponse,
     getParkingSpaceRanking,
-    type RevenuePeriod,
     getRevenueStats,
-    type RevenueResponse,
 } from '@api/Statistics';
-
-type ExpandedStatistic =
-    | 'entries'
-    | 'revenue'
-    | 'averageStay'
-    | 'spaceRanking'
-    | null;
+import type {
+    AverageStayPeriod,
+    AverageStayResponse,
+    EntriesPeriod,
+    EntriesResponse,
+    ParkingFloor,
+    ParkingSpaceRankingResponse,
+    RevenuePeriod,
+    RevenueResponse,
+} from '@api/Statistics';
 
 const toIsoDate = (date: Date) => {
     const year = date.getFullYear();
@@ -38,352 +33,190 @@ const toIsoDate = (date: Date) => {
     return `${year}-${month}-${day}`;
 };
 
-const getDateFromIso = (date: string) => {
-    const [year, month, day] = date.split('-').map(Number);
-
-    return new Date(year, month - 1, day, 12, 0, 0, 0);
-};
-
-
-const getStartOfCurrentWeek = () => {
-    const today = new Date();
-    const day = today.getDay();
-    const diffToMonday = day === 0 ? -6 : 1 - day;
-
-    today.setDate(today.getDate() + diffToMonday);
-    today.setHours(12, 0, 0, 0);
-
-    return today;
-};
-
-const getStartOfCurrentYear = () => {
-    const today = new Date();
-
-    return new Date(today.getFullYear(), 0, 1, 12, 0, 0, 0);
-};
-
-const getStartOfCurrentMonth = () => {
-    const today = new Date();
-
-    return new Date(today.getFullYear(), today.getMonth(), 1, 12, 0, 0, 0);
-};
-
 const ParkingStatisticsPage = () => {
     const {formatMessage} = useIntl();
 
-    const [expandedStatistic, setExpandedStatistic] =
-        useState<ExpandedStatistic>(null);
+    const [expandedTile, setExpandedTile] = useState<string | null>('entries');
 
-    const [selectedEntriesPeriod, setSelectedEntriesPeriod] =
-        useState<EntriesPeriod>('WEEKLY');
-
-    const [selectedEntriesDate, setSelectedEntriesDate] = useState(
-        toIsoDate(getStartOfCurrentWeek())
-    );
-
+    const [entriesPeriod, setEntriesPeriod] = useState<EntriesPeriod>('WEEKLY');
+    const [entriesDate, setEntriesDate] = useState(toIsoDate(new Date()));
     const [entriesData, setEntriesData] = useState<EntriesResponse | null>(null);
 
-    const [selectedRevenuePeriod, setSelectedRevenuePeriod] =
-        useState<RevenuePeriod>('YEARLY');
-
-    const [selectedRevenueFrom, setSelectedRevenueFrom] =
-        useState(getStartOfCurrentYear());
-
+    const [revenuePeriod, setRevenuePeriod] = useState<RevenuePeriod>('WEEKLY');
+    const [revenueDate, setRevenueDate] = useState(toIsoDate(new Date()));
     const [revenueData, setRevenueData] = useState<RevenueResponse | null>(null);
 
-    const [selectedAverageStayPeriod, setSelectedAverageStayPeriod] =
-        useState<AverageStayPeriod>('DAILY');
-
-    const [selectedAverageStayDate, setSelectedAverageStayDate] = useState(
-        toIsoDate(new Date())
-    );
-
+    const [averageStayPeriod, setAverageStayPeriod] =
+        useState<AverageStayPeriod>('YEARLY');
+    const [averageStayDate, setAverageStayDate] = useState(toIsoDate(new Date()));
     const [averageStayData, setAverageStayData] =
         useState<AverageStayResponse | null>(null);
 
+    const [rankingPeriod, setRankingPeriod] = useState<EntriesPeriod>('DAILY');
     const [selectedSpaceRankingDate, setSelectedSpaceRankingDate] = useState(
         toIsoDate(new Date())
     );
-
     const [selectedSpaceRankingFloor, setSelectedSpaceRankingFloor] =
         useState<ParkingFloor>('A');
-
     const [spaceRankingData, setSpaceRankingData] =
         useState<ParkingSpaceRankingResponse | null>(null);
 
-    const handleAccordionChange = (statistic: ExpandedStatistic) => {
-        setExpandedStatistic((current) => (current === statistic ? null : statistic));
-    };
+    const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
+    const [fetchError, setFetchError] = useState<{ [key: string]: string | null }>({});
 
-    useEffect(() => {
-        if (expandedStatistic !== 'entries') {
-            return;
+    const fetchEntries = useCallback(async () => {
+        setIsLoading(prev => ({ ...prev, entries: true }));
+        setFetchError(prev => ({ ...prev, entries: null }));
+        try {
+            const data = await getEntriesStats(entriesDate, entriesPeriod);
+            setEntriesData(data);
+        } catch (e: any) {
+            console.error(e);
+            setFetchError(prev => ({ ...prev, entries: e.message || 'Error' }));
+        } finally {
+            setIsLoading(prev => ({ ...prev, entries: false }));
         }
+    }, [entriesDate, entriesPeriod]);
 
-        let isMounted = true;
-
-        const fetchEntries = async () => {
-            try {
-                const data = await getEntriesStats(
-                    selectedEntriesDate,
-                    selectedEntriesPeriod
-                );
-
-                if (!isMounted) {
-                    return;
-                }
-
-                setEntriesData(data);
-            } catch (error) {
-                console.error('Failed to fetch parking entries statistics:', error);
-
-                if (!isMounted) {
-                    return;
-                }
-            }
-        };
-
-        void fetchEntries();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [expandedStatistic, selectedEntriesPeriod, selectedEntriesDate]);
-
-    useEffect(() => {
-        if (expandedStatistic !== 'revenue') {
-            return;
+    const fetchRevenue = useCallback(async () => {
+        setIsLoading(prev => ({ ...prev, revenue: true }));
+        setFetchError(prev => ({ ...prev, revenue: null }));
+        try {
+            const data = await getRevenueStats(revenueDate, revenuePeriod);
+            setRevenueData(data);
+        } catch (e: any) {
+            console.error(e);
+            setFetchError(prev => ({ ...prev, revenue: e.message || 'Error' }));
+        } finally {
+            setIsLoading(prev => ({ ...prev, revenue: false }));
         }
+    }, [revenueDate, revenuePeriod]);
 
-        let isMounted = true;
-
-        const fetchRevenue = async () => {
-            const date = toIsoDate(selectedRevenueFrom);
-
-            try {
-                const data = await getRevenueStats(
-                    date,
-                    selectedRevenuePeriod
-                );
-
-                if (!isMounted) {
-                    return;
-                }
-
-                setRevenueData(data);
-            } catch (error) {
-                console.error('Failed to fetch parking revenue statistics:', error);
-
-                if (!isMounted) {
-                    return;
-                }
-            }
-        };
-
-        void fetchRevenue();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [expandedStatistic, selectedRevenuePeriod, selectedRevenueFrom]);
-
-    useEffect(() => {
-        if (expandedStatistic !== 'averageStay') {
-            return;
+    const fetchAverageStay = useCallback(async () => {
+        setIsLoading(prev => ({ ...prev, averageStay: true }));
+        setFetchError(prev => ({ ...prev, averageStay: null }));
+        try {
+            const data = await getAverageStayStats(averageStayDate, averageStayPeriod);
+            setAverageStayData(data);
+        } catch (e: any) {
+            console.error(e);
+            setFetchError(prev => ({ ...prev, averageStay: e.message || 'Error' }));
+        } finally {
+            setIsLoading(prev => ({ ...prev, averageStay: false }));
         }
+    }, [averageStayDate, averageStayPeriod]);
 
-        let isMounted = true;
-
-        const fetchAverageStay = async () => {
-            try {
-                const data = await getAverageStayStats(
-                    selectedAverageStayDate,
-                    selectedAverageStayPeriod
-                );
-
-                if (!isMounted) {
-                    return;
-                }
-
-                setAverageStayData(data);
-            } catch (error) {
-                console.error('Failed to fetch average stay statistics:', error);
-
-                if (!isMounted) {
-                    return;
-                }
-            }
-        };
-
-        void fetchAverageStay();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [expandedStatistic, selectedAverageStayPeriod, selectedAverageStayDate]);
-
-    useEffect(() => {
-        if (expandedStatistic !== 'spaceRanking') {
-            return;
+    const fetchRanking = useCallback(async () => {
+        setIsLoading(prev => ({ ...prev, ranking: true }));
+        setFetchError(prev => ({ ...prev, ranking: null }));
+        try {
+            const data = await getParkingSpaceRanking(selectedSpaceRankingDate, rankingPeriod, selectedSpaceRankingFloor);
+            setSpaceRankingData(data);
+        } catch (e: any) {
+            console.error(e);
+            setFetchError(prev => ({ ...prev, ranking: e.message || 'Error' }));
+        } finally {
+            setIsLoading(prev => ({ ...prev, ranking: false }));
         }
+    }, [selectedSpaceRankingDate, rankingPeriod, selectedSpaceRankingFloor]);
 
-        let isMounted = true;
+    useEffect(() => { void fetchEntries(); }, [fetchEntries]);
+    useEffect(() => { void fetchRevenue(); }, [fetchRevenue]);
+    useEffect(() => { void fetchAverageStay(); }, [fetchAverageStay]);
+    useEffect(() => { void fetchRanking(); }, [fetchRanking]);
 
-        const fetchSpaceRanking = async () => {
-            try {
-                const data = await getParkingSpaceRanking(
-                    selectedSpaceRankingDate,
-                    selectedSpaceRankingFloor
-                );
-
-                if (!isMounted) {
-                    return;
-                }
-
-                setSpaceRankingData(data);
-            } catch (error) {
-                console.error('Failed to fetch parking space ranking:', error);
-
-                if (!isMounted) {
-                    return;
-                }
-            }
-        };
-
-        void fetchSpaceRanking();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [expandedStatistic, selectedSpaceRankingDate, selectedSpaceRankingFloor]);
-
-    const handleEntriesPeriodChange = (period: EntriesPeriod) => {
-        setSelectedEntriesPeriod(period);
-
-        if (period === 'YEARLY') {
-            setSelectedEntriesDate(toIsoDate(getStartOfCurrentYear()));
-            return;
+    const renderChart = (key: string, data: any, component: React.ReactNode) => {
+        if (fetchError[key]) {
+            return (
+                <Alert severity="error" sx={{ m: 2 }}>
+                    {fetchError[key]}
+                </Alert>
+            );
         }
-
-        if (period === 'WEEKLY') {
-            setSelectedEntriesDate(toIsoDate(getStartOfCurrentWeek()));
-            return;
+        if (isLoading[key] && !data) {
+            return (
+                <Box sx={{ display: 'flex', justifyContent: 'center', p: 8 }}>
+                    <CircularProgress color="primary" />
+                </Box>
+            );
         }
-
-        setSelectedEntriesDate(toIsoDate(new Date()));
-    };
-
-    const handleRevenuePeriodChange = (period: RevenuePeriod) => {
-        setSelectedRevenuePeriod(period);
-
-        if (period === 'YEARLY') {
-            setSelectedRevenueFrom(getStartOfCurrentYear());
-            return;
+        if (!data && !isLoading[key]) {
+             return <Typography sx={{ p: 4, textAlign: 'center', color: 'text.secondary' }}>Brak danych do wyświetlenia.</Typography>;
         }
-
-        if (period === 'WEEKLY') {
-            setSelectedRevenueFrom(getStartOfCurrentWeek());
-            return;
-        }
-
-        setSelectedRevenueFrom(getStartOfCurrentMonth());
-    };
-
-    const handleAverageStayPeriodChange = (period: AverageStayPeriod) => {
-        setSelectedAverageStayPeriod(period);
-
-        if (period === 'YEARLY') {
-            setSelectedAverageStayDate(toIsoDate(getStartOfCurrentYear()));
-            return;
-        }
-
-        if (period === 'WEEKLY') {
-            setSelectedAverageStayDate(toIsoDate(getStartOfCurrentWeek()));
-            return;
-        }
-
-        setSelectedAverageStayDate(toIsoDate(new Date()));
+        return data ? component : null;
     };
 
     return (
-        <Box
-            sx={{
-                width: '100%',
-                minHeight: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 2.5,
-            }}
-        >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pb: 4 }}>
             <StatisticsAccordionTile
-                title={formatMessage({id: 'statistics.entries.tileTitle'})}
+                title={formatMessage({id: 'statistics.entries.title'})}
                 description={formatMessage({id: 'statistics.entries.tileDescription'})}
-                expanded={expandedStatistic === 'entries'}
-                onChange={() => handleAccordionChange('entries')}
+                expanded={expandedTile === 'entries'}
+                onChange={() => setExpandedTile(expandedTile === 'entries' ? null : 'entries')}
             >
-                {entriesData && (
+                {renderChart('entries', entriesData, (
                     <ParkingEntriesChart
-                        data={entriesData}
-                        selectedPeriod={selectedEntriesPeriod}
-                        selectedDate={selectedEntriesDate}
-                        onPeriodChange={handleEntriesPeriodChange}
-                        onDateChange={setSelectedEntriesDate}
+                        data={entriesData!}
+                        selectedPeriod={entriesPeriod}
+                        selectedDate={entriesDate}
+                        onPeriodChange={setEntriesPeriod}
+                        onDateChange={setEntriesDate}
                     />
-                )}
+                ))}
             </StatisticsAccordionTile>
 
             <StatisticsAccordionTile
-                title={formatMessage({id: 'statistics.revenue.tileTitle'})}
-                description={formatMessage({id: 'statistics.revenue.tileDescription'})}
-                expanded={expandedStatistic === 'revenue'}
-                onChange={() => handleAccordionChange('revenue')}
+                title={formatMessage({id: 'statistics.revenue.title'})}
+                description={formatMessage({id: 'statistics.revenue.totalDescription'})}
+                expanded={expandedTile === 'revenue'}
+                onChange={() => setExpandedTile(expandedTile === 'revenue' ? null : 'revenue')}
             >
-                {revenueData && (
+                {renderChart('revenue', revenueData, (
                     <ParkingRevenueChart
-                        data={revenueData}
-                        selectedPeriod={selectedRevenuePeriod}
-                        selectedDate={toIsoDate(selectedRevenueFrom)}
-                        onPeriodChange={handleRevenuePeriodChange}
-                        onDateChange={(date) =>
-                            setSelectedRevenueFrom(getDateFromIso(date))
-                        }
+                        data={revenueData!}
+                        selectedPeriod={revenuePeriod}
+                        selectedDate={revenueDate}
+                        onPeriodChange={setRevenuePeriod}
+                        onDateChange={setRevenueDate}
                     />
-                )}
+                ))}
             </StatisticsAccordionTile>
 
             <StatisticsAccordionTile
-                title={formatMessage({id: 'statistics.averageStay.tileTitle'})}
-                description={formatMessage({id: 'statistics.averageStay.tileDescription'})}
-                expanded={expandedStatistic === 'averageStay'}
-                onChange={() => handleAccordionChange('averageStay')}
+                title={formatMessage({id: 'statistics.averageStay.title'})}
+                description={formatMessage({id: 'statistics.averageStay.totalDescription'})}
+                expanded={expandedTile === 'averageStay'}
+                onChange={() => setExpandedTile(expandedTile === 'averageStay' ? null : 'averageStay')}
             >
-                {averageStayData && (
+                {renderChart('averageStay', averageStayData, (
                     <ParkingAverageStayChart
-                        data={averageStayData}
-                        selectedPeriod={selectedAverageStayPeriod}
-                        selectedDate={selectedAverageStayDate}
-                        onPeriodChange={handleAverageStayPeriodChange}
-                        onDateChange={setSelectedAverageStayDate}
+                        data={averageStayData!}
+                        selectedPeriod={averageStayPeriod}
+                        selectedDate={averageStayDate}
+                        onPeriodChange={setAverageStayPeriod}
+                        onDateChange={setAverageStayDate}
                     />
-                )}
+                ))}
             </StatisticsAccordionTile>
 
             <StatisticsAccordionTile
-                title={formatMessage({id: 'statistics.spaceRanking.tileTitle'})}
+                title={formatMessage({id: 'statistics.spaceRanking.title'})}
                 description={formatMessage({id: 'statistics.spaceRanking.tileDescription'})}
-                expanded={expandedStatistic === 'spaceRanking'}
-                onChange={() => handleAccordionChange('spaceRanking')}
+                expanded={expandedTile === 'ranking'}
+                onChange={() => setExpandedTile(expandedTile === 'ranking' ? null : 'ranking')}
             >
-                {spaceRankingData && (
+                {renderChart('ranking', spaceRankingData, (
                     <ParkingSpaceRankingChart
-                        data={spaceRankingData}
+                        data={spaceRankingData!}
+                        selectedPeriod={rankingPeriod}
                         selectedDate={selectedSpaceRankingDate}
                         selectedFloor={selectedSpaceRankingFloor}
                         floors={['A', 'B']}
+                        onPeriodChange={setRankingPeriod}
                         onDateChange={setSelectedSpaceRankingDate}
                         onFloorChange={setSelectedSpaceRankingFloor}
                     />
-                )}
+                ))}
             </StatisticsAccordionTile>
         </Box>
     );
