@@ -213,7 +213,7 @@ export default function ListView<T extends { id: number | string }>({
                         alignItems: 'center',
                         gap: {xs: 1.5, md: 2},
                         px: {xs: 2, md: 3},
-                        bgcolor: '#F5EAF6',
+                        bgcolor: index % 2 === 0 ? '#F5EAF6' : '#FFFFFF',
                         borderBottom: index < items.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
                     }}
                 >
