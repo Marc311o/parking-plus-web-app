@@ -342,17 +342,33 @@
     },
     "editor": {
       "editing": "Editing: {days}, {startHour}:00 – {endHour}:00",
+      "addTitle": "Add new tariff",
+      "editTitle": "Edit tariff",
+      "dayLabel": "Day",
+      "startHourLabel": "Start hour",
+      "endHourLabel": "End hour",
       "firstHourLabel": "First hour",
       "nextHourLabel": "Next hour",
+      "dailyPriceLabel": "Daily price",
       "currencyShort": "PLN",
       "saveButton": "Save",
       "savingButton": "Saving...",
-      "helper": "Click any price tile to edit the tariff."
+      "addNew": "Add new tariff",
+      "helper": "Fill in the tariff and effective hours.",
+      "unsavedChanges": "You have unsaved changes"
+    },
+    "switcher": {
+      "hourly": "Hourly\nPrices",
+      "daily": "Daily\nPrices"
     },
     "errors": {
       "fetchTariffs": "Could not fetch tariffs.",
       "invalidPrices": "Enter valid prices.",
-      "saveTariff": "Could not save the price."
+      "invalidHours": "End hour must be later than start hour.",
+      "overlapError": "The selected period overlaps with an existing tariff in this view.",
+      "saveTariff": "Could not save the pricing changes.",
+      "deleteTariff": "Could not delete the tariff.",
+      "calendarNotFull": "To save, you must cover the entire week with tariffs."
     }
   },
   "parkingPurchase": {

@@ -342,17 +342,33 @@
     },
     "editor": {
       "editing": "Edytujesz: {days}, {startHour}:00 – {endHour}:00",
+      "addTitle": "Dodaj nową taryfę",
+      "editTitle": "Edytuj taryfę",
+      "dayLabel": "Dzień",
+      "startHourLabel": "Godzina rozpoczęcia",
+      "endHourLabel": "Godzina zakończenia",
       "firstHourLabel": "Pierwsza godzina",
       "nextHourLabel": "Kolejna godzina",
+      "dailyPriceLabel": "Cena dobowa",
       "currencyShort": "zł",
       "saveButton": "Zapisz",
       "savingButton": "Zapisywanie...",
-      "helper": "Kliknij dowolny kafelek z ceną, aby edytować taryfę."
+      "addNew": "Dodaj nową taryfę",
+      "helper": "Uzupełnij taryfę i godziny obowiązywania.",
+      "unsavedChanges": "Masz niezapisane zmiany"
+    },
+    "switcher": {
+      "hourly": "Ceny\nGodzinowe",
+      "daily": "Ceny\nDobowe"
     },
     "errors": {
       "fetchTariffs": "Nie udało się pobrać taryf.",
       "invalidPrices": "Podaj poprawne ceny.",
-      "saveTariff": "Nie udało się zapisać ceny."
+      "invalidHours": "Godzina zakończenia musi być późniejsza niż rozpoczęcia.",
+      "overlapError": "Wybrany termin nakłada się na istniejącą taryfę w tym widoku.",
+      "saveTariff": "Nie udało się zapisać zmian w cenniku.",
+      "deleteTariff": "Nie udało się usunąć taryfy.",
+      "calendarNotFull": "Aby zapisać, musisz pokryć cały tydzień taryfami."
     }
   },
   "parkingPurchase": {

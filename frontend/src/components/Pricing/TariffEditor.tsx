@@ -1,7 +1,6 @@
-import {Alert, Box, Button, TextField, Typography} from '@mui/material';
+import {Box, TextField, Typography, MenuItem} from '@mui/material';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import {useIntl} from 'react-intl';
-import type {TariffVisualBlock} from './TariffScheduleTile';
 
 const DAYS = [
     {value: 1, id: 'prices.schedule.days.mondayShort'},
@@ -13,214 +12,166 @@ const DAYS = [
     {value: 7, id: 'prices.schedule.days.sundayShort'},
 ];
 
+const HOURS = Array.from({length: 25}, (_, i) => i);
+
 type TariffEditorProps = {
-    selectedBlock: TariffVisualBlock | null;
+    view: 'hourly' | 'daily';
     firstHourPrice: string;
     nextHourPrice: string;
-    isSaving: boolean;
-    saveError: string | null;
-    onFirstHourPriceChange: (value: string) => void;
-    onNextHourPriceChange: (value: string) => void;
-    onSave: () => void;
+    startHour: number;
+    endHour: number;
+    selectedDay: number;
+    onChange: (field: string, value: any) => void;
 };
 
 const TariffEditor = ({
-                          selectedBlock,
+                          view,
                           firstHourPrice,
                           nextHourPrice,
-                          isSaving,
-                          saveError,
-                          onFirstHourPriceChange,
-                          onNextHourPriceChange,
-                          onSave,
+                          startHour,
+                          endHour,
+                          selectedDay,
+                          onChange,
                       }: TariffEditorProps) => {
     const intl = useIntl();
 
-    const getDaysLabel = (days: number[]) => {
-        if (days.length === 0) {
-            return '-';
-        }
-
-        const getDayLabel = (value: number) => {
-            const day = DAYS.find((item) => item.value === value);
-
-            return day ? intl.formatMessage({id: day.id}) : String(value);
-        };
-
-        if (days.length === 1) {
-            return getDayLabel(days[0]);
-        }
-
-        return `${getDayLabel(days[0])} – ${getDayLabel(days[days.length - 1])}`;
-    };
+    const isHourly = view === 'hourly';
 
     return (
         <Box
             sx={{
-                mt: 1.5,
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'center',
-                gap: 0.9,
+                gap: 1.5,
+                width: 280,
             }}
         >
-            {selectedBlock && (
-                <Typography
-                    sx={{
-                        color: '#6B007B',
-                        fontSize: 13,
-                        fontWeight: 500,
-                    }}
+            <Typography
+                sx={{
+                    color: '#6B007B',
+                    fontSize: 16,
+                    fontWeight: 700,
+                    mb: 0.5,
+                }}
+            >
+                {intl.formatMessage({id: 'prices.editor.editTitle'})}
+            </Typography>
+
+            <Box sx={{ display: 'flex', gap: 1 }}>
+                <TextField
+                    select
+                    label={intl.formatMessage({id: 'prices.editor.dayLabel'})}
+                    value={selectedDay}
+                    onChange={(e) => onChange('selectedDay', Number(e.target.value))}
+                    size="small"
+                    fullWidth
                 >
-                    {intl.formatMessage(
-                        {id: 'prices.editor.editing'},
-                        {
-                            days: getDaysLabel(selectedBlock.days),
-                            startHour: String(selectedBlock.startHour).padStart(2, '0'),
-                            endHour: String(selectedBlock.endHour).padStart(2, '0'),
-                        }
-                    )}
-                </Typography>
+                    {DAYS.map((day) => (
+                        <MenuItem key={day.value} value={day.value}>
+                            {intl.formatMessage({id: day.id})}
+                        </MenuItem>
+                    ))}
+                </TextField>
+            </Box>
+
+            {isHourly && (
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                    <TextField
+                        select
+                        label={intl.formatMessage({id: 'prices.editor.startHourLabel'})}
+                        value={startHour}
+                        onChange={(e) => onChange('startHour', Number(e.target.value))}
+                        size="small"
+                        fullWidth
+                    >
+                        {HOURS.slice(0, 24).map((h) => (
+                            <MenuItem key={h} value={h}>
+                                {String(h).padStart(2, '0')}:00
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <TextField
+                        select
+                        label={intl.formatMessage({id: 'prices.editor.endHourLabel'})}
+                        value={endHour}
+                        onChange={(e) => onChange('endHour', Number(e.target.value))}
+                        size="small"
+                        fullWidth
+                    >
+                        {HOURS.slice(1).map((h) => (
+                            <MenuItem key={h} value={h}>
+                                {h === 24 ? '24:00' : `${String(h).padStart(2, '0')}:00`}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </Box>
             )}
 
             <Box
                 sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'auto 72px auto',
-                    columnGap: 1,
-                    rowGap: 0.7,
+                    gridTemplateColumns: '1fr 70px 30px',
+                    gap: 1,
                     alignItems: 'center',
                 }}
             >
-                <Typography
-                    sx={{
-                        color: '#6B007B',
-                        fontSize: 12,
-                        textAlign: 'right',
-                    }}
-                >
-                    {intl.formatMessage({id: 'prices.editor.firstHourLabel'})}
-                </Typography>
+                {view === 'daily' ? (
+                    <>
+                        <Typography sx={{ color: '#6B007B', fontSize: 13 }}>
+                            {intl.formatMessage({id: 'prices.editor.dailyPriceLabel'})}
+                        </Typography>
+                        <TextField
+                            size="small"
+                            value={firstHourPrice}
+                            onChange={(e) => onChange('firstHourPrice', e.target.value)}
+                            inputProps={{ style: { textAlign: 'center', fontSize: 13, padding: '6px' } }}
+                        />
+                        <Typography sx={{ color: '#6B007B', fontSize: 13 }}>
+                            {intl.formatMessage({id: 'prices.editor.currencyShort'})}
+                        </Typography>
+                    </>
+                ) : (
+                    <>
+                        <Typography sx={{ color: '#6B007B', fontSize: 13 }}>
+                            {intl.formatMessage({id: 'prices.editor.firstHourLabel'})}
+                        </Typography>
+                        <TextField
+                            size="small"
+                            value={firstHourPrice}
+                            onChange={(e) => onChange('firstHourPrice', e.target.value)}
+                            inputProps={{ style: { textAlign: 'center', fontSize: 13, padding: '6px' } }}
+                        />
+                        <Typography sx={{ color: '#6B007B', fontSize: 13 }}>
+                            {intl.formatMessage({id: 'prices.editor.currencyShort'})}
+                        </Typography>
 
-                <TextField
-                    size="small"
-                    value={firstHourPrice}
-                    disabled={!selectedBlock || isSaving}
-                    onChange={(event) => onFirstHourPriceChange(event.target.value)}
-                    inputProps={{
-                        inputMode: 'decimal',
-                        style: {
-                            textAlign: 'center',
-                            padding: '0 8px',
-                            height: 20,
-                            fontSize: 12,
-                        },
-                    }}
-                    sx={{
-                        '& .MuiOutlinedInput-root': {
-                            height: 24,
-                            borderRadius: '8px',
-                        },
-                    }}
-                />
-
-                <Typography
-                    sx={{
-                        color: '#6B007B',
-                        fontSize: 12,
-                    }}
-                >
-                    {intl.formatMessage({id: 'prices.editor.currencyShort'})}
-                </Typography>
-
-                <Typography
-                    sx={{
-                        color: '#6B007B',
-                        fontSize: 12,
-                        textAlign: 'right',
-                    }}
-                >
-                    {intl.formatMessage({id: 'prices.editor.nextHourLabel'})}
-                </Typography>
-
-                <TextField
-                    size="small"
-                    value={nextHourPrice}
-                    disabled={!selectedBlock || isSaving}
-                    onChange={(event) => onNextHourPriceChange(event.target.value)}
-                    inputProps={{
-                        inputMode: 'decimal',
-                        style: {
-                            textAlign: 'center',
-                            padding: '0 8px',
-                            height: 20,
-                            fontSize: 12,
-                        },
-                    }}
-                    sx={{
-                        '& .MuiOutlinedInput-root': {
-                            height: 24,
-                            borderRadius: '8px',
-                        },
-                    }}
-                />
-
-                <Typography
-                    sx={{
-                        color: '#6B007B',
-                        fontSize: 12,
-                    }}
-                >
-                    {intl.formatMessage({id: 'prices.editor.currencyShort'})}
-                </Typography>
+                        <Typography sx={{ color: '#6B007B', fontSize: 13 }}>
+                            {intl.formatMessage({id: 'prices.editor.nextHourLabel'})}
+                        </Typography>
+                        <TextField
+                            size="small"
+                            value={nextHourPrice}
+                            onChange={(e) => onChange('nextHourPrice', e.target.value)}
+                            inputProps={{ style: { textAlign: 'center', fontSize: 13, padding: '6px' } }}
+                        />
+                        <Typography sx={{ color: '#6B007B', fontSize: 13 }}>
+                            {intl.formatMessage({id: 'prices.editor.currencyShort'})}
+                        </Typography>
+                    </>
+                )}
             </Box>
-
-            {saveError && (
-                <Alert
-                    severity="error"
-                    sx={{
-                        py: 0,
-                        borderRadius: 2,
-                    }}
-                >
-                    {saveError}
-                </Alert>
-            )}
-
-            <Button
-                variant="contained"
-                disabled={!selectedBlock || isSaving}
-                onClick={onSave}
-                sx={{
-                    minWidth: 96,
-                    height: 24,
-                    borderRadius: '7px',
-                    bgcolor: '#9C13B8',
-                    textTransform: 'none',
-                    fontSize: 11,
-                    boxShadow: 'none',
-                    '&:hover': {
-                        bgcolor: '#7F0F96',
-                        boxShadow: 'none',
-                    },
-                }}
-            >
-                {intl.formatMessage({
-                    id: isSaving ? 'prices.editor.savingButton' : 'prices.editor.saveButton',
-                })}
-            </Button>
 
             <Box
                 sx={{
-                    mt: 0.5,
+                    mt: 1,
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 0.7,
+                    gap: 1,
                     color: '#6B007B',
+                    opacity: 0.7,
                 }}
             >
-                <InfoRoundedIcon sx={{fontSize: 15}}/>
-
+                <InfoRoundedIcon sx={{fontSize: 16}}/>
                 <Typography sx={{fontSize: 11}}>
                     {intl.formatMessage({id: 'prices.editor.helper'})}
                 </Typography>

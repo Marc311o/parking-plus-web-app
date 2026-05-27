@@ -23,17 +23,23 @@ const getCurrentDayOfWeek = () => {
 };
 
 type TariffScheduleProps = {
+    view: 'hourly' | 'daily';
     blocks: TariffVisualBlock[];
     selectedBlockKey?: string;
     isLoading: boolean;
-    onBlockClick: (block: TariffVisualBlock) => void;
+    isAdmin: boolean;
+    onBlockClick: (block: TariffVisualBlock, event: React.MouseEvent<HTMLElement>) => void;
+    onBlockDelete: (block: TariffVisualBlock, event: React.MouseEvent<HTMLElement>) => void;
 };
 
 const TariffSchedule = ({
+                            view,
                             blocks,
                             selectedBlockKey,
                             isLoading,
+                            isAdmin,
                             onBlockClick,
+                            onBlockDelete,
                         }: TariffScheduleProps) => {
     const intl = useIntl();
 
@@ -157,6 +163,9 @@ const TariffSchedule = ({
                         `,
                         backgroundSize: 'calc(100% / 7) calc(100% / 24)',
                         overflow: 'hidden',
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(7, 1fr)',
+                        gridTemplateRows: 'repeat(24, 1fr)',
                     }}
                 >
                     <Box
@@ -203,10 +212,13 @@ const TariffSchedule = ({
                     {blocks.map((block) => (
                         <TariffScheduleTile
                             key={block.key}
+                            view={view}
                             block={block}
                             selected={selectedBlockKey === block.key}
                             highlighted={highlightedBlockKey === block.key}
-                            onClick={() => onBlockClick(block)}
+                            isAdmin={isAdmin}
+                            onClick={(event) => onBlockClick(block, event)}
+                            onDelete={(event) => onBlockDelete(block, event)}
                         />
                     ))}
                 </Box>

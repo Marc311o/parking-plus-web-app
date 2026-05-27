@@ -13,6 +13,7 @@ class TariffService(private val tariffRepository: TariffRepository) {
         val overlaps = existingTariffs.any { entity ->
             entity.dayOfWeek == dto.dayOfWeek &&
                     entity.isDaily == dto.isDaily &&
+                    entity.isFirstHour == dto.isFirstHour &&
                     (dto.startHour < entity.endHour && dto.endHour > entity.startHour)
         }
 
@@ -34,6 +35,7 @@ class TariffService(private val tariffRepository: TariffRepository) {
         val overlaps = otherTariffs.any { entity ->
             entity.dayOfWeek == dto.dayOfWeek &&
                     entity.isDaily == dto.isDaily &&
+                    entity.isFirstHour == dto.isFirstHour &&
                     (dto.startHour < entity.endHour && dto.endHour > entity.startHour)
         }
 
