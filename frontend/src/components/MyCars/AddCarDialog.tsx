@@ -19,10 +19,10 @@ import {
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 
-import {useIntl} from 'react-intl';
-import {useState} from 'react';
+import { useIntl } from 'react-intl';
+import { useState } from 'react';
 
-import type {CarType, VehicleDTO} from '@api/MyCars';
+import type { CarType, VehicleDTO } from '@api/MyCars';
 
 interface Props {
     open: boolean;
@@ -44,28 +44,25 @@ export default function AddCarDialog({
                                          onSubmit,
                                          ownerId,
                                      }: Props) {
-    const {formatMessage} = useIntl();
+    const { formatMessage } = useIntl();
 
     const [plateError, setPlateError] = useState(false);
-
     const [licensePlate, setLicensePlate] = useState('');
     const [carType, setCarType] =
         useState<CarType>('REGULAR_ABLEBODIED');
-
     const [loading, setLoading] = useState(false);
+
+    const LICENSE_PLATE_REGEX =
+        /^([A-Z]{1,3}) ([0-9]{4,5}|[0-9A-Z]{4,5}|[0-9A-Z]{3,5})$/;
+
+    const isValidLicensePlate = (plate: string): boolean =>
+        LICENSE_PLATE_REGEX.test(plate.trim().toUpperCase());
 
     const handleClose = () => {
         setPlateError(false);
         setLicensePlate('');
         setCarType('REGULAR_ABLEBODIED');
         onClose();
-    };
-
-    const LICENSE_PLATE_REGEX =
-        /^([A-Z]{1,3}) ([0-9]{4,5}|[0-9A-Z]{4,5}|[0-9A-Z]{3,5})$/;
-
-    const isValidLicensePlate = (plate: string): boolean => {
-        return LICENSE_PLATE_REGEX.test(plate.trim().toUpperCase());
     };
 
     const handleSubmit = async () => {
@@ -80,7 +77,6 @@ export default function AddCarDialog({
 
         setPlateError(false);
 
-
         try {
             setLoading(true);
 
@@ -90,8 +86,6 @@ export default function AddCarDialog({
                 carType,
             });
 
-            setLicensePlate('');
-            setCarType('REGULAR_ABLEBODIED');
             handleClose();
         } finally {
             setLoading(false);
@@ -99,19 +93,15 @@ export default function AddCarDialog({
     };
 
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            fullWidth
-            maxWidth="xs"
-        >
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
+            {/* CLOSE BUTTON */}
             <IconButton
-                onClick={onClose}
+                onClick={handleClose}
                 disableRipple
                 sx={{
                     position: 'absolute',
                     top: 22,
-                    right: 0,
+                    right: 16,
                     zIndex: 2,
                     color: '#FFFFFF',
                     p: 0,
@@ -124,6 +114,7 @@ export default function AddCarDialog({
                 <CloseRoundedIcon />
             </IconButton>
 
+            {/* HEADER */}
             <DialogTitle
                 sx={{
                     p: 0,
@@ -152,42 +143,30 @@ export default function AddCarDialog({
                         <DirectionsCarRoundedIcon />
                     </Avatar>
 
-                    <Box>
-                        <Typography
-                            sx={{
-                                fontSize: 18,
-                                fontWeight: 800,
-                            }}
-                        >
-                            {formatMessage({
-                                id: 'myCars.addDialog.title',
-                            })}
-                        </Typography>
-                    </Box>
+                    <Typography sx={{ fontSize: 18, fontWeight: 800 }}>
+                        {formatMessage({ id: 'myCars.addDialog.title' })}
+                    </Typography>
                 </Box>
             </DialogTitle>
 
-            <DialogContent
-                sx={{
-                    bgcolor: '#FBF7FC',
-                    pt: '24px !important',
-                }}
-            >
+            {/* CONTENT (BEZ PAPER = brak "otoczki") */}
+            <DialogContent sx={{ p: 0, bgcolor: '#FBF7FC' }}>
                 <Box
                     sx={{
+                        p: 3,
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 2,
                     }}
                 >
-
                     {plateError && (
-                        <Alert severity="error" sx={{ width: '100%' }}>
+                        <Alert severity="error">
                             {formatMessage({
                                 id: 'myCars.addDialog.licensePlateFormatError',
                             })}
                         </Alert>
                     )}
+
                     <TextField
                         fullWidth
                         label={formatMessage({
@@ -216,10 +195,7 @@ export default function AddCarDialog({
                             }
                         >
                             {CAR_TYPES.map((type) => (
-                                <MenuItem
-                                    key={type}
-                                    value={type}
-                                >
+                                <MenuItem key={type} value={type}>
                                     {formatMessage({
                                         id: `myCars.carTypes.${type}`,
                                     })}
@@ -230,20 +206,10 @@ export default function AddCarDialog({
                 </Box>
             </DialogContent>
 
-            <DialogActions
-                sx={{
-                    px: 3,
-                    pb: 3,
-                    bgcolor: '#FBF7FC',
-                }}
-            >
-                <Button
-                    onClick={onClose}
-                    color="inherit"
-                >
-                    {formatMessage({
-                        id: 'myCars.fields.cancel',
-                    })}
+            {/* ACTIONS */}
+            <DialogActions sx={{ px: 3, pb: 3, bgcolor: '#FBF7FC' }}>
+                <Button onClick={handleClose} color="inherit">
+                    {formatMessage({ id: 'myCars.fields.cancel' })}
                 </Button>
 
                 <Button
@@ -255,9 +221,7 @@ export default function AddCarDialog({
                         ownerId == null
                     }
                 >
-                    {formatMessage({
-                        id: 'myCars.addCar',
-                    })}
+                    {formatMessage({ id: 'myCars.addCar' })}
                 </Button>
             </DialogActions>
         </Dialog>
