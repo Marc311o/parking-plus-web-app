@@ -149,7 +149,7 @@ export default function AddCarDialog({
                 </Box>
             </DialogTitle>
 
-            {/* CONTENT (BEZ PAPER = brak "otoczki") */}
+            {/* CONTENT */}
             <DialogContent sx={{ p: 0, bgcolor: '#FBF7FC' }}>
                 <Box
                     sx={{
