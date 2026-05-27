@@ -88,7 +88,7 @@ const EventsPage = () => {
             key: 'date',
             width: '0.8fr',
             render: (item) => {
-                const color = item.eventType === 'ENTRY' ? '#2e7d32' : '#d32f2f';
+                const color = '#000000';
 
                 const date = parseDate(item.eventDate);
 
@@ -103,7 +103,7 @@ const EventsPage = () => {
             key: 'time',
             width: '0.8fr',
             render: (item) => {
-                const color = item.eventType === 'ENTRY' ? '#2e7d32' : '#d32f2f';
+                const color = '#000000';
 
                 const date = parseDate(item.eventDate);
 
@@ -133,7 +133,7 @@ const EventsPage = () => {
             key: 'plateNumber',
             width: '1fr',
             render: (item) => {
-                const color = item.eventType === 'ENTRY' ? '#2e7d32' : '#d32f2f';
+                const color = '#000000';
                 return <span style={{color, fontWeight: 600}}>{item.plateNumber}</span>;
             },
         },
