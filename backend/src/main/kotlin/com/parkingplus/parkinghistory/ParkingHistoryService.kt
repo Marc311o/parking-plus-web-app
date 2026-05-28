@@ -65,11 +65,11 @@ class ParkingHistoryService(
             startTime = dto.startTime,
             endTime = dto.endTime,
             price = dto.price,
-            barrierPhotoPath = dto.barrierPhotoPath.ifBlank { 
+            barrierPhotoPath = dto.barrierPhotoPath.takeIf { !it.isNullOrBlank() } ?: run {
                 val index = (vehicle.id ?: 0L) % 10
                 "/car_photos/car_${index}_barrier.png"
             },
-            spotPhotoPath = dto.spotPhotoPath.ifBlank {
+            spotPhotoPath = dto.spotPhotoPath.takeIf { !it.isNullOrBlank() } ?: run {
                 val index = (vehicle.id ?: 0L) % 10
                 "/car_photos/car_${index}_spot.png"
             }

@@ -162,7 +162,8 @@
         "entry": "Wjazd",
         "plate": "Tablica",
         "parkingTime": "Czas postoju",
-        "amountDue": "Należność"
+        "amountDue": "Należność",
+        "viewPhoto": "Zobacz zdjęcie"
       },
       "statuses": {
         "FREE": "Wolne",

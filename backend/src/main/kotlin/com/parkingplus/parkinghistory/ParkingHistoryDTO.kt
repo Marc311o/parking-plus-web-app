@@ -22,9 +22,7 @@ data class ParkingHistoryDTO(
     @field:PositiveOrZero(message = "Price must be greater than or equal to 0")
     val price: Double = 0.0,
 
-    @field:NotBlank(message = "Barrier photo path is required")
-    val barrierPhotoPath: String = "",
+    val barrierPhotoPath: String? = null,
 
-    @field:NotBlank(message = "Spot photo path is required")
-    val spotPhotoPath: String = ""
+    val spotPhotoPath: String? = null
 )

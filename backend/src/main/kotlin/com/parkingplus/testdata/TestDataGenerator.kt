@@ -117,7 +117,7 @@ class TestDataGenerator(
                     vehicle = vehicle,
                     parkingSpace = space,
                     startTime = now.minusHours(Random.nextLong(1, 5)).minusMinutes(Random.nextLong(0, 60)),
-                    endTime = now.plusHours(Random.nextLong(1, 8)),
+                    endTime = null,
                     price = 0.0, // Will be calculated on exit
                     barrierPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_barrier.png",
                     spotPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_spot.png"

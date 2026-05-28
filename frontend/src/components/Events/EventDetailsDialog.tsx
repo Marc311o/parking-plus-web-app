@@ -222,7 +222,7 @@ export default function EventDetailsDialog({
                             {event.barrierPhotoPath && barrierImgOk && (
                                 <Box sx={{ flex: 1 }}>
                                     <Typography variant="caption" sx={{ display: 'block', mb: 0.5, fontWeight: 600, color: '#6B7280' }}>
-                                        {formatMessage({ id: 'events.details.barrierPhoto' }, { defaultMessage: 'Wjazd' })}
+                                        {formatMessage({ id: 'events.details.barrierPhoto', defaultMessage: 'Wjazd' })}
                                     </Typography>
                                     <Box
                                         sx={{
@@ -252,7 +252,7 @@ export default function EventDetailsDialog({
                             {event.spotPhotoPath && spotImgOk && (
                                 <Box sx={{ flex: 1 }}>
                                     <Typography variant="caption" sx={{ display: 'block', mb: 0.5, fontWeight: 600, color: '#6B7280' }}>
-                                        {formatMessage({ id: 'events.details.spotPhoto' }, { defaultMessage: 'Miejsce' })}
+                                        {formatMessage({ id: 'events.details.spotPhoto', defaultMessage: 'Miejsce' })}
                                     </Typography>
                                     <Box
                                         sx={{

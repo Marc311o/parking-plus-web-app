@@ -162,7 +162,8 @@
         "entry": "Entry",
         "plate": "Plate",
         "parkingTime": "Parking time",
-        "amountDue": "Due"
+        "amountDue": "Due",
+        "viewPhoto": "View photo"
       },
       "statuses": {
         "FREE": "Free",

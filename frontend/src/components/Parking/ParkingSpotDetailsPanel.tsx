@@ -2,7 +2,6 @@ import {Box, Dialog, IconButton, Paper, Typography, Tooltip} from '@mui/material
 import {useIntl} from 'react-intl';
 import {useState, useEffect} from 'react';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import PhotoCameraRoundedIcon from '@mui/icons-material/PhotoCameraRounded';
 import type {ParkingSpotDetails} from '@api/Dashboard/types';
 
 interface ParkingSpotDetailsPanelProps {
@@ -38,47 +37,58 @@ const InfoRow = ({
     value?: string | number;
     photoPath?: string | null;
     onPhotoClick?: (path: string) => void;
-}) => (
-    <Box
-        sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            py: 1,
-            borderBottom: '1px solid rgba(0,0,0,0.06)',
-            '&:last-child': {
-                borderBottom: 'none',
-            },
-        }}
-    >
-        <Typography sx={labelCellSx}>{label}</Typography>
-        <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
-            <Typography sx={valueCellSx}>{value ?? '-'}</Typography>
-            {photoPath && onPhotoClick && (
-                <Tooltip title="Zobacz zdjęcie">
-                    <Box
-                        component="img"
-                        src={photoPath}
-                        onClick={() => onPhotoClick(photoPath)}
-                        sx={{
-                            width: 40,
-                            height: 32,
-                            objectFit: 'cover',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            border: '1px solid rgba(139, 31, 158, 0.2)',
-                            '&:hover': {
-                                opacity: 0.8,
-                                borderColor: '#5E076E',
-                            },
-                            transition: 'all 0.2s',
-                        }}
-                    />
-                </Tooltip>
-            )}
+}) => {
+    const {formatMessage} = useIntl();
+    
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                py: 1,
+                borderBottom: '1px solid rgba(0,0,0,0.06)',
+                '&:last-child': {
+                    borderBottom: 'none',
+                },
+            }}
+        >
+            <Typography sx={labelCellSx}>{label}</Typography>
+            <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1 }}>
+                <Typography sx={valueCellSx}>{value ?? '-'}</Typography>
+                {photoPath && onPhotoClick && (
+                    <Tooltip title={formatMessage({id: 'parking.details.labels.viewPhoto'})}>
+                        <IconButton
+                            onClick={() => onPhotoClick(photoPath)}
+                            size="small"
+                            sx={{
+                                p: 0,
+                                borderRadius: '4px',
+                                overflow: 'hidden',
+                                border: '1px solid rgba(139, 31, 158, 0.2)',
+                                '&:hover': {
+                                    borderColor: '#5E076E',
+                                },
+                            }}
+                        >
+                            <Box
+                                component="img"
+                                src={photoPath}
+                                alt={formatMessage({id: 'parking.details.labels.viewPhoto'})}
+                                sx={{
+                                    width: 40,
+                                    height: 32,
+                                    objectFit: 'cover',
+                                    display: 'block',
+                                }}
+                            />
+                        </IconButton>
+                    </Tooltip>
+                )}
+            </Box>
         </Box>
-    </Box>
-);
+    );
+};
 
 const cardSx = {
     p: 3,
