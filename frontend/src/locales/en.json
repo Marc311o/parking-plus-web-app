@@ -152,14 +152,13 @@
   "parking": {
     "details": {
       "spotCardTitle": "ID #{id}",
-      "ownerCardTitle": "ID {id}",
+      "ownerCardTitle": "Client details (ID: {id})",
       "labels": {
         "type": "Type",
         "status": "Status",
         "level": "Floor",
-        "ownerData": "Details",
+        "ownerData": "Owner",
         "email": "Email",
-        "phone": "Phone",
         "entry": "Entry",
         "plate": "Plate",
         "parkingTime": "Parking time",
@@ -324,7 +323,9 @@
       "id": "ID",
       "ownerName": "Owner first name",
       "ownerSurname": "Owner last name",
-      "ownerEmail": "Owner email"
+      "ownerEmail": "Owner email",
+      "barrierPhoto": "Entry",
+      "spotPhoto": "Spot"
     }
   },
   "prices": {

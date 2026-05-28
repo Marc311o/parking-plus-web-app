@@ -30,11 +30,15 @@ export default function EventDetailsDialog({
                                            }: Props) {
     const { formatMessage } = useIntl();
 
-    const [imgOk, setImgOk] = useState(true);
+    const [barrierImgOk, setBarrierImgOk] = useState(true);
+    const [spotImgOk, setSpotImgOk] = useState(true);
 
     useEffect(() => {
-        if (open) setImgOk(true);
-    }, [open, event?.carPhotoPath]);
+        if (open) {
+            setBarrierImgOk(true);
+            setSpotImgOk(true);
+        }
+    }, [open, event?.barrierPhotoPath, event?.spotPhotoPath]);
 
     if (!event) return null;
 
@@ -214,31 +218,67 @@ export default function EventDetailsDialog({
                             value={event.ownerEmail}
                         />
 
-                        {event.carPhotoPath && imgOk && (
-                            <Box
-                                sx={{
-                                    mt: 2,
-                                    width: '100%',
-                                    height: 240,
-                                    overflow: 'hidden',
-                                    bgcolor: '#000',
-                                    borderRadius: 2,
-                                }}
-                            >
-                                <Box
-                                    component="img"
-                                    src={event.carPhotoPath}
-                                    alt={event.plateNumber}
-                                    onError={() => setImgOk(false)}
-                                    sx={{
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        display: 'block',
-                                    }}
-                                />
-                            </Box>
-                        )}
+                        <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
+                            {event.barrierPhotoPath && barrierImgOk && (
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography variant="caption" sx={{ display: 'block', mb: 0.5, fontWeight: 600, color: '#6B7280' }}>
+                                        {formatMessage({ id: 'events.details.barrierPhoto' }, { defaultMessage: 'Wjazd' })}
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 200,
+                                            overflow: 'hidden',
+                                            bgcolor: '#000',
+                                            borderRadius: 2,
+                                        }}
+                                    >
+                                        <Box
+                                            component="img"
+                                            src={event.barrierPhotoPath}
+                                            alt="Barrier"
+                                            onError={() => setBarrierImgOk(false)}
+                                            sx={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover',
+                                                display: 'block',
+                                            }}
+                                        />
+                                    </Box>
+                                </Box>
+                            )}
+
+                            {event.spotPhotoPath && spotImgOk && (
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography variant="caption" sx={{ display: 'block', mb: 0.5, fontWeight: 600, color: '#6B7280' }}>
+                                        {formatMessage({ id: 'events.details.spotPhoto' }, { defaultMessage: 'Miejsce' })}
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            height: 200,
+                                            overflow: 'hidden',
+                                            bgcolor: '#000',
+                                            borderRadius: 2,
+                                        }}
+                                    >
+                                        <Box
+                                            component="img"
+                                            src={event.spotPhotoPath}
+                                            alt="Spot"
+                                            onError={() => setSpotImgOk(false)}
+                                            sx={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover',
+                                                display: 'block',
+                                            }}
+                                        />
+                                    </Box>
+                                </Box>
+                            )}
+                        </Box>
                     </Paper>
                 </Box>
             </DialogContent>

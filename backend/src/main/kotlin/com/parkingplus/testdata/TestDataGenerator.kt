@@ -94,8 +94,37 @@ class TestDataGenerator(
         val spaces = generateParkingSpaces()
         val tariffs = generateTariffs()
         generateHistory(vehicles, spaces, tariffs)
+        generateActiveSessions(vehicles, spaces)
 
         println(">>> Zakończono proces generowania/weryfikacji danych.")
+    }
+
+    private fun generateActiveSessions(vehicles: List<VehicleEntity>, spaces: List<ParkingSpaceEntity>) {
+        val occupiedSpaces = spaces.filter { it.status == ParkingSpaceStatus.FREE }.shuffled().take(5)
+        val now = LocalDateTime.now()
+
+        for (space in occupiedSpaces) {
+            val vehicle = vehicles.random()
+            
+            // Check if vehicle already has active session
+            if (parkingHistoryRepository.existsByVehicleIdAndEndTimeIsNull(vehicle.id!!)) continue
+
+            space.status = ParkingSpaceStatus.OCCUPIED
+            parkingSpaceRepository.save(space)
+
+            parkingHistoryRepository.save(
+                ParkingHistoryEntity(
+                    vehicle = vehicle,
+                    parkingSpace = space,
+                    startTime = now.minusHours(Random.nextLong(1, 5)).minusMinutes(Random.nextLong(0, 60)),
+                    endTime = now.plusHours(Random.nextLong(1, 8)),
+                    price = 0.0, // Will be calculated on exit
+                    barrierPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_barrier.png",
+                    spotPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_spot.png"
+                )
+            )
+        }
+        println(">>> Wygenerowano 5 aktywnych sesji parkowania.")
     }
 
     private fun generateUsers(count: Int): List<UserEntity> {
@@ -307,7 +336,8 @@ class TestDataGenerator(
                     startTime = startTime,
                     endTime = endTime,
                     price = price,
-                    photoPath = "/photos/placeholder.jpg"
+                    barrierPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_barrier.png",
+                    spotPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_spot.png"
                 )
                 historyEntries.add(parkingHistoryRepository.save(entry))
 

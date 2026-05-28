@@ -3,6 +3,7 @@ package com.parkingplus.parkingspaces
 import com.parkingplus.parkinghistory.ParkingHistoryRepository
 import com.parkingplus.parkingspaces.enums.ParkingSpaceStatus
 import com.parkingplus.parkingspaces.enums.SpaceType
+import com.parkingplus.reservations.PricingService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -14,7 +15,8 @@ import java.util.NoSuchElementException
 @Service
 class ParkingSpaceService(
     private val parkingSpaceRepository: ParkingSpaceRepository,
-    private val parkingHistoryRepository: ParkingHistoryRepository
+    private val parkingHistoryRepository: ParkingHistoryRepository,
+    private val pricingService: PricingService
 ) {
 
     @Transactional(readOnly = true)
@@ -119,18 +121,19 @@ class ParkingSpaceService(
             val vehicle = activeHistory.vehicle
             val owner = vehicle.owner
 
-            val duration = java.time.Duration.between(activeHistory.startTime, LocalDateTime.now())
+            val duration = java.time.Duration.between(activeHistory.startTime, now)
+            val currentFee = pricingService.calculatePrice(activeHistory.startTime, now)
 
             occupantDto = ParkingSpotOccupantDetailsDTO(
                 ownerId = owner.id.toString(),
                 ownerName = "${owner.name} ${owner.surname}",
                 ownerEmail = owner.email,
-                ownerPhone = null,
                 vehiclePlate = vehicle.licensePlate,
                 entryTime = activeHistory.startTime,
                 parkingDurationSec = duration.seconds,
-                amountDue = 0.0,
-                imageUrl = activeHistory.photoPath
+                amountDue = currentFee.toDouble(),
+                barrierPhotoPath = activeHistory.barrierPhotoPath,
+                spotPhotoPath = activeHistory.spotPhotoPath
             )
         }
 

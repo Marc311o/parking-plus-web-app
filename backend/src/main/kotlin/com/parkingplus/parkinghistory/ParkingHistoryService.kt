@@ -65,7 +65,14 @@ class ParkingHistoryService(
             startTime = dto.startTime,
             endTime = dto.endTime,
             price = dto.price,
-            photoPath = dto.photoPath
+            barrierPhotoPath = dto.barrierPhotoPath.ifBlank { 
+                val index = (vehicle.id ?: 0L) % 10
+                "/car_photos/car_${index}_barrier.png"
+            },
+            spotPhotoPath = dto.spotPhotoPath.ifBlank {
+                val index = (vehicle.id ?: 0L) % 10
+                "/car_photos/car_${index}_spot.png"
+            }
         )
 
         return parkingHistoryRepository.save(entity).toDTO()
@@ -288,9 +295,9 @@ class ParkingHistoryService(
             val owner = entry.vehicle.owner
             val entryId = entry.id ?: continue
 
-            events.add(ParkingEventDTO(entryId * 10, entry.vehicle.licensePlate, ParkingEventType.ENTRY, entry.startTime, owner.name, owner.surname, owner.email, entry.photoPath))
+            events.add(ParkingEventDTO(entryId * 10, entry.vehicle.licensePlate, ParkingEventType.ENTRY, entry.startTime, owner.name, owner.surname, owner.email, entry.barrierPhotoPath, entry.spotPhotoPath))
             if (entry.endTime != null) {
-                events.add(ParkingEventDTO(entryId * 10 + 1, entry.vehicle.licensePlate, ParkingEventType.EXIT, entry.endTime!!, owner.name, owner.surname, owner.email, entry.photoPath))
+                events.add(ParkingEventDTO(entryId * 10 + 1, entry.vehicle.licensePlate, ParkingEventType.EXIT, entry.endTime!!, owner.name, owner.surname, owner.email, entry.barrierPhotoPath, entry.spotPhotoPath))
             }
         }
 

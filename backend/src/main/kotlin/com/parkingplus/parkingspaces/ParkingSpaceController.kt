@@ -86,8 +86,8 @@ class ParkingSpaceController(
     fun getParkingStats(): ParkingSpaceStatsDTO =
         parkingSpaceService.getDetailedStats()
 
-    @Operation(summary = "Pobierz szczegółowe dane o miejscu (Admin)")
-    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Pobierz szczegółowe dane o miejscu (Admin/Klient)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/{id}/details")
     fun getParkingSpaceDetails(@PathVariable id: String): ParkingSpotDetailsDTO =
         parkingSpaceService.getSpaceDetails(id)

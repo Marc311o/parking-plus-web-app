@@ -7,5 +7,6 @@ fun ParkingHistoryEntity.toDTO() = ParkingHistoryDTO(
     startTime = startTime,
     endTime = endTime,
     price = price,
-    photoPath = photoPath
+    barrierPhotoPath = barrierPhotoPath,
+    spotPhotoPath = spotPhotoPath
 )

@@ -8,12 +8,12 @@ data class ParkingSpotOccupantDetailsDTO(
     val ownerId: String,
     val ownerName: String,
     val ownerEmail: String,
-    val ownerPhone: String?,
     val vehiclePlate: String,
     val entryTime: LocalDateTime,
     val parkingDurationSec: Long,
     val amountDue: Double,
-    val imageUrl: String?
+    val barrierPhotoPath: String?,
+    val spotPhotoPath: String?
 )
 
 data class ParkingSpotDetailsDTO(

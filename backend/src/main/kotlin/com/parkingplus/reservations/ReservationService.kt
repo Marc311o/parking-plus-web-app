@@ -144,7 +144,8 @@ class ReservationService(
                     startTime = startTime,
                     endTime = endTime, // Persist planned end time
                     price = price.toDouble(),
-                    photoPath = "/photos/placeholder.jpg"
+                    barrierPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_barrier.png",
+                    spotPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_spot.png"
                 )
             )
             id = history.id ?: throw IllegalStateException("Failed to save parking history ID")

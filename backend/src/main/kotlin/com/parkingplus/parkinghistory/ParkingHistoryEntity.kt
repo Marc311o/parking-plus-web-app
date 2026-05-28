@@ -30,6 +30,9 @@ class ParkingHistoryEntity(
     @Column(name = "price", nullable = false)
     var price: Double = 0.0,
 
-    @Column(name = "photo_taken_path", nullable = false)
-    var photoPath: String
+    @Column(name = "barrier_photo_path", nullable = false)
+    var barrierPhotoPath: String,
+
+    @Column(name = "spot_photo_path", nullable = false)
+    var spotPhotoPath: String
 )
