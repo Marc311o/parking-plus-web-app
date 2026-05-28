@@ -9,6 +9,7 @@ import plMessages from '@locales/pl.json';
 import {useAuthStore} from "@store/useAuthStore.tsx";
 import {useEffect} from "react";
 import {useLocaleStore} from '@store/useLocaleStore';
+import SessionExpiredDialog from '@components/Login/SessionExpiredDialog';
 
 type Messages = Record<string, string | Messages>;
 
@@ -50,6 +51,7 @@ function App() {
         <IntlProvider locale={locale} messages={messages}>
             <ThemeProvider theme={theme}>
                 <CssBaseline/>
+                <SessionExpiredDialog />
                 <BrowserRouter>
                     <AppRoutes/>
                 </BrowserRouter>

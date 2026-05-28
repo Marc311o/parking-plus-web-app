@@ -6,6 +6,7 @@ import {fetchUserData} from "@api/Login";
 type AuthState = {
     token: string | null;
     user: User | null;
+    sessionExpired: boolean;
 
     setToken: (token: string | null) => void;
     setUser: (user: User | null) => void;
@@ -14,6 +15,7 @@ type AuthState = {
     initialize: () => Promise<void>;
 
     logout: () => void;
+    setSessionExpired: (expired: boolean) => void;
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -21,9 +23,11 @@ export const useAuthStore = create<AuthState>()(
         (set, get) => ({
             token: null,
             user: null,
+            sessionExpired: false,
 
             setToken: (token) => set({ token }),
             setUser: (user) => set({ user }),
+            setSessionExpired: (expired) => set({ sessionExpired: expired }),
 
             setBalance: (balance) =>
                 set((state) => ({
@@ -43,13 +47,26 @@ export const useAuthStore = create<AuthState>()(
                 if (!token) return;
 
                 try {
-                    const userData = await fetchUserData(token);
-
-                    set({
-                        user: userData,
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
                     });
+
+                    if (response.status === 401) {
+                        set({ sessionExpired: true });
+                        return;
+                    }
+
+                    if (!response.ok) throw new Error();
+
+                    const userData = await response.json();
+                    set({ user: userData });
                 } catch {
-                    get().logout();
+                    // Only logout silently if it's not a 401 (which is handled by the interceptor or the check above)
+                    if (!get().sessionExpired) {
+                        get().logout();
+                    }
                 }
             },
         }),

@@ -12,8 +12,8 @@ import java.util.Date
 class JwtService(
     @Value("\${jwt.secret}") private val secretKeyString: String
 ) {
-    // Tokens expire after 1 hour (3600000 ms)
-    private val jwtExpirationMs = 3_600_000L
+    // Tokens expire after 30 seconds (for testing)
+    private val jwtExpirationMs = 30_000L
 
     // Pre-auth tokens expire after 5 minutes (for MFA verification step)
     private val preAuthExpirationMs = 5 * 60 * 1000L

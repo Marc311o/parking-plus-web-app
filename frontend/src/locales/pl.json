@@ -56,6 +56,11 @@
     },
     "errors": {
       "auth": {
+        "sessionExpired": {
+          "title": "Sesja wygasła",
+          "description": "Twoja sesja wygasła. Zaloguj się ponownie, aby kontynuować.",
+          "button": "Powrót do logowania"
+        },
         "invalidCredentials": "Niepoprawny e-mail lub hasło",
         "mfaFailed": "Błąd logowania",
         "emailTaken": "Na podany e-mail jest już założone inne konto!",
