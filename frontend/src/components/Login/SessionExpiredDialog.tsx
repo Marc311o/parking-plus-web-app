@@ -1,4 +1,4 @@
-import {Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box} from '@mui/material';
+import {Dialog, DialogContent, DialogActions, Button, Typography, Box} from '@mui/material';
 import {useAuthStore} from '@store/useAuthStore';
 import {useIntl} from 'react-intl';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
@@ -30,11 +30,11 @@ const SessionExpiredDialog = () => {
                     <ErrorOutlineRoundedIcon sx={{ fontSize: 64, color: '#D32F2F' }} />
                 </Box>
                 <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, color: '#111111' }}>
-                    {formatMessage({ id: 'auth.sessionExpired.title', defaultMessage: 'Sesja wygasła' })}
+                    {formatMessage({ id: 'logins.errors.auth.sessionExpired.title', defaultMessage: 'Sesja wygasła' })}
                 </Typography>
                 <Typography sx={{ color: '#6B7280' }}>
                     {formatMessage({ 
-                        id: 'auth.sessionExpired.description', 
+                        id: 'logins.errors.auth.sessionExpired.description', 
                         defaultMessage: 'Twoja sesja wygasła. Zaloguj się ponownie, aby kontynuować.' 
                     })}
                 </Typography>
@@ -53,7 +53,7 @@ const SessionExpiredDialog = () => {
                         '&:hover': { bgcolor: '#4A0558' }
                     }}
                 >
-                    {formatMessage({ id: 'auth.sessionExpired.button', defaultMessage: 'Powrót do logowania' })}
+                    {formatMessage({ id: 'logins.errors.auth.sessionExpired.button', defaultMessage: 'Powrót do logowania' })}
                 </Button>
             </DialogActions>
         </Dialog>

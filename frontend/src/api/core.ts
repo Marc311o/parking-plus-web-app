@@ -25,9 +25,10 @@ window.fetch = async (...args) => {
     const url = typeof args[0] === 'string' ? args[0] : args[0] instanceof Request ? args[0].url : '';
     const isLoginRequest = url.includes('/auth/login') || url.includes('/auth/verify-mfa');
     
-    if (response.status === 401 && !isLoginRequest) {
-        console.log('Session expired detected via 401 response');
-        useAuthStore.getState().setSessionExpired(true);
+    const {token, setSessionExpired} = useAuthStore.getState();
+
+    if (token && response.status === 401 && !isLoginRequest) {
+        setSessionExpired(true);
     }
     
     return response;

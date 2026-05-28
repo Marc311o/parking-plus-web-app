@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {User} from '@api/Login/types';
-import {fetchUserData} from "@api/Login";
 
 type AuthState = {
     token: string | null;
@@ -25,7 +24,7 @@ export const useAuthStore = create<AuthState>()(
             user: null,
             sessionExpired: false,
 
-            setToken: (token) => set({ token }),
+            setToken: (token) => set({ token, sessionExpired: false }),
             setUser: (user) => set({ user }),
             setSessionExpired: (expired) => set({ sessionExpired: expired }),
 
@@ -39,7 +38,7 @@ export const useAuthStore = create<AuthState>()(
                         : state.user,
                 })),
 
-            logout: () => set({ token: null, user: null }),
+            logout: () => set({ token: null, user: null, sessionExpired: false }),
 
             initialize: async () => {
                 const token = get().token;
