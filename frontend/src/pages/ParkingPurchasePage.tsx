@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react';
-import {Alert, Box, Button, CircularProgress, Paper, Stack, Typography} from '@mui/material';
+import {Alert, Box, Button, CircularProgress, Paper, Snackbar, Stack, Typography} from '@mui/material';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 import {useIntl} from 'react-intl';
 
@@ -66,6 +66,11 @@ const ParkingPurchasePage = () => {
     const [quoteError, setQuoteError] = useState<string | null>(null);
     const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
+    const [snackbar, setSnackbar] = useState<{ open: boolean; message: string }>({
+        open: false,
+        message: '',
+    });
+
     const selectedVehicle = useMemo(
         () => vehicles.find((vehicle) => String(vehicle.id) === selectedVehicleId) ?? null,
         [vehicles, selectedVehicleId],
@@ -94,10 +99,20 @@ const ParkingPurchasePage = () => {
         ? purchaseEndDateTime
         : reservationEndDateTime;
 
-    const isParkingTimeValid =
-        Boolean(parkingStartDateTime) &&
-        Boolean(parkingEndDateTime) &&
-        new Date(parkingStartDateTime as string) < new Date(parkingEndDateTime as string);
+    const isParkingTimeValid = useMemo(() => {
+        if (!parkingStartDateTime || !parkingEndDateTime) return false;
+        
+        const start = new Date(parkingStartDateTime as string);
+        const end = new Date(parkingEndDateTime as string);
+        const nowForValidation = new Date();
+        
+        nowForValidation.setSeconds(0);
+        nowForValidation.setMilliseconds(0);
+        
+        const bufferTime = new Date(nowForValidation.getTime() - 60000);
+
+        return start >= bufferTime && end > start;
+    }, [parkingStartDateTime, parkingEndDateTime]);
 
     const canPurchase =
         Boolean(selectedVehicle?.id) &&
@@ -326,6 +341,95 @@ const ParkingPurchasePage = () => {
         );
     }
 
+    const showValidationError = (messageKey: string) => {
+        setSnackbar({
+            open: true,
+            message: formatMessage({ id: `parkingPurchase.errors.${messageKey}` }),
+        });
+    };
+
+    const handlePurchaseEndDateChange = (value: string) => {
+        const today = toDateInputValue(new Date());
+        if (value < today) {
+            setPurchaseEndDate(today);
+            showValidationError('pastDate');
+        } else {
+            setPurchaseEndDate(value);
+        }
+        clearPurchaseState();
+    };
+
+    const handlePurchaseEndTimeChange = (value: string) => {
+        const today = toDateInputValue(new Date());
+        if (purchaseEndDate === today) {
+            const currentTime = toTimeInputValue(new Date());
+            if (value < currentTime) {
+                setPurchaseEndTime(currentTime);
+                showValidationError('pastTime');
+            } else {
+                setPurchaseEndTime(value);
+            }
+        } else {
+            setPurchaseEndTime(value);
+        }
+        clearPurchaseState();
+    };
+
+    const handleReservationStartDateChange = (value: string) => {
+        const today = toDateInputValue(new Date());
+        let finalValue = value;
+        if (value < today) {
+            finalValue = today;
+            showValidationError('pastDate');
+        }
+        setReservationStartDate(finalValue);
+        
+        if (reservationEndDate < finalValue) {
+            setReservationEndDate(finalValue);
+        }
+        clearPurchaseState();
+    };
+
+    const handleReservationStartTimeChange = (value: string) => {
+        const today = toDateInputValue(new Date());
+        let finalTime = value;
+        if (reservationStartDate === today) {
+            const currentTime = toTimeInputValue(new Date());
+            if (value < currentTime) {
+                finalTime = currentTime;
+                showValidationError('pastTime');
+            }
+        }
+        setReservationStartTime(finalTime);
+        
+        if (reservationEndDate === reservationStartDate && reservationEndTime <= finalTime) {
+            const end = new Date(buildDateTime(reservationStartDate, finalTime) as string);
+            setReservationEndTime(toTimeInputValue(addHours(end, 1)));
+        }
+        clearPurchaseState();
+    };
+
+    const handleReservationEndDateChange = (value: string) => {
+        if (value < reservationStartDate) {
+            setReservationEndDate(reservationStartDate);
+            showValidationError('endBeforeStart');
+        } else {
+            setReservationEndDate(value);
+        }
+        clearPurchaseState();
+    };
+
+    const handleReservationEndTimeChange = (value: string) => {
+        if (reservationEndDate === reservationStartDate && value <= reservationStartTime) {
+            const end = new Date(buildDateTime(reservationStartDate, reservationStartTime) as string);
+            setReservationEndTime(toTimeInputValue(addHours(end, 1)));
+            showValidationError('endBeforeStart');
+        } else {
+            setReservationEndTime(value);
+        }
+        clearPurchaseState();
+    };
+
     return (
         <Box
             sx={{
@@ -408,37 +512,18 @@ const ParkingPurchasePage = () => {
                                 <ParkingPurchaseTimeCard
                                     mode={mode}
                                     isDisabled={isPurchasing}
-                                    isParkingTimeValid={isParkingTimeValid}
                                     purchaseEndDate={purchaseEndDate}
                                     purchaseEndTime={purchaseEndTime}
                                     reservationStartDate={reservationStartDate}
                                     reservationStartTime={reservationStartTime}
                                     reservationEndDate={reservationEndDate}
                                     reservationEndTime={reservationEndTime}
-                                    onPurchaseEndDateChange={(value) => {
-                                        setPurchaseEndDate(value);
-                                        clearPurchaseState();
-                                    }}
-                                    onPurchaseEndTimeChange={(value) => {
-                                        setPurchaseEndTime(value);
-                                        clearPurchaseState();
-                                    }}
-                                    onReservationStartDateChange={(value) => {
-                                        setReservationStartDate(value);
-                                        clearPurchaseState();
-                                    }}
-                                    onReservationStartTimeChange={(value) => {
-                                        setReservationStartTime(value);
-                                        clearPurchaseState();
-                                    }}
-                                    onReservationEndDateChange={(value) => {
-                                        setReservationEndDate(value);
-                                        clearPurchaseState();
-                                    }}
-                                    onReservationEndTimeChange={(value) => {
-                                        setReservationEndTime(value);
-                                        clearPurchaseState();
-                                    }}
+                                    onPurchaseEndDateChange={handlePurchaseEndDateChange}
+                                    onPurchaseEndTimeChange={handlePurchaseEndTimeChange}
+                                    onReservationStartDateChange={handleReservationStartDateChange}
+                                    onReservationStartTimeChange={handleReservationStartTimeChange}
+                                    onReservationEndDateChange={handleReservationEndDateChange}
+                                    onReservationEndTimeChange={handleReservationEndTimeChange}
                                 />
 
                                 {quoteError && (
@@ -456,36 +541,6 @@ const ParkingPurchasePage = () => {
                                         {purchaseError}
                                     </Alert>
                                 )}
-
-                                <Button
-                                    variant="contained"
-                                    size="large"
-                                    disabled={!canPurchase}
-                                    onClick={handlePurchase}
-                                    sx={{
-                                        alignSelf: {
-                                            xs: 'stretch',
-                                            sm: 'flex-start',
-                                        },
-                                        minWidth: 210,
-                                        height: 44,
-                                        borderRadius: '13px',
-                                        bgcolor: '#9C13B8',
-                                        textTransform: 'none',
-                                        fontWeight: 800,
-                                        boxShadow: 'none',
-                                        '&:hover': {
-                                            bgcolor: '#7F0F96',
-                                            boxShadow: 'none',
-                                        },
-                                    }}
-                                >
-                                    {isPurchasing
-                                        ? formatMessage({id: 'parkingPurchase.processingButton'})
-                                        : mode === 'RESERVATION'
-                                            ? formatMessage({id: 'parkingPurchase.reserveButton'})
-                                            : formatMessage({id: 'parkingPurchase.buyButton'})}
-                                </Button>
                             </Stack>
                         )}
                     </Box>
@@ -493,6 +548,7 @@ const ParkingPurchasePage = () => {
 
                 <Box
                     sx={{
+                        height: '100%',
                         position: {
                             xs: 'static',
                             lg: 'sticky',
@@ -511,9 +567,28 @@ const ParkingPurchasePage = () => {
                         isQuoteLoading={isQuoteLoading}
                         reservationStartDateTime={reservationStartDateTime}
                         parkingEndDateTime={parkingEndDateTime}
+                        onPurchase={handlePurchase}
+                        isPurchasing={isPurchasing}
+                        canPurchase={canPurchase}
                     />
                 </Box>
             </Box>
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={4000}
+                onClose={() => setSnackbar({ ...snackbar, open: false })}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert 
+                    onClose={() => setSnackbar({ ...snackbar, open: false })} 
+                    severity="info" 
+                    variant="filled"
+                    sx={{ width: '100%', borderRadius: '14px' }}
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

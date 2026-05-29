@@ -1,4 +1,4 @@
-import {Avatar, Box, CircularProgress, Divider, Paper, Stack, Typography} from '@mui/material';
+import {Avatar, Box, Button, CircularProgress, Divider, Paper, Stack, Typography} from '@mui/material';
 import AccountBalanceWalletRoundedIcon from '@mui/icons-material/AccountBalanceWalletRounded';
 import ConfirmationNumberRoundedIcon from '@mui/icons-material/ConfirmationNumberRounded';
 import {useIntl} from 'react-intl';
@@ -14,6 +14,9 @@ type ParkingPurchaseSummaryProps = {
     isQuoteLoading: boolean;
     reservationStartDateTime: string | null;
     parkingEndDateTime: string | null;
+    onPurchase: () => void;
+    isPurchasing: boolean;
+    canPurchase: boolean;
 };
 
 const ParkingPurchaseSummary = ({
@@ -25,6 +28,9 @@ const ParkingPurchaseSummary = ({
                                     isQuoteLoading,
                                     reservationStartDateTime,
                                     parkingEndDateTime,
+                                    onPurchase,
+                                    isPurchasing,
+                                    canPurchase,
                                 }: ParkingPurchaseSummaryProps) => {
     const {formatMessage} = useIntl();
 
@@ -33,14 +39,11 @@ const ParkingPurchaseSummary = ({
             sx={{
                 height: {
                     xs: 'auto',
-                    lg: 'calc(100vh - 48px)',
+                    lg: '100%',
                 },
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: {
-                    xs: 'flex-start',
-                    lg: 'space-between',
-                },
+                justifyContent: 'flex-start',
                 gap: 2.5,
             }}
         >
@@ -81,11 +84,14 @@ const ParkingPurchaseSummary = ({
             <Paper
                 elevation={0}
                 sx={{
+                    flex: 1,
                     p: 2.5,
                     borderRadius: '22px',
                     bgcolor: '#FFFFFF',
                     border: '1px solid rgba(139, 31, 158, 0.1)',
                     boxShadow: '0 18px 42px rgba(20, 30, 55, 0.08)',
+                    display: 'flex',
+                    flexDirection: 'column',
                 }}
             >
                 <Box sx={{display: 'flex', alignItems: 'center', gap: 1.5, mb: 2}}>
@@ -113,7 +119,7 @@ const ParkingPurchaseSummary = ({
 
                 <Divider sx={{mb: 2}}/>
 
-                <Stack spacing={1.6}>
+                <Stack spacing={1.6} sx={{ flex: 1 }}>
                     <Box sx={{display: 'flex', justifyContent: 'space-between', gap: 2}}>
                         <Typography sx={{fontSize: 14, color: '#777777'}}>
                             {formatMessage({id: 'parkingPurchase.summaryMode'})}
@@ -186,6 +192,35 @@ const ParkingPurchaseSummary = ({
                         </Typography>
                     </Box>
                 </Stack>
+
+                <Box sx={{ mt: 3 }}>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        fullWidth
+                        disabled={!canPurchase}
+                        onClick={onPurchase}
+                        sx={{
+                            height: 48,
+                            borderRadius: '13px',
+                            bgcolor: '#9C13B8',
+                            textTransform: 'none',
+                            fontSize: 16,
+                            fontWeight: 800,
+                            boxShadow: 'none',
+                            '&:hover': {
+                                bgcolor: '#7F0F96',
+                                boxShadow: 'none',
+                            },
+                        }}
+                    >
+                        {isPurchasing
+                            ? formatMessage({id: 'parkingPurchase.processingButton'})
+                            : mode === 'RESERVATION'
+                                ? formatMessage({id: 'parkingPurchase.reserveButton'})
+                                : formatMessage({id: 'parkingPurchase.buyButton'})}
+                    </Button>
+                </Box>
             </Paper>
         </Box>
     );

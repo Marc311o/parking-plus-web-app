@@ -10,7 +10,7 @@ const ParkingPurchaseHero = () => {
             elevation={0}
             sx={{
                 overflow: 'hidden',
-                borderRadius: '22px',
+                borderRadius: '22px 0 0',
                 border: '1px solid rgba(139, 31, 158, 0.1)',
                 boxShadow: '0 18px 42px rgba(20, 30, 55, 0.08)',
             }}

@@ -432,7 +432,10 @@
     "errors": {
       "initialData": "Failed to fetch data needed to prepare the stay.",
       "quote": "Failed to calculate price for the selected time.",
-      "purchase": "Failed to confirm the stay."
+      "purchase": "Failed to confirm the stay.",
+      "pastDate": "Past dates cannot be selected.",
+      "pastTime": "The selected time has already passed.",
+      "endBeforeStart": "End time must be later than start time."
     },
     "completedButton": "Parking purchased",
     "backToFormButton": "Back to selection"
