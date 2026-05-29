@@ -56,6 +56,11 @@
     },
     "errors": {
       "auth": {
+        "sessionExpired": {
+          "title": "Session Expired",
+          "description": "Your session has expired. Please log in again to continue.",
+          "button": "Back to login"
+        },
         "invalidCredentials": "Invalid email or password",
         "mfaFailed": "Login error",
         "emailTaken": "An account already exists for this email address!",
