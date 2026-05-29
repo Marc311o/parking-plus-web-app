@@ -71,6 +71,32 @@ const ParkingPurchasePage = () => {
         message: '',
     });
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const today = toDateInputValue(new Date());
+            const nowTime = toTimeInputValue(new Date());
+
+            if (reservationStartDate === today) {
+                const currentStart = new Date(buildDateTime(reservationStartDate, reservationStartTime) as string);
+                const realNow = new Date();
+                realNow.setSeconds(0);
+                realNow.setMilliseconds(0);
+
+                if (currentStart < realNow) {
+                    setReservationStartTime(nowTime);
+
+                    if (reservationEndDate === today && reservationEndTime <= nowTime) {
+                        const newEnd = new Date(realNow.getTime() + 60 * 60 * 1000); // +1h
+                        setReservationEndDate(toDateInputValue(newEnd));
+                        setReservationEndTime(toTimeInputValue(newEnd));
+                    }
+                }
+            }
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, [reservationStartDate, reservationStartTime, reservationEndDate, reservationEndTime]);
+
     const selectedVehicle = useMemo(
         () => vehicles.find((vehicle) => String(vehicle.id) === selectedVehicleId) ?? null,
         [vehicles, selectedVehicleId],
