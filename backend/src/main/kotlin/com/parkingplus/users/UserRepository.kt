@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.*
+import com.parkingplus.vehicles.VehicleEntity
+
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, Long> {
@@ -18,12 +20,14 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
     fun findAllByIsOperatorFalse(): List<UserEntity>
     fun findByNameAndSurname(name: String, surname: String): List<UserEntity>
 
-    @Query("SELECT u FROM UserEntity u WHERE " +
-            "(:clientsOnly = false OR u.isOperator = false) AND " +
+    @Query("SELECT DISTINCT u FROM UserEntity u " +
+            "LEFT JOIN VehicleEntity v ON v.owner = u " +
+            "WHERE (:clientsOnly = false OR u.isOperator = false) AND " +
             "(:search IS NULL OR :search = '' OR " +
             "LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.surname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))")
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(v.licensePlate) LIKE LOWER(CONCAT('%', :search, '%')))")
     fun findAllWithSearch(
         @Param("search") search: String?,
         @Param("clientsOnly") clientsOnly: Boolean,

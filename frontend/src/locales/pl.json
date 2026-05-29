@@ -129,7 +129,7 @@
     },
     "clients": {
       "filters": {
-        "searchPlaceholder": "Wyszukaj klienta",
+        "searchPlaceholder": "Wyszukaj klienta (imię, email, tablica)",
         "searchButton": "Wyszukaj",
         "sortLabel": "Sortuj po",
         "sortButton": "Sortuj",
