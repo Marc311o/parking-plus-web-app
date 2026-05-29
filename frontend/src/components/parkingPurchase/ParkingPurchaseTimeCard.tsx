@@ -70,7 +70,13 @@ const ParkingPurchaseTimeCard = ({
                     </Typography>
                 </Box>
 
-                {mode === 'PURCHASE' ? (
+                {mode === 'INDEFINITE' ? (
+                    <Box sx={{ p: 2, bgcolor: '#FBF7FC', borderRadius: '14px', border: '1px dashed rgba(139, 31, 158, 0.2)' }}>
+                        <Typography sx={{ fontSize: 14, color: '#8B1F9E', fontWeight: 600 }}>
+                            {formatMessage({id: 'parkingPurchase.indefiniteDescription'})}
+                        </Typography>
+                    </Box>
+                ) : mode === 'PURCHASE' ? (
                     <Box
                         sx={{
                             display: 'grid',

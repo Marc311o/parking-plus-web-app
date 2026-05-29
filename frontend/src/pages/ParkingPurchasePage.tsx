@@ -117,15 +117,18 @@ const ParkingPurchasePage = () => {
         [purchaseEndDate, purchaseEndTime],
     );
 
-    const parkingStartDateTime = mode === 'PURCHASE'
+    const parkingStartDateTime = (mode === 'PURCHASE' || mode === 'INDEFINITE')
         ? getCurrentDateTimeValue()
         : reservationStartDateTime;
 
-    const parkingEndDateTime = mode === 'PURCHASE'
-        ? purchaseEndDateTime
-        : reservationEndDateTime;
+    const parkingEndDateTime = mode === 'RESERVATION'
+        ? reservationEndDateTime
+        : mode === 'PURCHASE'
+            ? purchaseEndDateTime
+            : null;
 
     const isParkingTimeValid = useMemo(() => {
+        if (mode === 'INDEFINITE') return true;
         if (!parkingStartDateTime || !parkingEndDateTime) return false;
         
         const start = new Date(parkingStartDateTime as string);
@@ -271,15 +274,17 @@ const ParkingPurchasePage = () => {
     };
 
     const handlePurchase = async () => {
-        const currentStartDateTime = mode === 'PURCHASE'
+        const currentStartDateTime = (mode === 'PURCHASE' || mode === 'INDEFINITE')
             ? getCurrentDateTimeValue()
             : reservationStartDateTime;
 
-        const currentEndDateTime = mode === 'PURCHASE'
-            ? purchaseEndDateTime
-            : reservationEndDateTime;
+        const currentEndDateTime = mode === 'RESERVATION'
+            ? reservationEndDateTime
+            : mode === 'PURCHASE'
+                ? purchaseEndDateTime
+                : null;
 
-        if (!selectedVehicle?.id || !currentStartDateTime || !currentEndDateTime) {
+        if (!selectedVehicle?.id || !currentStartDateTime || (mode !== 'INDEFINITE' && !currentEndDateTime)) {
             return;
         }
 
@@ -291,8 +296,8 @@ const ParkingPurchasePage = () => {
             const result = await purchaseParking({
                 vehicleId: selectedVehicle.id,
                 mode,
-                startTime: currentStartDateTime,
-                endTime: currentEndDateTime,
+                startTime: currentStartDateTime as string,
+                endTime: currentEndDateTime as string | null,
             });
 
             setPurchaseResult(result);

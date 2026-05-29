@@ -19,7 +19,11 @@ class PricingService(
 ) {
 
     fun calculateQuote(request: ParkingPurchaseRequestDTO, userId: Long, isAdmin: Boolean = false): ParkingQuoteDTO {
-        val price = calculatePrice(request.startTime, request.endTime)
+        val price = if (request.mode == ParkingPurchaseMode.INDEFINITE) {
+            BigDecimal.ZERO
+        } else {
+            calculatePrice(request.startTime, request.endTime ?: throw ResponseStatusException(HttpStatus.BAD_REQUEST, "End time is required for this mode"))
+        }
         
         val balanceToUse = if (request.vehicleId != null) {
             val vehicle = vehicleRepository.findById(request.vehicleId).orElseThrow {
@@ -45,11 +49,14 @@ class PricingService(
     }
 
     fun calculatePrice(start: LocalDateTime, end: LocalDateTime): BigDecimal {
-        if (end.isBefore(start) || end == start) {
+        if (end.isBefore(start)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time")
         }
 
-        val durationMinutes = Duration.between(start, end).toMinutes()
+        var durationMinutes = Duration.between(start, end).toMinutes()
+        if (durationMinutes < 1) {
+            durationMinutes = 1
+        }
         val durationHours = Math.ceil(durationMinutes / 60.0).toInt().coerceAtLeast(1)
 
         val tariffs = tariffRepository.findAll()
@@ -103,7 +110,7 @@ data class ParkingPurchaseRequestDTO(
     val vehicleId: Long?,
     val mode: ParkingPurchaseMode,
     val startTime: LocalDateTime,
-    val endTime: LocalDateTime,
+    val endTime: LocalDateTime?,
     val durationMinutes: Int? = null
 )
 

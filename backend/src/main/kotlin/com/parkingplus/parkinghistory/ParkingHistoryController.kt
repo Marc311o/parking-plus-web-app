@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @RestController
@@ -66,6 +67,24 @@ class ParkingHistoryController(
         @PathVariable licensePlate: String,
     ): ResponseEntity<ParkingHistoryDTO> {
         return ResponseEntity.ok(parkingHistoryService.endParking(licensePlate))
+    }
+
+    @Operation(summary = "Pobierz opłatę za trwający postój", description = "Zwraca aktualną kwotę do zapłaty za postój bezterminowy.")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @GetMapping("/checkout/{id}/fee")
+    fun getCheckoutFee(@PathVariable id: Long): ResponseEntity<CheckoutDetailsDTO> {
+        return ResponseEntity.ok(parkingHistoryService.calculateCurrentIndefiniteFee(id))
+    }
+
+    @Operation(summary = "Opłać i zakończ postój bezterminowy", description = "Pobiera opłatę z salda i zwalnia miejsce.")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PostMapping("/checkout/{id}")
+    fun checkoutParking(
+        @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<ParkingHistoryDTO> {
+        val authUserId = authentication.details as? Long ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        return ResponseEntity.ok(parkingHistoryService.checkoutIndefinite(id, authUserId))
     }
 
     @Operation(summary = "Usuń wpis historii (Admin)")

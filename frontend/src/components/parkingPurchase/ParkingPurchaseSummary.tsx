@@ -128,7 +128,9 @@ const ParkingPurchaseSummary = ({
                         <Typography sx={{fontSize: 14, fontWeight: 800, textAlign: 'right'}}>
                             {mode === 'RESERVATION'
                                 ? formatMessage({id: 'parkingPurchase.modeReservation'})
-                                : formatMessage({id: 'parkingPurchase.modePurchase'})}
+                                : mode === 'INDEFINITE'
+                                    ? formatMessage({id: 'parkingPurchase.modeIndefinite'})
+                                    : formatMessage({id: 'parkingPurchase.modePurchase'})}
                         </Typography>
                     </Box>
 
@@ -148,7 +150,7 @@ const ParkingPurchaseSummary = ({
                         </Typography>
 
                         <Typography sx={{fontSize: 14, fontWeight: 800, textAlign: 'right'}}>
-                            {mode === 'PURCHASE'
+                            {mode === 'PURCHASE' || mode === 'INDEFINITE'
                                 ? formatMessage({id: 'parkingPurchase.now'})
                                 : reservationStartDateTime
                                     ? formatDateTime(reservationStartDateTime)
@@ -162,7 +164,9 @@ const ParkingPurchaseSummary = ({
                         </Typography>
 
                         <Typography sx={{fontSize: 14, fontWeight: 800, textAlign: 'right'}}>
-                            {parkingEndDateTime ? formatDateTime(parkingEndDateTime) : '-'}
+                            {mode === 'INDEFINITE'
+                                ? formatMessage({id: 'parkingPurchase.indefiniteEndDate'})
+                                : parkingEndDateTime ? formatDateTime(parkingEndDateTime) : '-'}
                         </Typography>
                     </Box>
 
@@ -174,6 +178,8 @@ const ParkingPurchaseSummary = ({
                         <Typography sx={{fontSize: 18, fontWeight: 900, color: '#202020'}}>
                             {isQuoteLoading ? (
                                 <CircularProgress size={18}/>
+                            ) : mode === 'INDEFINITE' ? (
+                                formatMessage({id: 'parkingPurchase.indefinitePrice'})
                             ) : quote ? (
                                 formatMoney(quote.price, quote.currency ?? currency)
                             ) : (
@@ -188,7 +194,13 @@ const ParkingPurchaseSummary = ({
                         </Typography>
 
                         <Typography sx={{fontSize: 14, fontWeight: 800}}>
-                            {quote ? formatMoney(quote.balanceAfter, quote.currency ?? currency) : '-'}
+                            {mode === 'INDEFINITE' ? (
+                                balance === null ? '-' : formatMoney(balance, currency)
+                            ) : quote ? (
+                                formatMoney(quote.balanceAfter, quote.currency ?? currency)
+                            ) : (
+                                '-'
+                            )}
                         </Typography>
                     </Box>
                 </Stack>
