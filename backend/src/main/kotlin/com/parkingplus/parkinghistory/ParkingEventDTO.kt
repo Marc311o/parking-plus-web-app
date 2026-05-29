@@ -17,5 +17,6 @@ data class ParkingEventDTO(
     val ownerName: String,
     val ownerSurname: String,
     val ownerEmail: String,
-    val carPhotoPath: String?
+    val barrierPhotoPath: String?,
+    val spotPhotoPath: String?
 )

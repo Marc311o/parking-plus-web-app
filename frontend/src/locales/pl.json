@@ -151,19 +151,19 @@
   },
   "parking": {
     "details": {
-      "spotCardTitle": "ID #{id}",
-      "ownerCardTitle": "ID {id}",
+      "spotCardTitle": "Miejsce #{id}",
+      "ownerCardTitle": "Obecnie zajęte przez klienta #{id}",
       "labels": {
         "type": "Typ",
         "status": "Status",
         "level": "Piętro",
-        "ownerData": "Dane",
+        "ownerData": "Klient",
         "email": "Email",
-        "phone": "Nr tel.",
         "entry": "Wjazd",
         "plate": "Tablica",
         "parkingTime": "Czas postoju",
-        "amountDue": "Należność"
+        "amountDue": "Należność",
+        "viewPhoto": "Zobacz zdjęcie"
       },
       "statuses": {
         "FREE": "Wolne",
@@ -324,7 +324,9 @@
       "id": "ID",
       "ownerName": "Imię właściciela",
       "ownerSurname": "Nazwisko właściciela",
-      "ownerEmail": "E-mail właściciela"
+      "ownerEmail": "E-mail właściciela",
+      "barrierPhoto": "Wjazd",
+      "spotPhoto": "Miejsce"
     }
   },
   "prices": {

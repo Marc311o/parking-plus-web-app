@@ -21,12 +21,12 @@ export interface ParkingSpotOccupantDetails {
     ownerId: string;
     ownerName: string;
     ownerEmail: string;
-    ownerPhone: string | null;
     vehiclePlate: string;
     entryTime: string;
     parkingDurationSec: number;
     amountDue: number;
-    imageUrl: string | null;
+    barrierPhotoPath: string | null;
+    spotPhotoPath: string | null;
 }
 
 export interface ParkingSpotDetails {
