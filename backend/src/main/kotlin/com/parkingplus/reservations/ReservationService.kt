@@ -67,9 +67,11 @@ class ReservationService(
         
         // Filter out spaces that have overlapping reservations
         val trulyAvailableSpaces = allFreeSpaces.filter { space ->
-            if (request.mode == ParkingPurchaseMode.INDEFINITE || request.mode == ParkingPurchaseMode.PURCHASE) {
-                // For immediate parking, we only care if it's reserved *now*
-                reservationRepository.findOverlappingReservations(space.id, startTime, startTime.plusMinutes(1)).isEmpty()
+            if (request.mode == ParkingPurchaseMode.PURCHASE) {
+                reservationRepository.findOverlappingReservations(space.id, startTime, endTime!!).isEmpty()
+            } else if (request.mode == ParkingPurchaseMode.INDEFINITE) {
+                // Unknown end time - block any future reservations for this space
+                reservationRepository.findOverlappingReservations(space.id, startTime, LocalDateTime.of(9999, 12, 31, 23, 59)).isEmpty()
             } else {
                 reservationRepository.findOverlappingReservations(space.id, startTime, endTime!!).isEmpty()
             }

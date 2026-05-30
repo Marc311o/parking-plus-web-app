@@ -49,7 +49,7 @@ class PricingService(
     }
 
     fun calculatePrice(start: LocalDateTime, end: LocalDateTime): BigDecimal {
-        if (end.isBefore(start)) {
+        if (!end.isAfter(start)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time")
         }
 

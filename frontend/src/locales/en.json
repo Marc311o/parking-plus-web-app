@@ -548,5 +548,28 @@
       "EV_ABLEBODIED": "Electric",
       "EV_HANDICAPED": "Electric (disabled)"
     }
+  },
+  "payParking": {
+    "title": "Pay for parking",
+    "subtitle": "End parking and settle payment.",
+    "labels": {
+      "vehicle": "Vehicle",
+      "entry": "Entry",
+      "duration": "Duration: {duration}",
+      "currentFee": "Current fee",
+      "balance": "YOUR BALANCE",
+      "insufficientFunds": "Insufficient funds!",
+      "topUpPrompt": "Top up your account in the main dashboard to pay for parking."
+    },
+    "buttons": {
+      "refresh": "Refresh",
+      "pay": "Pay and end parking",
+      "processing": "Processing..."
+    },
+    "success": {
+      "title": "Thank you!",
+      "message": "Payment was successful. You can now leave the parking.",
+      "backButton": "Back to dashboard"
+    }
   }
 }

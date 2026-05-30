@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useSearchParams} from 'react-router-dom';
 import {
     Alert,
@@ -52,7 +52,7 @@ const PayParkingPage = () => {
     const balance = useAuthStore((state) => state.user?.balance ?? 0);
     const setBalance = useAuthStore((state) => state.setBalance);
 
-    const fetchFee = async () => {
+    const fetchFee = useCallback(async () => {
         if (!parkingId) return;
         setIsLoading(true);
         setError(null);
@@ -69,11 +69,11 @@ const PayParkingPage = () => {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [parkingId, formatMessage]);
 
     useEffect(() => {
         void fetchFee();
-    }, [parkingId]);
+    }, [fetchFee]);
 
     const handlePay = async () => {
         if (!parkingId) return;
@@ -88,9 +88,9 @@ const PayParkingPage = () => {
                 const body = await response.text();
                 throw new Error(body || 'Payment failed');
             }
-            const data = await response.json();
+            const data: { price: number } = await response.json();
             setSuccess(true);
-            setBalance(data.balanceAfter ?? balance - (details?.fee ?? 0));
+            setBalance(balance - data.price);
         } catch (err: any) {
             console.error(err);
             setError(err.message || formatMessage({id: 'parkingPurchase.errors.purchase'}));
@@ -117,8 +117,12 @@ const PayParkingPage = () => {
                             <CheckCircleRoundedIcon sx={{ fontSize: 48 }} />
                         </Avatar>
                         <Box>
-                            <Typography sx={{ fontSize: 24, fontWeight: 900 }}>Dziękujemy!</Typography>
-                            <Typography sx={{ color: '#777777', mt: 1 }}>Płatność została zrealizowana pomyślnie. Możesz teraz opuścić parking.</Typography>
+                            <Typography sx={{ fontSize: 24, fontWeight: 900 }}>
+                                {formatMessage({id: 'payParking.success.title'})}
+                            </Typography>
+                            <Typography sx={{ color: '#777777', mt: 1 }}>
+                                {formatMessage({id: 'payParking.success.message'})}
+                            </Typography>
                         </Box>
                         <Button 
                             variant="outlined" 
@@ -126,7 +130,7 @@ const PayParkingPage = () => {
                             href="/dashboard"
                             sx={{ borderRadius: '14px', textTransform: 'none', fontWeight: 800, height: 48 }}
                         >
-                            Powrót do panelu
+                            {formatMessage({id: 'payParking.success.backButton'})}
                         </Button>
                     </Stack>
                 </Paper>
@@ -146,8 +150,12 @@ const PayParkingPage = () => {
                 }}
             >
                 <Box sx={{ p: 3, bgcolor: '#8B1F9E', color: '#FFFFFF' }}>
-                    <Typography sx={{ fontSize: 20, fontWeight: 900 }}>Opłać postój</Typography>
-                    <Typography sx={{ fontSize: 14, opacity: 0.8 }}>Zakończ parkowanie i ureguluj płatność.</Typography>
+                    <Typography sx={{ fontSize: 20, fontWeight: 900 }}>
+                        {formatMessage({id: 'payParking.title'})}
+                    </Typography>
+                    <Typography sx={{ fontSize: 14, opacity: 0.8 }}>
+                        {formatMessage({id: 'payParking.subtitle'})}
+                    </Typography>
                 </Box>
 
                 <Box sx={{ p: 3, bgcolor: '#FBF7FC' }}>
@@ -160,7 +168,9 @@ const PayParkingPage = () => {
                                     <DirectionsCarRoundedIcon />
                                 </Avatar>
                                 <Box>
-                                    <Typography sx={{ fontSize: 13, color: '#777777', fontWeight: 700 }}>Pojazd</Typography>
+                                    <Typography sx={{ fontSize: 13, color: '#777777', fontWeight: 700 }}>
+                                        {formatMessage({id: 'payParking.labels.vehicle'})}
+                                    </Typography>
                                     <Typography sx={{ fontSize: 18, fontWeight: 900 }}>{plate ?? '-'}</Typography>
                                 </Box>
                             </Box>
@@ -170,12 +180,14 @@ const PayParkingPage = () => {
                                     <EventAvailableRoundedIcon />
                                 </Avatar>
                                 <Box>
-                                    <Typography sx={{ fontSize: 13, color: '#777777', fontWeight: 700 }}>Wjazd</Typography>
+                                    <Typography sx={{ fontSize: 13, color: '#777777', fontWeight: 700 }}>
+                                        {formatMessage({id: 'payParking.labels.entry'})}
+                                    </Typography>
                                     <Typography sx={{ fontSize: 14, fontWeight: 800 }}>
                                         {isLoading ? <CircularProgress size={14} /> : (details ? formatDateTime(details.startTime) : '-')}
                                     </Typography>
                                     <Typography sx={{ fontSize: 12, color: '#8B1F9E', fontWeight: 700 }}>
-                                        {details ? `Czas: ${formatDuration(details.durationMinutes)}` : ''}
+                                        {details ? formatMessage({id: 'payParking.labels.duration'}, {duration: formatDuration(details.durationMinutes)}) : ''}
                                     </Typography>
                                 </Box>
                             </Box>
@@ -189,7 +201,9 @@ const PayParkingPage = () => {
                                     <AccessTimeRoundedIcon />
                                 </Avatar>
                                 <Box>
-                                    <Typography sx={{ fontSize: 13, color: '#777777', fontWeight: 700 }}>Aktualna opłata</Typography>
+                                    <Typography sx={{ fontSize: 13, color: '#777777', fontWeight: 700 }}>
+                                        {formatMessage({id: 'payParking.labels.currentFee'})}
+                                    </Typography>
                                     <Typography sx={{ fontSize: 22, fontWeight: 900 }}>
                                         {isLoading ? <CircularProgress size={20} /> : (details !== null ? formatMoney(details.fee, 'PLN') : '-')}
                                     </Typography>
@@ -201,7 +215,7 @@ const PayParkingPage = () => {
                                 disabled={isLoading}
                                 sx={{ textTransform: 'none', fontWeight: 700 }}
                             >
-                                Odśwież
+                                {formatMessage({id: 'payParking.buttons.refresh'})}
                             </Button>
                         </Box>
 
@@ -219,11 +233,15 @@ const PayParkingPage = () => {
                                     <AccountBalanceWalletRoundedIcon sx={{ fontSize: 18 }} />
                                 </Avatar>
                                 <Box sx={{ flex: 1 }}>
-                                    <Typography sx={{ fontSize: 11, fontWeight: 800, color: '#8B1F9E' }}>TWOJE SALDO</Typography>
+                                    <Typography sx={{ fontSize: 11, fontWeight: 800, color: '#8B1F9E' }}>
+                                        {formatMessage({id: 'payParking.labels.balance'})}
+                                    </Typography>
                                     <Typography sx={{ fontSize: 16, fontWeight: 900 }}>{formatMoney(balance, 'PLN')}</Typography>
                                 </Box>
                                 {balance < (details?.fee ?? 0) && (
-                                    <Typography sx={{ fontSize: 12, fontWeight: 800, color: '#D32F2F' }}>Brak środków!</Typography>
+                                    <Typography sx={{ fontSize: 12, fontWeight: 800, color: '#D32F2F' }}>
+                                        {formatMessage({id: 'payParking.labels.insufficientFunds'})}
+                                    </Typography>
                                 )}
                             </Box>
                         </Paper>
@@ -245,12 +263,12 @@ const PayParkingPage = () => {
                                 '&:hover': { bgcolor: '#7F0F96', boxShadow: 'none' },
                             }}
                         >
-                            {isPaying ? 'Przetwarzanie...' : 'Zapłać i zakończ postój'}
+                            {isPaying ? formatMessage({id: 'payParking.buttons.processing'}) : formatMessage({id: 'payParking.buttons.pay'})}
                         </Button>
 
                         {balance < (details?.fee ?? 0) && (
                             <Typography sx={{ fontSize: 13, color: '#777777', textAlign: 'center' }}>
-                                Doładuj konto w panelu głównym, aby opłacić postój.
+                                {formatMessage({id: 'payParking.labels.topUpPrompt'})}
                             </Typography>
                         )}
                     </Stack>

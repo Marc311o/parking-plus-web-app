@@ -28,6 +28,7 @@ const QRCode = ({
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        setError(null);
         try {
             const qr = qrcodegen.QrCode.encodeText(value, qrcodegen_ecc.Ecc.MEDIUM);
             const scale = size / (qr.size + padding * 2);

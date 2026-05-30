@@ -140,10 +140,14 @@ class ParkingHistoryService(
     }
 
     @Transactional(readOnly = true)
-    fun calculateCurrentIndefiniteFee(historyId: Long): CheckoutDetailsDTO {
+    fun calculateCurrentIndefiniteFee(historyId: Long, userId: Long, isAdmin: Boolean): CheckoutDetailsDTO {
         val entry = parkingHistoryRepository.findById(historyId)
             .orElseThrow { NoSuchElementException("Parking session with id $historyId not found") }
         
+        if (!isAdmin && entry.vehicle.owner.id != userId) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "This parking session does not belong to you")
+        }
+
         if (entry.endTime != null) {
             val durationMinutes = Duration.between(entry.startTime, entry.endTime).toMinutes()
             return CheckoutDetailsDTO(BigDecimal.valueOf(entry.price), entry.startTime, durationMinutes)

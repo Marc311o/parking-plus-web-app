@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import java.math.BigDecimal
 import java.time.LocalDate
 
 @RestController
@@ -72,8 +71,13 @@ class ParkingHistoryController(
     @Operation(summary = "Pobierz opłatę za trwający postój", description = "Zwraca aktualną kwotę do zapłaty za postój bezterminowy.")
     @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
     @GetMapping("/checkout/{id}/fee")
-    fun getCheckoutFee(@PathVariable id: Long): ResponseEntity<CheckoutDetailsDTO> {
-        return ResponseEntity.ok(parkingHistoryService.calculateCurrentIndefiniteFee(id))
+    fun getCheckoutFee(
+        @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<CheckoutDetailsDTO> {
+        val authUserId = authentication.details as? Long ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val isAdmin = authentication.authorities.any { it.authority == "ROLE_ADMIN" }
+        return ResponseEntity.ok(parkingHistoryService.calculateCurrentIndefiniteFee(id, authUserId, isAdmin))
     }
 
     @Operation(summary = "Opłać i zakończ postój bezterminowy", description = "Pobiera opłatę z salda i zwalnia miejsce.")

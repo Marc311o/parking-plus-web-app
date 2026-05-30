@@ -548,5 +548,28 @@
       "EV_ABLEBODIED": "Elektryczny",
       "EV_HANDICAPED": "Elektryczny (niepełnosprawny)"
     }
+  },
+  "payParking": {
+    "title": "Opłać postój",
+    "subtitle": "Zakończ parkowanie i ureguluj płatność.",
+    "labels": {
+      "vehicle": "Pojazd",
+      "entry": "Wjazd",
+      "duration": "Czas: {duration}",
+      "currentFee": "Aktualna opłata",
+      "balance": "TWOJE SALDO",
+      "insufficientFunds": "Brak środków!",
+      "topUpPrompt": "Doładuj konto w panelu głównym, aby opłacić postój."
+    },
+    "buttons": {
+      "refresh": "Odśwież",
+      "pay": "Zapłać i zakończ postój",
+      "processing": "Przetwarzanie..."
+    },
+    "success": {
+      "title": "Dziękujemy!",
+      "message": "Płatność została zrealizowana pomyślnie. Możesz teraz opuścić parking.",
+      "backButton": "Powrót do panelu"
+    }
   }
 }

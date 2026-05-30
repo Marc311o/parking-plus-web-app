@@ -20,7 +20,7 @@ const ParkingPurchaseResultCard = ({
                                    }: ParkingPurchaseResultCardProps) => {
     const {formatMessage} = useIntl();
     const isIndefinite = purchaseResult.mode === 'INDEFINITE';
-    const paymentUrl = `${window.location.origin}/pay-parking?id=${purchaseResult.id}&plate=${purchaseResult.licensePlate}`;
+    const paymentUrl = `${window.location.origin}/pay-parking?id=${encodeURIComponent(String(purchaseResult.id))}&plate=${encodeURIComponent(purchaseResult.licensePlate)}`;
 
     const [copied, setCopied] = useState(false);
 
