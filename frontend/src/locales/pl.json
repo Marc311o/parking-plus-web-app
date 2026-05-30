@@ -99,6 +99,7 @@
       "prices": "Cennik",
       "parkingPurchase": "Zakup miejsce",
       "myCars": "Moje pojazdy",
+      "myPurchases": "Moje zakupy",
       "myReservations": "Moje rezerwacje"
     },
     "other": {
@@ -534,5 +535,11 @@
       "EV_ABLEBODIED": "Elektryczny",
       "EV_HANDICAPED": "Elektryczny (niepełnosprawny)"
     }
+  },
+  "myPurchases": {
+    "start": "Od",
+    "end": "Do",
+    "emptyMessage": "Nie znaleziono żadnego zakupu",
+    "error": "Wystąpił błąd"
   }
 }

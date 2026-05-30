@@ -1,30 +1,50 @@
-import {useEffect, useMemo} from 'react';
-import {Box, Avatar, Alert, Button} from '@mui/material';
-import EventSeatIcon from '@mui/icons-material/EventSeat';
-import {useSearchParams} from 'react-router-dom';
-import {useState} from 'react';
-import ReservationDetailsDialog
-    from '@components/MyReservations/ReservationDetailsDialog';
+import { useEffect, useMemo, useState } from 'react';
+import { Box, Avatar, Alert } from '@mui/material';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import { useSearchParams } from 'react-router-dom';
+import { useIntl } from 'react-intl';
 
 import ListView, {
     type ListViewColumn,
 } from '@components/Common/ListView';
 
-import type {ReservationDetailsDTO, ReservationStatus} from '@api/MyReservations';
-import {useAuthStore} from '@store/useAuthStore';
-import {getReservationsByUser} from "../api/MyReservations/myreservations.ts";
-import {useIntl} from 'react-intl';
+import { useAuthStore } from '@store/useAuthStore';
 
+import type { PurchaseDetailsDTO } from '@api/MyPurchases';
+import { getPurchasesByUser } from '@api/MyPurchases/mypurchases';
+
+
+const formatDateTime = (
+    dateString: string | null | undefined
+): string => {
+    if (!dateString) {
+        return '-';
+    }
+
+    return new Date(dateString).toLocaleString('pl-PL', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+    });
+};
 
 const MyPurchasesPage = () => {
-    const {formatMessage} = useIntl();
+    const { formatMessage } = useIntl();
 
     const token = useAuthStore((state) => state.token);
 
+    const [purchases, setPurchases] = useState<
+        PurchaseDetailsDTO[]
+    >([]);
 
-    const [reservations, setReservations] = useState<ReservationDetailsDTO[]>([]);
-    const [, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] =
+        useState(false);
+
+    const [error, setError] = useState<
+        string | null
+    >(null);
 
     const [searchParams, setSearchParams] =
         useSearchParams();
@@ -35,61 +55,35 @@ const MyPurchasesPage = () => {
 
     const size = 10;
 
-    const startDate =
-        searchParams.get('startDate') ?? '';
-
-    const endDate =
-        searchParams.get('endDate') ?? '';
-
-    const showAll =
-        searchParams.get('showAll') === 'true';
-
-
-    const [selectedReservation, setSelectedReservation] =
-        useState<ReservationDetailsDTO | null>(null);
-
-    const [dialogOpen, setDialogOpen] =
-        useState(false);
-
-    const formatReservationStatus = (
-        status: ReservationStatus
-    ): string => {
-        return formatMessage({
-            id: `myReservations.status.${status}`,
-        });
-    };
-
     useEffect(() => {
         if (!token) return;
 
         let isMounted = true;
 
-        const fetchReservations = async () => {
+        const fetchPurchases = async () => {
             setIsLoading(true);
             setError(null);
 
             try {
                 const result =
-                    await getReservationsByUser(
-                        token
-                    );
+                    await getPurchasesByUser(token);
 
                 if (!isMounted) return;
 
-                setReservations(result);
+                setPurchases(result);
             } catch (error) {
                 if (!isMounted) return;
 
-                setReservations([]);
+                setPurchases([]);
 
                 const message =
                     error instanceof Error
                         ? error.message
-                        : null;
+                        : formatMessage({
+                            id: 'common.error',
+                        });
 
-                if (message) {
-                    setError(message);
-                }
+                setError(message);
             } finally {
                 if (isMounted) {
                     setIsLoading(false);
@@ -97,76 +91,26 @@ const MyPurchasesPage = () => {
             }
         };
 
-        void fetchReservations();
+        void fetchPurchases();
 
         return () => {
             isMounted = false;
         };
-    }, [token]);
-
-    const handleOpenDetails = (
-        reservation: ReservationDetailsDTO
-    ) => {
-        setSelectedReservation(reservation);
-        setDialogOpen(true);
-    };
-
-    const filteredReservations = useMemo(() => {
-        if (showAll) {
-            return reservations;
-        }
-
-        return reservations.filter((reservation) => {
-            const reservationStart = new Date(reservation.start_time);
-
-            if (startDate) {
-                const start = new Date(startDate);
-                if (reservationStart < start) return false;
-            }
-
-            if (endDate) {
-                const end = new Date(endDate);
-                end.setHours(23, 59, 59, 999);
-                if (reservationStart > end) return false;
-            }
-
-            return true;
-        });
-    }, [reservations, startDate, endDate, showAll]);
+    }, [token, formatMessage]);
 
     const totalPages = Math.max(
-        Math.ceil(filteredReservations.length / size),
+        Math.ceil(purchases.length / size),
         1
     );
 
-    const pagedReservations = useMemo(() => {
+    const pagedPurchases = useMemo(() => {
         const start = page * size;
 
-        return filteredReservations.slice(
+        return purchases.slice(
             start,
             start + size
         );
-    }, [filteredReservations, page]);
-
-
-    const getStatusColor = (status: ReservationStatus) => {
-        switch (status) {
-            case 'CONFIRMED':
-                return '#2e7d32';
-
-            case 'PENDING':
-                return '#ed6c02';
-
-            case 'CANCELLED':
-                return '#d32f2f';
-
-            case 'COMPLETED':
-                return '#1565c0';
-
-            default:
-                return '#757575';
-        }
-    };
+    }, [purchases, page]);
 
     const handlePageChange = (
         nextPage: number
@@ -185,20 +129,20 @@ const MyPurchasesPage = () => {
     };
 
     const columns = useMemo<
-        ListViewColumn<ReservationDetailsDTO>[]
+        ListViewColumn<PurchaseDetailsDTO>[]
     >(
         () => [
             {
-                key: 'parking_place_id',
-                width: '0.8fr',
+                key: 'licensePlate',
+                width: '1fr',
                 render: (item) => (
                     <span
                         style={{
-                            fontWeight: 600,
+                            fontWeight: 700,
                             color: '#7F0F96',
                         }}
                     >
-                        {item.parking_place_id}
+                        {item.licensePlate}
                     </span>
                 ),
             },
@@ -206,48 +150,54 @@ const MyPurchasesPage = () => {
                 key: 'start_time',
                 width: '1.2fr',
                 render: (item) => (
-                    <span style={{fontWeight: 600, color: '#7F0F96'}}>
-                        {formatMessage({id: `myReservations.start`,})}: {item.start_time}
+                    <span
+                        style={{
+                            fontWeight: 600,
+                            color: '#7F0F96',
+                        }}
+                    >
+                        {formatMessage({
+                            id: 'myPurchases.start',
+                        })}
+                        : {formatDateTime(item.startTime)}
                     </span>
-
                 ),
             },
             {
                 key: 'end_time',
                 width: '1.2fr',
                 render: (item) => (
-                    <span style={{fontWeight: 600, color: '#7F0F96'}}>
-                        {formatMessage({id: `myReservations.end`,})}: {item.end_time}
+                    <span
+                        style={{
+                            fontWeight: 600,
+                            color: '#7F0F96',
+                        }}
+                    >
+                        {formatMessage({
+                            id: 'myPurchases.end',
+                        })}
+                        : {formatDateTime(item.endTime) ?? '-'}
                     </span>
                 ),
             },
             {
                 key: 'price',
-                width: '0.7fr',
-                render: (item) => (
-                    <span style={{fontWeight: 600, color: '#7F0F96'}}>
-                       {item.price.toFixed(2)} zł
-                    </span>
-                ),
-            },
-            {
-                key: 'status',
                 width: '0.8fr',
                 render: (item) => (
                     <span
                         style={{
                             fontWeight: 700,
-                            color: getStatusColor(item.status),
+                            color: '#2e7d32',
                         }}
                     >
-            {formatReservationStatus(item.status)}
-        </span>
+                        {item.price != null
+                            ? `${item.price.toFixed(2)} zł`
+                            : '-'}
+                    </span>
                 ),
             },
-
-
         ],
-        [formatMessage, handleOpenDetails, getStatusColor, formatReservationStatus]
+        [formatMessage]
     );
 
     return (
@@ -262,17 +212,21 @@ const MyPurchasesPage = () => {
             {error && (
                 <Alert
                     severity="error"
-                    onClose={() => setError(null)}
-                    sx={{mb: 2}}
+                    onClose={() =>
+                        setError(null)
+                    }
+                    sx={{ mb: 2 }}
                 >
                     {error}
                 </Alert>
             )}
 
             <ListView
-                items={pagedReservations}
-                isLoading={false}
-                emptyMessage={formatMessage({id: 'myReservations.emptyMessage'})}
+                items={pagedPurchases}
+                isLoading={isLoading}
+                emptyMessage={formatMessage({
+                    id: 'myPurchases.emptyMessage',
+                })}
                 columns={columns}
                 pagination={{
                     page,
@@ -290,23 +244,10 @@ const MyPurchasesPage = () => {
                             color: '#7F0F96',
                         }}
                     >
-                        <EventSeatIcon/>
+                        <ShoppingBagIcon />
                     </Avatar>
                 )}
-
-                action={{
-                    label: formatMessage({id: 'events.list.details'}),
-                    onClick: (e) => handleOpenDetails(e),
-                }}
             />
-
-
-            <ReservationDetailsDialog
-                open={dialogOpen}
-                reservation={selectedReservation}
-                onClose={() => setDialogOpen(false)}
-            />
-
         </Box>
     );
 };

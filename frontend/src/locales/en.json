@@ -99,6 +99,7 @@
       "prices": "Pricing",
       "parkingPurchase": "Purchase space",
       "myCars": "My vehicles",
+      "myPurchases": "My purchases",
       "myReservations": "My reservations"
     },
     "other": {
@@ -534,5 +535,11 @@
       "EV_ABLEBODIED": "Electric",
       "EV_HANDICAPED": "Electric (disabled)"
     }
+  },
+  "myPurchases": {
+    "start": "From",
+    "end": "To",
+    "emptyMessage": "No purchases to show",
+    "error": "An error occurred"
   }
 }
