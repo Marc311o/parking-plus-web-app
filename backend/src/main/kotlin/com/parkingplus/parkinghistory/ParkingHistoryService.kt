@@ -316,17 +316,18 @@ class ParkingHistoryService(
             if (ownerID != userId)
                 continue
 
-            purchases.add(
-                PurchaseDetailsDTO(
-                    userID = ownerID,
-                    licensePlate = entry.vehicle.licensePlate,
-                    price = 0.0,
-                    startTime = entry.startTime,
-                    endTime = entry.endTime
+            if (entry.endTime == null) {
+                purchases.add(
+                    PurchaseDetailsDTO(
+                        userID = ownerID,
+                        licensePlate = entry.vehicle.licensePlate,
+                        price = 0.0,
+                        startTime = entry.startTime,
+                        endTime = entry.endTime
+                    )
                 )
-            )
-
-            if (entry.endTime != null) {
+            }
+            else {
                 val price = pricingService.calculatePrice(entry.startTime, entry.endTime!!).toDouble()
                 purchases.add(
                     PurchaseDetailsDTO(
