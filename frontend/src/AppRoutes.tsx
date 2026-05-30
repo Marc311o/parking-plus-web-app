@@ -68,6 +68,7 @@ const AppRoutes = () => {
                     {/* ================= CLIENT ONLY ================= */}
                     <Route element={<ProtectedRoute allowed={["CLIENT"]} />}>
                         <Route path="myCars" element={<MyCarsPage />} />
+                        <Route path="myPurchases" element={<MyReservationsPage />} />
                         <Route path="myReservations" element={<MyReservationsPage />} />
                         <Route path="parkingPurchase" element={<ParkingPurchasePage />} />
                     </Route>

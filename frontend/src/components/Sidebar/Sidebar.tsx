@@ -18,6 +18,7 @@ import DirectionsCarRoundedIcon from '@mui/icons-material/DirectionsCarRounded';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import EventSeatIcon from '@mui/icons-material/EventSeat';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import {useIntl} from 'react-intl';
 import {useLocation, useNavigate} from 'react-router-dom';
 import logo from '@assets/logo.png';
@@ -102,6 +103,13 @@ const Sidebar = () => {
             icon: <DirectionsCarRoundedIcon/>,
             path: '/myCars',
             active: location.pathname === '/myCars',
+            visibleFor: 'CLIENT',
+        },
+        {
+            text: formatMessage({id: 'sidebar.menu.myPurchases'}),
+            icon: <ShoppingBagIcon/>,
+            path: '/myPurchases',
+            active: location.pathname === '/myPurchases',
             visibleFor: 'CLIENT',
         },
         {
