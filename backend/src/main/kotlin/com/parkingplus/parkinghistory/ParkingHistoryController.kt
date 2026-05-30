@@ -148,4 +148,23 @@ class ParkingHistoryController(
     fun getParkingEvents(): ResponseEntity<List<ParkingEventDTO>> {
         return ResponseEntity.ok(parkingHistoryService.getParkingEvents())
     }
+
+    @Operation(summary = "Pobierz historię zakupów dla danego użytkownika")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @GetMapping("/purchases/my")
+    fun getMyPurchases(authentication: Authentication): ResponseEntity<List<PurchaseDetailsDTO>> {
+        val authUserId = extractUserId(authentication)
+            ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
+        return ResponseEntity.ok(parkingHistoryService.getMyPurchases(authUserId))
+    }
+
+    private fun extractUserId(authentication: Authentication): Long? {
+        return when (val details = authentication.details) {
+            is Long -> details
+            is Number -> details.toLong()
+            is String -> details.toLongOrNull()
+            else -> null
+        }
+    }
 }

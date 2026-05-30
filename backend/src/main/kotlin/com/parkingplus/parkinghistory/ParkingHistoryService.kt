@@ -2,6 +2,7 @@ package com.parkingplus.parkinghistory
 
 import com.parkingplus.parkingspaces.ParkingSpaceRepository
 import com.parkingplus.parkingspaces.enums.SpaceType
+import com.parkingplus.reservations.PricingService
 import com.parkingplus.vehicles.VehicleRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +19,8 @@ import kotlin.math.round
 class ParkingHistoryService(
     private val parkingHistoryRepository: ParkingHistoryRepository,
     private val vehicleRepository: VehicleRepository,
-    private val parkingSpaceRepository: ParkingSpaceRepository
+    private val parkingSpaceRepository: ParkingSpaceRepository,
+    private val pricingService: PricingService
 ) {
     @Transactional(readOnly = true)
     fun getAllParkingHistory(): List<ParkingHistoryDTO> {
@@ -302,5 +304,42 @@ class ParkingHistoryService(
         }
 
         return events.sortedByDescending { it.eventDate }
+    }
+
+    @Transactional(readOnly = true)
+    fun getMyPurchases(userId: Long): List<PurchaseDetailsDTO> {
+        val history = parkingHistoryRepository.findAllWithVehicleAndOwner()
+        val purchases = mutableListOf<PurchaseDetailsDTO>()
+
+        for (entry in history) {
+            val ownerID = entry.vehicle.owner.id
+            if (ownerID != userId)
+                continue
+
+            purchases.add(
+                PurchaseDetailsDTO(
+                    userID = ownerID,
+                    licensePlate = entry.vehicle.licensePlate,
+                    price = 0.0,
+                    startTime = entry.startTime,
+                    endTime = entry.endTime
+                )
+            )
+
+            if (entry.endTime != null) {
+                val price = pricingService.calculatePrice(entry.startTime, entry.endTime!!).toDouble()
+                purchases.add(
+                    PurchaseDetailsDTO(
+                        userID = ownerID,
+                        licensePlate = entry.vehicle.licensePlate,
+                        price = price,
+                        startTime = entry.startTime,
+                        endTime = entry.endTime
+                    )
+                )
+            }
+        }
+
+        return purchases.sortedByDescending { it.startTime }
     }
 }
