@@ -124,7 +124,7 @@
         "dateRange": "Date range",
         "startDate": "Start date",
         "endDate": "End date",
-        "showAll": "Show all reservations",
+        "showAll": "Show all",
         "invalidDateRange": "End date cannot be earlier than start date"
       }
     },
