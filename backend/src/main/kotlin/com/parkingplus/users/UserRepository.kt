@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
-import java.util.*
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, Long> {
@@ -23,7 +22,8 @@ interface UserRepository : JpaRepository<UserEntity, Long> {
             "(:search IS NULL OR :search = '' OR " +
             "LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.surname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')))")
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "EXISTS (SELECT 1 FROM VehicleEntity v WHERE v.owner = u AND LOWER(v.licensePlate) LIKE LOWER(CONCAT('%', :search, '%'))))")
     fun findAllWithSearch(
         @Param("search") search: String?,
         @Param("clientsOnly") clientsOnly: Boolean,
