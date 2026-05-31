@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.PositiveOrZero
 import java.time.LocalDateTime
+import java.math.BigDecimal
 
 data class ParkingHistoryDTO(
     val id: Long? = null,
@@ -25,4 +26,10 @@ data class ParkingHistoryDTO(
     val barrierPhotoPath: String? = null,
 
     val spotPhotoPath: String? = null
+)
+
+data class CheckoutDetailsDTO(
+    val fee: BigDecimal,
+    val startTime: LocalDateTime,
+    val durationMinutes: Long
 )

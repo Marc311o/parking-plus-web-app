@@ -52,7 +52,11 @@ class ReservationService(
         val startTime = request.startTime
         val endTime = request.endTime
 
-        val price = pricingService.calculatePrice(startTime, endTime)
+        val price = if (request.mode == ParkingPurchaseMode.INDEFINITE) {
+            BigDecimal.ZERO
+        } else {
+            pricingService.calculatePrice(startTime, endTime!!)
+        }
         
         if (user.balance < price) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds. Required: $price, available: ${user.balance}")
@@ -63,7 +67,14 @@ class ReservationService(
         
         // Filter out spaces that have overlapping reservations
         val trulyAvailableSpaces = allFreeSpaces.filter { space ->
-            reservationRepository.findOverlappingReservations(space.id, startTime, endTime).isEmpty()
+            if (request.mode == ParkingPurchaseMode.PURCHASE) {
+                reservationRepository.findOverlappingReservations(space.id, startTime, endTime!!).isEmpty()
+            } else if (request.mode == ParkingPurchaseMode.INDEFINITE) {
+                // Unknown end time - block any future reservations for this space
+                reservationRepository.findOverlappingReservations(space.id, startTime, LocalDateTime.of(9999, 12, 31, 23, 59)).isEmpty()
+            } else {
+                reservationRepository.findOverlappingReservations(space.id, startTime, endTime!!).isEmpty()
+            }
         }
 
         if (trulyAvailableSpaces.isEmpty()) {
@@ -119,21 +130,23 @@ class ReservationService(
         // TRANSACTION INTEGRATION (Atomic Operation)
         
         // Deduct balance
-        user.balance = user.balance.subtract(price)
-        userRepository.save(user)
+        if (price > BigDecimal.ZERO) {
+            user.balance = user.balance.subtract(price)
+            userRepository.save(user)
 
-        // Record transaction
-        transactionRepository.save(
-            TransactionEntity(
-                user = user,
-                type = TransactionType.WITHDRAWAL,
-                amount = price.toFloat(),
-                realisedAt = LocalDateTime.now()
+            // Record transaction
+            transactionRepository.save(
+                TransactionEntity(
+                    user = user,
+                    type = TransactionType.WITHDRAWAL,
+                    amount = price.toFloat(),
+                    realisedAt = LocalDateTime.now()
+                )
             )
-        )
+        }
 
         val id: Long
-        if (request.mode == ParkingPurchaseMode.PURCHASE) {
+        if (request.mode == ParkingPurchaseMode.PURCHASE || request.mode == ParkingPurchaseMode.INDEFINITE) {
             availableSpace.status = ParkingSpaceStatus.OCCUPIED
             parkingSpaceRepository.save(availableSpace)
 
@@ -142,7 +155,7 @@ class ReservationService(
                     vehicle = vehicle,
                     parkingSpace = availableSpace,
                     startTime = startTime,
-                    endTime = endTime, // Persist planned end time
+                    endTime = if (request.mode == ParkingPurchaseMode.PURCHASE) endTime else null,
                     price = price.toDouble(),
                     barrierPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_barrier.png",
                     spotPhotoPath = "/car_photos/car_${(vehicle.id ?: 0L) % 10}_spot.png"
@@ -157,7 +170,7 @@ class ReservationService(
                     vehicle = vehicle,
                     parkingSpace = availableSpace,
                     startTime = startTime,
-                    endTime = endTime,
+                    endTime = endTime!!,
                     price = price,
                     status = ReservationStatus.CONFIRMED
                 )
@@ -192,7 +205,7 @@ data class ParkingPurchaseDTO(
     val mode: String,
     val parkingSpace: ParkingSpaceDTO,
     val startTime: LocalDateTime,
-    val endTime: LocalDateTime,
+    val endTime: LocalDateTime?,
     val price: BigDecimal,
     val balanceAfter: BigDecimal,
     val currency: String = "PLN"

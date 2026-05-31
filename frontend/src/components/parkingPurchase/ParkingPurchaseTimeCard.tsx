@@ -1,11 +1,11 @@
 import {Alert, Box, Paper, Stack, TextField, Typography} from '@mui/material';
 import {useIntl} from 'react-intl';
 import type {ParkingPurchaseMode} from '@api/ParkingPurchase';
+import {toDateInputValue, toTimeInputValue} from './utils';
 
 type ParkingPurchaseTimeCardProps = {
     mode: ParkingPurchaseMode;
     isDisabled: boolean;
-    isParkingTimeValid: boolean;
     purchaseEndDate: string;
     purchaseEndTime: string;
     reservationStartDate: string;
@@ -30,7 +30,6 @@ const inputSx = {
 const ParkingPurchaseTimeCard = ({
                                      mode,
                                      isDisabled,
-                                     isParkingTimeValid,
                                      purchaseEndDate,
                                      purchaseEndTime,
                                      reservationStartDate,
@@ -45,6 +44,8 @@ const ParkingPurchaseTimeCard = ({
                                      onReservationEndTimeChange,
                                  }: ParkingPurchaseTimeCardProps) => {
     const {formatMessage} = useIntl();
+    const today = toDateInputValue(new Date());
+    const currentTime = toTimeInputValue(new Date());
 
     return (
         <Paper
@@ -69,7 +70,13 @@ const ParkingPurchaseTimeCard = ({
                     </Typography>
                 </Box>
 
-                {mode === 'PURCHASE' ? (
+                {mode === 'INDEFINITE' ? (
+                    <Box sx={{ p: 2, bgcolor: '#FBF7FC', borderRadius: '14px', border: '1px dashed rgba(139, 31, 158, 0.2)' }}>
+                        <Typography sx={{ fontSize: 14, color: '#8B1F9E', fontWeight: 600 }}>
+                            {formatMessage({id: 'parkingPurchase.indefiniteDescription'})}
+                        </Typography>
+                    </Box>
+                ) : mode === 'PURCHASE' ? (
                     <Box
                         sx={{
                             display: 'grid',
@@ -88,6 +95,7 @@ const ParkingPurchaseTimeCard = ({
                             onChange={(event) => onPurchaseEndDateChange(event.target.value)}
                             disabled={isDisabled}
                             InputLabelProps={{shrink: true}}
+                            inputProps={{ min: today }}
                             sx={inputSx}
                         />
 
@@ -99,6 +107,7 @@ const ParkingPurchaseTimeCard = ({
                             onChange={(event) => onPurchaseEndTimeChange(event.target.value)}
                             disabled={isDisabled}
                             InputLabelProps={{shrink: true}}
+                            inputProps={{ min: purchaseEndDate === today ? currentTime : undefined }}
                             sx={inputSx}
                         />
                     </Box>
@@ -121,6 +130,7 @@ const ParkingPurchaseTimeCard = ({
                             onChange={(event) => onReservationStartDateChange(event.target.value)}
                             disabled={isDisabled}
                             InputLabelProps={{shrink: true}}
+                            inputProps={{ min: today }}
                             sx={inputSx}
                         />
 
@@ -132,6 +142,7 @@ const ParkingPurchaseTimeCard = ({
                             onChange={(event) => onReservationStartTimeChange(event.target.value)}
                             disabled={isDisabled}
                             InputLabelProps={{shrink: true}}
+                            inputProps={{ min: reservationStartDate === today ? currentTime : undefined }}
                             sx={inputSx}
                         />
 
@@ -143,6 +154,7 @@ const ParkingPurchaseTimeCard = ({
                             onChange={(event) => onReservationEndDateChange(event.target.value)}
                             disabled={isDisabled}
                             InputLabelProps={{shrink: true}}
+                            inputProps={{ min: reservationStartDate || today }}
                             sx={inputSx}
                         />
 
@@ -154,15 +166,10 @@ const ParkingPurchaseTimeCard = ({
                             onChange={(event) => onReservationEndTimeChange(event.target.value)}
                             disabled={isDisabled}
                             InputLabelProps={{shrink: true}}
+                            inputProps={{ min: reservationEndDate === reservationStartDate ? reservationStartTime : (reservationEndDate === today ? currentTime : undefined) }}
                             sx={inputSx}
                         />
                     </Box>
-                )}
-
-                {!isParkingTimeValid && (
-                    <Alert severity="warning" sx={{borderRadius: '14px'}}>
-                        {formatMessage({id: 'parkingPurchase.invalidParkingTime'})}
-                    </Alert>
                 )}
             </Stack>
         </Paper>
