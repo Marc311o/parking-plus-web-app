@@ -12,6 +12,7 @@ import PricesPage from '@pages/PricesPage';
 import SettingsPage from '@pages/SettingsPage';
 import MyCarsPage from '@pages/MyCarsPage';
 import MyReservationsPage from '@pages/MyReservationsPage';
+import MyPurchasesPage from '@pages/MyPurchasesPage';
 import ParkingPurchasePage from '@pages/ParkingPurchasePage';
 import PayParkingPage from '@pages/PayParkingPage';
 
@@ -69,6 +70,7 @@ const AppRoutes = () => {
                     {/* ================= CLIENT ONLY ================= */}
                     <Route element={<ProtectedRoute allowed={["CLIENT"]} />}>
                         <Route path="myCars" element={<MyCarsPage />} />
+                        <Route path="myPurchases" element={<MyPurchasesPage />} />
                         <Route path="myReservations" element={<MyReservationsPage />} />
                         <Route path="parkingPurchase" element={<ParkingPurchasePage />} />
                     </Route>

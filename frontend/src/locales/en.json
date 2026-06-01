@@ -99,6 +99,7 @@
       "prices": "Pricing",
       "parkingPurchase": "Purchase space",
       "myCars": "My vehicles",
+      "myPurchases": "My purchases",
       "myReservations": "My reservations"
     },
     "other": {
@@ -123,7 +124,7 @@
         "dateRange": "Date range",
         "startDate": "Start date",
         "endDate": "End date",
-        "showAll": "Show all reservations",
+        "showAll": "Show all",
         "invalidDateRange": "End date cannot be earlier than start date"
       }
     },
@@ -548,6 +549,12 @@
       "EV_ABLEBODIED": "Electric",
       "EV_HANDICAPED": "Electric (disabled)"
     }
+  },
+  "myPurchases": {
+    "start": "From",
+    "end": "To",
+    "emptyMessage": "No purchases to show",
+    "error": "An error occurred"
   },
   "payParking": {
     "title": "Pay for parking",

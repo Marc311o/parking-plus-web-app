@@ -99,6 +99,7 @@
       "prices": "Cennik",
       "parkingPurchase": "Zakup miejsce",
       "myCars": "Moje pojazdy",
+      "myPurchases": "Moje zakupy",
       "myReservations": "Moje rezerwacje"
     },
     "other": {
@@ -123,7 +124,7 @@
         "dateRange": "Zakres dat",
         "startDate": "Data początkowa",
         "endDate": "Data końcowa",
-        "showAll": "Pokaż wszystkie rezerwacje",
+        "showAll": "Pokaż wszystkie",
         "invalidDateRange": "Data końcowa nie może być wcześniejsza niż początkowa"
       }
     },
@@ -548,6 +549,12 @@
       "EV_ABLEBODIED": "Elektryczny",
       "EV_HANDICAPED": "Elektryczny (niepełnosprawny)"
     }
+  },
+  "myPurchases": {
+    "start": "Od",
+    "end": "Do",
+    "emptyMessage": "Nie znaleziono żadnego zakupu",
+    "error": "Wystąpił błąd"
   },
   "payParking": {
     "title": "Opłać postój",

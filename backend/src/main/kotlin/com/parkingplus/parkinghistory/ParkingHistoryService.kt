@@ -388,4 +388,42 @@ class ParkingHistoryService(
 
         return events.sortedByDescending { it.eventDate }
     }
+
+    @Transactional(readOnly = true)
+    fun getMyPurchases(userId: Long): List<PurchaseDetailsDTO> {
+        val history = parkingHistoryRepository.findAllWithVehicleAndOwner()
+        val purchases = mutableListOf<PurchaseDetailsDTO>()
+
+        for (entry in history) {
+            val ownerID = entry.vehicle.owner.id
+            if (ownerID != userId)
+                continue
+
+            if (entry.endTime == null) {
+                purchases.add(
+                    PurchaseDetailsDTO(
+                        userID = ownerID,
+                        licensePlate = entry.vehicle.licensePlate,
+                        price = 0.0,
+                        startTime = entry.startTime,
+                        endTime = entry.endTime
+                    )
+                )
+            }
+            else {
+                val price = pricingService.calculatePrice(entry.startTime, entry.endTime!!).toDouble()
+                purchases.add(
+                    PurchaseDetailsDTO(
+                        userID = ownerID,
+                        licensePlate = entry.vehicle.licensePlate,
+                        price = price,
+                        startTime = entry.startTime,
+                        endTime = entry.endTime
+                    )
+                )
+            }
+        }
+
+        return purchases.sortedByDescending { it.startTime }
+    }
 }
