@@ -130,7 +130,7 @@
     },
     "clients": {
       "filters": {
-        "searchPlaceholder": "Wyszukaj klienta",
+        "searchPlaceholder": "Wyszukaj klienta (imię, email, tablica)",
         "searchButton": "Wyszukaj",
         "sortLabel": "Sortuj po",
         "sortButton": "Sortuj",
@@ -392,13 +392,24 @@
     "formModeTitle": "Rodzaj postoju",
     "formModeDescription": "Rozpocznij postój od razu albo zaplanuj go na wybraną datę.",
     "modePurchase": "Kup od teraz",
+    "modeIndefinite": "Bezterminowo (QR)",
     "modeReservation": "Zarezerwuj",
     "vehicleSectionTitle": "Samochód",
     "vehicleSectionDescription": "Wybierz pojazd, dla którego chcesz kupić lub zarezerwować miejsce.",
     "vehicleLabel": "Samochód",
     "timeSectionTitle": "Czas postoju",
     "purchaseTimeDescription": "Postój rozpocznie się natychmiast. Wybierz datę i godzinę zakończenia.",
+    "indefiniteDescription": "Zaparkuj teraz bez określonego czasu zakończenia. Opłacisz postój przy wyjeździe za pomocą kodu QR.",
     "reservationTimeDescription": "Wybierz dokładny początek i koniec planowanego postoju.",
+    "indefiniteEndDate": "Bezterminowo",
+    "indefinitePrice": "Płatność przy wyjeździe",
+    "indefinitePriceLabel": "0.00 PLN (Płatność z dołu)",
+    "qrSuccessTitle": "Postój rozpoczęty!",
+    "qrSuccessDescription": "Zeskanuj poniższy kod QR swoim telefonem, aby móc sprawdzić aktualną opłatę i zakończyć postój przy wyjeździe.",
+    "qrButtonLabel": "Zakończ i opłać (z linku QR)",
+    "qrDownloadPng": "Zapisz jako PNG",
+    "qrCopyLink": "Kopiuj link",
+    "qrCopied": "Skopiowano!",
     "purchaseEndDate": "Dzień zakończenia",
     "purchaseEndTime": "Godzina zakończenia",
     "parkingStartDate": "Dzień rozpoczęcia",
@@ -432,8 +443,11 @@
     "paid": "Zapłacono",
     "errors": {
       "initialData": "Nie udało się pobrać danych potrzebnych do przygotowania postoju.",
-      "quote": "Nie udało się wyliczyć ceny dla wybranego czasu.",
-      "purchase": "Nie udało się potwierdzić postoju."
+      "quote": "Nie udało się obliczyć ceny dla wybranego czasu.",
+      "purchase": "Nie udało się zatwierdzić postoju.",
+      "pastDate": "Nie można wybrać daty z przeszłości.",
+      "pastTime": "Wybrana godzina już minęła.",
+      "endBeforeStart": "Czas zakończenia musi być późniejszy niż rozpoczęcia."
     },
     "completedButton": "Postój zakupiony",
     "backToFormButton": "Wróć do wyboru postoju"
@@ -541,5 +555,28 @@
     "end": "Do",
     "emptyMessage": "Nie znaleziono żadnego zakupu",
     "error": "Wystąpił błąd"
+  },
+  "payParking": {
+    "title": "Opłać postój",
+    "subtitle": "Zakończ parkowanie i ureguluj płatność.",
+    "labels": {
+      "vehicle": "Pojazd",
+      "entry": "Wjazd",
+      "duration": "Czas: {duration}",
+      "currentFee": "Aktualna opłata",
+      "balance": "TWOJE SALDO",
+      "insufficientFunds": "Brak środków!",
+      "topUpPrompt": "Doładuj konto w panelu głównym, aby opłacić postój."
+    },
+    "buttons": {
+      "refresh": "Odśwież",
+      "pay": "Zapłać i zakończ postój",
+      "processing": "Przetwarzanie..."
+    },
+    "success": {
+      "title": "Dziękujemy!",
+      "message": "Płatność została zrealizowana pomyślnie. Możesz teraz opuścić parking.",
+      "backButton": "Powrót do panelu"
+    }
   }
 }

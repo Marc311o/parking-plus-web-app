@@ -68,6 +68,29 @@ class ParkingHistoryController(
         return ResponseEntity.ok(parkingHistoryService.endParking(licensePlate))
     }
 
+    @Operation(summary = "Pobierz opłatę za trwający postój", description = "Zwraca aktualną kwotę do zapłaty za postój bezterminowy.")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @GetMapping("/checkout/{id}/fee")
+    fun getCheckoutFee(
+        @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<CheckoutDetailsDTO> {
+        val authUserId = authentication.details as? Long ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        val isAdmin = authentication.authorities.any { it.authority == "ROLE_ADMIN" }
+        return ResponseEntity.ok(parkingHistoryService.calculateCurrentIndefiniteFee(id, authUserId, isAdmin))
+    }
+
+    @Operation(summary = "Opłać i zakończ postój bezterminowy", description = "Pobiera opłatę z salda i zwalnia miejsce.")
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENT')")
+    @PostMapping("/checkout/{id}")
+    fun checkoutParking(
+        @PathVariable id: Long,
+        authentication: Authentication
+    ): ResponseEntity<ParkingHistoryDTO> {
+        val authUserId = authentication.details as? Long ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        return ResponseEntity.ok(parkingHistoryService.checkoutIndefinite(id, authUserId))
+    }
+
     @Operation(summary = "Usuń wpis historii (Admin)")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")

@@ -70,6 +70,10 @@ const ParkingPurchaseModeCard = ({
                         {formatMessage({id: 'parkingPurchase.modePurchase'})}
                     </ToggleButton>
 
+                    <ToggleButton value="INDEFINITE">
+                        {formatMessage({id: 'parkingPurchase.modeIndefinite'})}
+                    </ToggleButton>
+
                     <ToggleButton value="RESERVATION">
                         {formatMessage({id: 'parkingPurchase.modeReservation'})}
                     </ToggleButton>

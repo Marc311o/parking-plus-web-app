@@ -14,6 +14,7 @@ import MyCarsPage from '@pages/MyCarsPage';
 import MyReservationsPage from '@pages/MyReservationsPage';
 import MyPurchasesPage from '@pages/MyPurchasesPage';
 import ParkingPurchasePage from '@pages/ParkingPurchasePage';
+import PayParkingPage from '@pages/PayParkingPage';
 
 import Login from '@pages/Auth/Login';
 import CreateNewAccount from '@pages/Auth/CreateNewAccountPage';
@@ -78,6 +79,7 @@ const AppRoutes = () => {
                     <Route element={<ProtectedRoute allowed={["ADMIN", "CLIENT"]} />}>
                         <Route path="settings" element={<SettingsPage />} />
                         <Route path="pricing" element={<PricesPage />} />
+                        <Route path="pay-parking" element={<PayParkingPage />} />
                     </Route>
 
                 </Route>

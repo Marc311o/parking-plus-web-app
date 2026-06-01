@@ -3,9 +3,16 @@ package com.parkingplus.parkinghistory
 import com.parkingplus.parkingspaces.ParkingSpaceRepository
 import com.parkingplus.parkingspaces.enums.SpaceType
 import com.parkingplus.reservations.PricingService
+import com.parkingplus.transactions.TransactionEntity
+import com.parkingplus.transactions.TransactionRepository
+import com.parkingplus.transactions.enums.TransactionType
+import com.parkingplus.users.UserRepository
 import com.parkingplus.vehicles.VehicleRepository
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.server.ResponseStatusException
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -20,7 +27,9 @@ class ParkingHistoryService(
     private val parkingHistoryRepository: ParkingHistoryRepository,
     private val vehicleRepository: VehicleRepository,
     private val parkingSpaceRepository: ParkingSpaceRepository,
-    private val pricingService: PricingService
+    private val pricingService: PricingService,
+    private val userRepository: UserRepository,
+    private val transactionRepository: TransactionRepository
 ) {
     @Transactional(readOnly = true)
     fun getAllParkingHistory(): List<ParkingHistoryDTO> {
@@ -78,6 +87,80 @@ class ParkingHistoryService(
         )
 
         return parkingHistoryRepository.save(entity).toDTO()
+    }
+
+    @Transactional
+    fun checkoutIndefinite(historyId: Long, userId: Long): ParkingHistoryDTO {
+        val entry = parkingHistoryRepository.findById(historyId)
+            .orElseThrow { NoSuchElementException("Parking session with id $historyId not found") }
+
+        if (entry.endTime != null) {
+            throw IllegalArgumentException("Parking session is already closed")
+        }
+
+        val user = entry.vehicle.owner
+        if (user.id != userId) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "This parking session does not belong to you")
+        }
+
+        var now = LocalDateTime.now()
+        if (now.isBefore(entry.startTime) || now == entry.startTime) {
+            now = entry.startTime.plusMinutes(1)
+        }
+
+        val price = pricingService.calculatePrice(entry.startTime, now)
+
+        if (user.balance < price) {
+            throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient funds. Required: $price, available: ${user.balance}")
+        }
+
+        // Deduct balance
+        user.balance = user.balance.subtract(price)
+        userRepository.save(user)
+
+        // Record transaction
+        transactionRepository.save(
+            TransactionEntity(
+                user = user,
+                type = TransactionType.WITHDRAWAL,
+                amount = price.toFloat(),
+                realisedAt = now
+            )
+        )
+
+        // End parking
+        entry.endTime = now
+        entry.price = price.toDouble()
+        
+        val parkingSpace = entry.parkingSpace
+        parkingSpace.status = com.parkingplus.parkingspaces.enums.ParkingSpaceStatus.FREE
+        parkingSpaceRepository.save(parkingSpace)
+
+        return parkingHistoryRepository.save(entry).toDTO()
+    }
+
+    @Transactional(readOnly = true)
+    fun calculateCurrentIndefiniteFee(historyId: Long, userId: Long, isAdmin: Boolean): CheckoutDetailsDTO {
+        val entry = parkingHistoryRepository.findById(historyId)
+            .orElseThrow { NoSuchElementException("Parking session with id $historyId not found") }
+        
+        if (!isAdmin && entry.vehicle.owner.id != userId) {
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "This parking session does not belong to you")
+        }
+
+        if (entry.endTime != null) {
+            val durationMinutes = Duration.between(entry.startTime, entry.endTime).toMinutes()
+            return CheckoutDetailsDTO(BigDecimal.valueOf(entry.price), entry.startTime, durationMinutes)
+        }
+        
+        var now = LocalDateTime.now()
+        if (now.isBefore(entry.startTime) || now == entry.startTime) {
+            now = entry.startTime.plusMinutes(1)
+        }
+        
+        val price = pricingService.calculatePrice(entry.startTime, now)
+        val durationMinutes = Duration.between(entry.startTime, now).toMinutes()
+        return CheckoutDetailsDTO(price, entry.startTime, durationMinutes)
     }
 
     @Transactional
