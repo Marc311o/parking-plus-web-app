@@ -37,8 +37,11 @@ export const addVehicle = async (
     );
 
     if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text || `Failed to add vehicle: ${response.status}`);
+        const error = await response.json();
+
+        throw new Error(
+            error?.message ?? `Failed to add vehicle: ${response.status}`
+        );
     }
 
     return response.json();
@@ -54,7 +57,7 @@ export const deleteVehicle = async (id: number): Promise<void> => {
     );
 
     if (!response.ok) {
-        const text = await response.text();
+        const error = await response.json();
 
         if (response.status === 403) {
             throw new Error('You are not allowed to delete this vehicle');
@@ -64,7 +67,9 @@ export const deleteVehicle = async (id: number): Promise<void> => {
             throw new Error('Vehicle not found');
         }
 
-        throw new Error(text || `Failed to delete vehicle: ${response.status}`);
+        throw new Error(
+            error?.message ?? `Failed to delete vehicle: ${response.status}`
+        );
     }
 };
 
@@ -86,8 +91,11 @@ export const updateVehicle = async (
     );
 
     if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text || `Failed to update vehicle: ${response.status}`);
+        const error = await response.json();
+
+        throw new Error(
+            error?.message ?? `Failed to update vehicle: ${response.status}`
+        );
     }
 
     return response.json();
