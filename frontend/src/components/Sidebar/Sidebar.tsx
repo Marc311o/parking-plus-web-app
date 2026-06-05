@@ -198,49 +198,59 @@ const Sidebar = () => {
                 </Box>
 
                 <Typography
-    variant="caption"
-    sx={{
-        color: 'text.secondary',
-        mb: 1.5,
-        ml: 1,
-        letterSpacing: 1.2,
-        textTransform: 'uppercase',
-        display: 'block',
-    }}
->
-    {formatMessage({id: 'sidebar.sections.menu'})}
-</Typography>
+                    variant="caption"
+                    sx={{
+                        color: 'text.secondary',
+                        mb: 1.5,
+                        ml: 1,
+                        letterSpacing: 1.2,
+                        textTransform: 'uppercase',
+                        display: 'block',
+                    }}
+                >
+                    {formatMessage({id: 'sidebar.sections.menu'})}
+                </Typography>
 
-<List sx={{p: 0}}>
-    {filteredMenuItems.map((item) => (
-        <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
-            <ListItemButton
-                onClick={() => navigate(item.path)}
+                <List sx={{p: 0}}>
+                    {filteredMenuItems.map((item) => (
+                        <ListItem key={item.path} disablePadding sx={{mb: 0.5}}>
+                            <ListItemButton
+                                onClick={() => navigate(item.path)}
+                                sx={{
+                                    minHeight: 44,
+                                    borderRadius: 2.5,
+                                    color: item.active
+                                        ? 'primary.main'
+                                        : 'text.secondary',
+                                    '& .MuiListItemIcon-root': {
+                                        minWidth: 34,
+                                        color: item.active
+                                            ? 'primary.main'
+                                            : 'text.secondary',
+                                    },
+                                    '& .MuiTypography-root': {
+                                        fontWeight: item.active ? 700 : 500,
+                                    },
+                                    '&:hover': {
+                                        bgcolor: 'rgba(94, 7, 110, 0.05)',
+                                    },
+                                }}
+                            >
+                                <ListItemIcon>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.text}/>
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            </SidebarScrollContent>
+
+            <Box
                 sx={{
-                    minHeight: 44,
-                    borderRadius: 2.5,
-                    color: item.active ? 'primary.main' : 'text.secondary',
-                    '& .MuiListItemIcon-root': {
-                        minWidth: 34,
-                        color: item.active ? 'primary.main' : 'text.secondary',
-                    },
-                    '& .MuiTypography-root': {
-                        fontWeight: item.active ? 700 : 500,
-                    },
-                    '&:hover': {
-                        bgcolor: 'rgba(94, 7, 110, 0.05)',
-                    },
+                    mt: 'auto',
+                    flexShrink: 0,
+                    pt: 2,
                 }}
             >
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text}/>
-            </ListItemButton>
-        </ListItem>
-    ))}
-</List>
-
-                <Box sx={{height: 32}}/>
-
                 <Typography
                     variant="caption"
                     sx={{
@@ -255,7 +265,7 @@ const Sidebar = () => {
                     {formatMessage({id: 'sidebar.sections.other'})}
                 </Typography>
 
-                <List sx={{p: 0, pb: 1}}>
+                <List sx={{p: 0}}>
                     {secondaryItems.map((item) => (
                         <ListItem
                             key={item.path ?? item.text}
@@ -273,10 +283,14 @@ const Sidebar = () => {
                                 sx={{
                                     minHeight: 44,
                                     borderRadius: 2.5,
-                                    color: item.active ? 'primary.main' : 'text.secondary',
+                                    color: item.active
+                                        ? 'primary.main'
+                                        : 'text.secondary',
                                     '& .MuiListItemIcon-root': {
                                         minWidth: 34,
-                                        color: item.active ? 'primary.main' : 'text.secondary',
+                                        color: item.active
+                                            ? 'primary.main'
+                                            : 'text.secondary',
                                     },
                                     '& .MuiTypography-root': {
                                         fontWeight: item.active ? 700 : 500,
@@ -292,7 +306,7 @@ const Sidebar = () => {
                         </ListItem>
                     ))}
                 </List>
-            </SidebarScrollContent>
+            </Box>
         </SidebarContainer>
     );
 };
