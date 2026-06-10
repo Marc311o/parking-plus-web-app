@@ -78,12 +78,8 @@ class PricingService(
             val segmentEnd = if (end.isBefore(endOfCurrentDay)) end else endOfCurrentDay
 
             // Calculate duration in minutes for this segment and convert to hours (ceiling)
-            val segmentDurationMinutes = Duration.between(currentDateTime, segmentEnd).toMinutes()
-            if (segmentDurationMinutes < 1 && currentDateTime == start) {
-                // Handle very short first segment if needed, though usually at least 1 min
-            }
-            
-            val segmentHours = Math.ceil(segmentDurationMinutes / 60.0).toInt().coerceAtLeast(if (currentDateTime == start) 1 else 0)
+            val segmentDurationMillis = Duration.between(currentDateTime, segmentEnd).toMillis().coerceAtLeast(1)
+            val segmentHours = Math.ceil(segmentDurationMillis / 3_600_000.0).toInt()
 
             var segmentCost = BigDecimal.ZERO
             var segmentIterateTime = currentDateTime
