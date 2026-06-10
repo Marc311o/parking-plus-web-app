@@ -53,56 +53,69 @@ class PricingService(
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "End time must be after start time")
         }
 
-        var durationMinutes = Duration.between(start, end).toMinutes()
-        if (durationMinutes < 1) {
-            durationMinutes = 1
-        }
-        val durationHours = Math.ceil(durationMinutes / 60.0).toInt().coerceAtLeast(1)
-
-        val tariffs = tariffRepository.findAll()
-        val dailyTariffsByDay = tariffs
-            .asSequence()
+        val allTariffs = tariffRepository.findAll()
+        val dailyTariffsByDay = allTariffs
             .filter { it.isDaily }
-            .groupBy { it.dayOfWeek }
-        val hourlyTariffsByDayAndHour = tariffs
-            .asSequence()
+            .associateBy { it.dayOfWeek }
+
+        val hourlyTariffsByDayAndHour = allTariffs
             .filter { !it.isDaily }
             .flatMap { tariff ->
-                (tariff.startHour until tariff.endHour).asSequence().map { hour ->
-                    Triple(tariff.dayOfWeek, hour, tariff)
+                (tariff.startHour until tariff.endHour).map { hour ->
+                    (tariff.dayOfWeek to hour) to tariff
                 }
             }
-            .groupBy({ (tariffDayOfWeek, hour, _) -> tariffDayOfWeek to hour }, { (_, _, tariff) -> tariff })
+            .groupBy({ it.first }, { it.second })
 
-        var totalCost = BigDecimal.ZERO
-        var currentHour = start
+        var totalFinalPrice = BigDecimal.ZERO
+        var currentDateTime = start
+        var totalHoursCount = 0
 
-        for (h in 0 until durationHours) {
-            val hourOfDay = currentHour.hour
-            val isFirstHour = (h == 0)
-            val hourlyTariffs = hourlyTariffsByDayAndHour[currentHour.dayOfWeek.value to hourOfDay].orEmpty()
+        // Iterate through calendar days
+        while (currentDateTime.isBefore(end)) {
+            val currentLocalDate = currentDateTime.toLocalDate()
+            val endOfCurrentDay = currentLocalDate.plusDays(1).atStartOfDay()
+            val segmentEnd = if (end.isBefore(endOfCurrentDay)) end else endOfCurrentDay
 
-            val tariff = if (isFirstHour) {
-                hourlyTariffs.find { it.isFirstHour } ?: hourlyTariffs.find { !it.isFirstHour }
-            } else {
-                hourlyTariffs.find { !it.isFirstHour } ?: hourlyTariffs.find { it.isFirstHour }
+            // Calculate duration in minutes for this segment and convert to hours (ceiling)
+            val segmentDurationMillis = Duration.between(currentDateTime, segmentEnd).toMillis().coerceAtLeast(1)
+            val segmentHours = Math.ceil(segmentDurationMillis / 3_600_000.0).toInt()
+
+            var segmentCost = BigDecimal.ZERO
+            var segmentIterateTime = currentDateTime
+
+            for (h in 0 until segmentHours) {
+                val hourOfDay = segmentIterateTime.hour
+                val isFirstHourOfSession = (totalHoursCount == 0)
+                val hourlyTariffs = hourlyTariffsByDayAndHour[segmentIterateTime.dayOfWeek.value to hourOfDay].orEmpty()
+
+                val tariff = if (isFirstHourOfSession) {
+                    hourlyTariffs.find { it.isFirstHour } ?: hourlyTariffs.find { !it.isFirstHour }
+                } else {
+                    hourlyTariffs.find { !it.isFirstHour } ?: hourlyTariffs.find { it.isFirstHour }
+                }
+
+                val priceToAdd = if (tariff != null) BigDecimal.valueOf(tariff.price) else BigDecimal.valueOf(5.0)
+                segmentCost = segmentCost.add(priceToAdd)
+                
+                segmentIterateTime = segmentIterateTime.plusHours(1)
+                totalHoursCount++
             }
 
-            val priceToAdd = if (tariff != null) BigDecimal.valueOf(tariff.price) else BigDecimal.valueOf(5.0)
-            totalCost = totalCost.add(priceToAdd)
-            currentHour = currentHour.plusHours(1)
+            // Apply Daily Cap for the current day
+            val dailyTariff = dailyTariffsByDay[currentLocalDate.dayOfWeek.value]
+            if (dailyTariff != null) {
+                val dailyLimit = BigDecimal.valueOf(dailyTariff.price)
+                totalFinalPrice = totalFinalPrice.add(if (segmentCost > dailyLimit) dailyLimit else segmentCost)
+            } else {
+                totalFinalPrice = totalFinalPrice.add(segmentCost)
+            }
+
+            // Move to the start of the next day
+            currentDateTime = segmentEnd
         }
 
-        // Check if daily cap applies (for the start day)
-        val dailyTariff = dailyTariffsByDay[start.dayOfWeek.value]?.firstOrNull()
-        val finalPrice = if (dailyTariff != null) {
-            val dailyPrice = BigDecimal.valueOf(dailyTariff.price)
-            if (totalCost > dailyPrice) dailyPrice else totalCost
-        } else {
-            totalCost
-        }
-
-        return finalPrice.setScale(2, RoundingMode.HALF_UP)
+        return totalFinalPrice.setScale(2, RoundingMode.HALF_UP)
     }
 }
 
