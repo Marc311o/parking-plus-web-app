@@ -44,7 +44,7 @@ The entire ecosystem (Backend, Frontend, and Database) is containerized for cons
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/user/parking-plus-web-app.git
+   git clone https://github.com/Marc311o/parking-plus-web-app.git
    cd parking-plus-web-app
    ```
 2. **Launch the platform:**

@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Link as RouterLink} from "react-router-dom";
 import {Link as MuiLink, Stack, Typography} from "@mui/material";
-import { useIntl } from "react-intl";
-import { login, verifyMfa, fetchUserData } from "@api/Login/auth";
+import {useIntl} from "react-intl";
+import {login, verifyMfa, fetchUserData} from "@api/Login/auth";
 import PersonFill from '@assets/PersonFillPurple.svg';
 import {Box, Alert, CircularProgress} from "@mui/material";
 import {useAuthStore} from "@store/useAuthStore";
@@ -82,7 +82,7 @@ const Login = () => {
         setError("");
 
         if (areEmptyFields()) {
-            setError(formatMessage({ id: 'logins.errors.auth.emptyFields' }));
+            setError(formatMessage({id: 'logins.errors.auth.emptyFields'}));
             setLoading(false);
             return;
         }
@@ -101,9 +101,9 @@ const Login = () => {
             setToken(result.token);
             setUser(userData);
 
-            navigate("/dashboard");
+            window.location.replace("/dashboard");
         } catch (err) {
-            setError(formatMessage({ id: 'logins.errors.auth.invalidCredentials' }));
+            setError(formatMessage({id: 'logins.errors.auth.invalidCredentials'}));
         } finally {
             setLoading(false);
         }
@@ -124,14 +124,14 @@ const Login = () => {
             const userData = await fetchUserData(data.token);
             setUser(userData);
 
-            navigate("/");
-
+            window.location.replace("/dashboard");
         } catch (err) {
-            setVerifyError(formatMessage({ id: 'logins.errors.auth.invalidCode' }));
+            setVerifyError(formatMessage({id: 'logins.errors.auth.invalidCode'}));
         } finally {
             setVerifyLoading(false);
         }
     };
+
 
     const handleCreateAccount = () => {
         navigate("/createnewaccount");
@@ -167,11 +167,11 @@ const Login = () => {
                             mt: 4,
                         }}
                     >
-                        {formatMessage({ id: 'logins.2fa.title' })}
+                        {formatMessage({id: 'logins.2fa.title'})}
                     </Typography>
 
                     <Typography sx={{mt: 3}}>
-                        {formatMessage({ id: 'logins.2fa.description' })}
+                        {formatMessage({id: 'logins.2fa.description'})}
                     </Typography>
 
                     <Box component="form" onSubmit={handle2FASubmit}
@@ -193,15 +193,15 @@ const Login = () => {
                         >
 
                             {verifyError && (
-                                <Alert severity="error" sx={{ width: "100%" }}>
+                                <Alert severity="error" sx={{width: "100%"}}>
                                     {verifyError}
                                 </Alert>
                             )}
 
                             <AuthDefaultField
                                 name="totpCode"
-                                label={formatMessage({ id: 'logins.2fa.codeLabel' })}
-                                placeholder={formatMessage({ id: 'logins.2fa.codePlaceholder' })}
+                                label={formatMessage({id: 'logins.2fa.codeLabel'})}
+                                placeholder={formatMessage({id: 'logins.2fa.codePlaceholder'})}
                                 value={totpCode}
                                 onChange={(e) =>
                                     setTotpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
@@ -224,11 +224,12 @@ const Login = () => {
 
                             <ButtonWhite type="submit" onClick={handle2FASubmit}
                                          disabled={verifyLoading || totpCode.length !== 6}>
-                                {verifyLoading ? <CircularProgress size={20}/> : formatMessage({ id: 'logins.2fa.verifyButton' })}
+                                {verifyLoading ?
+                                    <CircularProgress size={20}/> : formatMessage({id: 'logins.2fa.verifyButton'})}
                             </ButtonWhite>
 
                             <ButtonWhite type="button" onClick={() => setStep('login')} disabled={verifyLoading}>
-                                {formatMessage({ id: 'logins.2fa.backButton' })}
+                                {formatMessage({id: 'logins.2fa.backButton'})}
                             </ButtonWhite>
 
                         </Stack>
@@ -269,7 +270,7 @@ const Login = () => {
                         mt: 2,
                     }}
                 >
-                    {formatMessage({ id: 'logins.login.title' })}
+                    {formatMessage({id: 'logins.login.title'})}
                 </Typography>
 
                 <Box
@@ -296,15 +297,15 @@ const Login = () => {
                     >
 
                         {error && (
-                            <Alert severity="error" sx={{ width: "100%" }}>
+                            <Alert severity="error" sx={{width: "100%"}}>
                                 {error}
                             </Alert>
                         )}
 
                         <AuthDefaultField
                             name={"email"}
-                            label={formatMessage({ id: 'logins.login.emailLabel' })}
-                            placeholder={formatMessage({ id: 'logins.login.emailPlaceholder' })}
+                            label={formatMessage({id: 'logins.login.emailLabel'})}
+                            placeholder={formatMessage({id: 'logins.login.emailPlaceholder'})}
                             value={email}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -313,8 +314,8 @@ const Login = () => {
 
                         <AuthPasswordField
                             name="password"
-                            label={formatMessage({ id: 'logins.login.passwordLabel' })}
-                            placeholder={formatMessage({ id: 'logins.login.passwordPlaceholder' })}
+                            label={formatMessage({id: 'logins.login.passwordLabel'})}
+                            placeholder={formatMessage({id: 'logins.login.passwordPlaceholder'})}
                             value={password}
                             onChange={(e) => handleInputChange(e)}
                             disabled={loading}
@@ -339,7 +340,7 @@ const Login = () => {
                                 },
                             }}
                         >
-                            {formatMessage({ id: 'logins.login.passwordForgot' })}
+                            {formatMessage({id: 'logins.login.passwordForgot'})}
                         </MuiLink>
 
                     </Stack>
@@ -356,11 +357,11 @@ const Login = () => {
                         }}
                     >
                         <ButtonPurple type="submit">
-                            {formatMessage({ id: 'logins.login.loginButton' })}
+                            {formatMessage({id: 'logins.login.loginButton'})}
                         </ButtonPurple>
 
                         <ButtonWhite onClick={handleCreateAccount}>
-                            {formatMessage({ id: 'logins.login.newAccButton' })}
+                            {formatMessage({id: 'logins.login.newAccButton'})}
                         </ButtonWhite>
                     </Stack>
                 </Box>
