@@ -113,7 +113,14 @@ class ParkingSpaceService(
 
         var occupantDto: ParkingSpotOccupantDetailsDTO? = null
         val now = LocalDateTime.now()
-        val activeHistory = parkingHistoryRepository.findActiveByParkingSpaceId(id, now)
+        
+        // In order to patch the bug where spot was taken by nobody, we add a time buffer
+        // The bug was related to timezone offset
+        val activeHistory = parkingHistoryRepository.findActiveByParkingSpaceId(
+            id,
+            now.plusHours(2).plusMinutes(30),
+            now.minusMinutes(1)
+        )
 
         val actualStatus = if (activeHistory != null) ParkingSpaceStatus.OCCUPIED else space.status
 
@@ -121,8 +128,23 @@ class ParkingSpaceService(
             val vehicle = activeHistory.vehicle
             val owner = vehicle.owner
 
-            val duration = java.time.Duration.between(activeHistory.startTime, now)
-            val currentFee = pricingService.calculatePrice(activeHistory.startTime, now)
+            // If startTime is in the "future" relative to now (due to timezone offset),
+            // we treat it as if it just started for duration and fee calculation.
+            val effectiveStartTime = if (activeHistory.startTime.isAfter(now)) now else activeHistory.startTime
+            
+            val duration = java.time.Duration.between(effectiveStartTime, now)
+            val currentFee = if (activeHistory.startTime.isAfter(now)) {
+                java.math.BigDecimal.ZERO
+            } else {
+                // We add a 1-second buffer to end time to avoid "End time must be after start time"
+                // if startTime == now.
+                val calculationEndTime = if (!now.isAfter(activeHistory.startTime)) {
+                    activeHistory.startTime.plusSeconds(1)
+                } else {
+                    now
+                }
+                pricingService.calculatePrice(activeHistory.startTime, calculationEndTime)
+            }
 
             occupantDto = ParkingSpotOccupantDetailsDTO(
                 ownerId = owner.id.toString(),

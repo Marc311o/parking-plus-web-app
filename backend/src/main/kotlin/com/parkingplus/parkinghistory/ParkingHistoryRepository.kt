@@ -18,8 +18,12 @@ interface ParkingHistoryRepository : JpaRepository<ParkingHistoryEntity, Long> {
     fun findByParkingSpaceIdAndEndTimeIsNull(parkingSpaceId: String): ParkingHistoryEntity?
     fun existsByVehicleIdAndEndTimeIsNull(vehicleId: Long): Boolean
 
-    @Query("SELECT p FROM ParkingHistoryEntity p WHERE p.parkingSpace.id = :spaceId AND p.startTime <= :now AND (p.endTime IS NULL OR p.endTime > :now)")
-    fun findActiveByParkingSpaceId(@Param("spaceId") spaceId: String, @Param("now") now: LocalDateTime): ParkingHistoryEntity?
+    @Query("SELECT p FROM ParkingHistoryEntity p WHERE p.parkingSpace.id = :spaceId AND p.startTime <= :startTimeLimit AND (p.endTime IS NULL OR p.endTime > :endTimeLimit)")
+    fun findActiveByParkingSpaceId(
+        @Param("spaceId") spaceId: String,
+        @Param("startTimeLimit") startTimeLimit: LocalDateTime,
+        @Param("endTimeLimit") endTimeLimit: LocalDateTime
+    ): ParkingHistoryEntity?
 
     @Query("SELECT COALESCE(SUM(p.price), 0.0) FROM ParkingHistoryEntity p WHERE p.endTime BETWEEN :start AND :end")
     fun sumPriceByEndTimeBetween(
