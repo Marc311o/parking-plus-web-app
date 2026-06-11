@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(to right, #5E076E 0%, #8B1F9E 100%);
+    background-attachment: fixed;
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+}

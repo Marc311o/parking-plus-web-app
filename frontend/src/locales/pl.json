@@ -1,0 +1,582 @@
+{
+  "logins": {
+    "login": {
+      "title": "ZALOGUJ SIĘ",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "passwordForgot": "Nie pamiętam hasła",
+      "loginButton": "Zaloguj",
+      "newAccButton": "Załóż konto"
+    },
+    "2fa": {
+      "title": "WERYFIKACJA 2FA",
+      "description": "Wpisz kod z aplikacji Authenticator",
+      "codeLabel": "Kod 2FA",
+      "codePlaceholder": "6-cyfrowy kod",
+      "verifyButton": "Weryfikuj",
+      "backButton": "Wróć"
+    },
+    "createNewAccount": {
+      "title": "ZAŁÓŻ KONTO",
+      "firstNameLabel": "Imię",
+      "firstNamePlaceholder": "Imię",
+      "lastNameLabel": "Nazwisko",
+      "lastNamePlaceholder": "Nazwisko",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "passwordLabel": "Hasło",
+      "passwordPlaceholder": "Hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "createButton": "Utwórz konto",
+      "backButton": "Wróć"
+    },
+    "resetPassword": {
+      "title": "RESET HASŁA",
+      "passwordLabel": "Nowe hasło",
+      "passwordPlaceholder": "Nowe hasło",
+      "confirmPasswordLabel": "Powtórz hasło",
+      "confirmPasswordPlaceholder": "Powtórz hasło",
+      "verifyButton": "Weryfikuj",
+      "resetButton": "Resetowanie ...",
+      "backButton": "Wróć",
+      "success": "Hasło zostało zmienione poprawnie"
+    },
+    "forgotPassword": {
+      "title": "RESET HASŁA",
+      "description": "Wpisz swój adres e-mail, aby zresetować hasło",
+      "emailLabel": "E-mail",
+      "emailPlaceholder": "E-mail",
+      "resetButton": "Zresetuj hasło",
+      "sendingButton": "Wysyłanie ...",
+      "backButton": "Wróć",
+      "success": "Jeśli konto istnieje, link do resetu został wysłany"
+    },
+    "errors": {
+      "auth": {
+        "sessionExpired": {
+          "title": "Sesja wygasła",
+          "description": "Twoja sesja wygasła. Zaloguj się ponownie, aby kontynuować.",
+          "button": "Powrót do logowania"
+        },
+        "invalidCredentials": "Niepoprawny e-mail lub hasło",
+        "mfaFailed": "Błąd logowania",
+        "emailTaken": "Na podany e-mail jest już założone inne konto!",
+        "forgotPasswordFailed": "Błąd wysyłania",
+        "resetTokenInvalid": "Token jest nieprawidłowy lub wygasł",
+        "emptyFields": "Wszystkie pola muszą być wypełnione",
+        "invalidCode": "Niepoprawny kod 2FA!",
+        "invalidEmail": "Niepoprawny adres e-mail",
+        "passwordTooShort": "Hasło powinno mieć min. 12 znaków",
+        "passwordTooShort12": "Hasło powinno mieć min. 12 znaków",
+        "passwordContainsUserData": "Hasło nie może zawierać Twoich danych osobowych",
+        "passwordContainsForbiddenWord": "Hasło zawiera niedozwolone słowa związane z aplikacją",
+        "passwordTooCommon": "Hasło zawiera zbyt proste i popularne sekwencje znaków",
+        "passwordPwned": "To hasło pojawiło się w znanych wyciekach danych. Wybierz inne.",
+        "passwordsNotMatch": "Hasła nie są identyczne",
+        "unknown": "Wystąpił nieznany błąd",
+        "emailRequired": "Uzupełnij adres email",
+        "sendEmailFailed": "Nie udało się wysłać maila",
+        "missingToken": "Brak tokenu resetującego"
+      }
+    }
+  },
+  "common": {
+    "lackOfData": "Brak danych"
+  },
+  "sidebar": {
+    "sections": {
+      "menu": "Menu",
+      "other": "Inne"
+    },
+    "menu": {
+      "dashboard": "Kokpit",
+      "statistics": "Statystyki",
+      "clients": "Klienci",
+      "events": "Zdarzenia",
+      "prices": "Cennik",
+      "parkingPurchase": "Zakup miejsce",
+      "myCars": "Moje pojazdy",
+      "myPurchases": "Moje zakupy",
+      "myReservations": "Moje rezerwacje"
+    },
+    "other": {
+      "settings": "Ustawienia",
+      "logout": "Wyloguj się"
+    }
+  },
+  "navbar": {
+    "statisticsCards": {
+      "parking": "Statystyki\nParkingu",
+      "places": "Statystyki\nMiejsc"
+    },
+    "occupancy": {
+      "label": "Zajętych miejsc"
+    },
+    "revenue": {
+      "value": "{value} PLN",
+      "label": "Przychód dzisiaj"
+    },
+    "reservations": {
+      "filters": {
+        "dateRange": "Zakres dat",
+        "startDate": "Data początkowa",
+        "endDate": "Data końcowa",
+        "showAll": "Pokaż wszystkie",
+        "invalidDateRange": "Data końcowa nie może być wcześniejsza niż początkowa"
+      }
+    },
+    "clients": {
+      "filters": {
+        "searchPlaceholder": "Wyszukaj klienta (imię, email, tablica)",
+        "searchButton": "Wyszukaj",
+        "sortLabel": "Sortuj po",
+        "sortButton": "Sortuj",
+        "options": {
+          "nameAsc": "Nazwa A-Z",
+          "nameDesc": "Nazwa Z-A",
+          "emailAsc": "Email A-Z",
+          "emailDesc": "Email Z-A",
+          "dateNewest": "Najnowsze",
+          "dateOldest": "Najstarsze"
+        }
+      }
+    },
+    "events": {
+      "filters": {
+        "searchPlaceholder": "Wyszukaj zdarzenie",
+        "searchButton": "Wyszukaj",
+        "checkboxes": {
+          "entries": "wjazdy",
+          "exits": "wyjazdy"
+        }
+      }
+    }
+  },
+  "parking": {
+    "details": {
+      "spotCardTitle": "Miejsce #{id}",
+      "ownerCardTitle": "Obecnie zajęte przez klienta #{id}",
+      "labels": {
+        "type": "Typ",
+        "status": "Status",
+        "level": "Piętro",
+        "ownerData": "Klient",
+        "email": "Email",
+        "entry": "Wjazd",
+        "plate": "Tablica",
+        "parkingTime": "Czas postoju",
+        "amountDue": "Należność",
+        "viewPhoto": "Zobacz zdjęcie"
+      },
+      "statuses": {
+        "FREE": "Wolne",
+        "OCCUPIED": "Zajęte",
+        "RESERVED": "Zarezerwowane"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Standardowe",
+        "REGULAR_HANDICAPED": "Niepełnosprawni",
+        "EV_ABLEBODIED": "Elektryczne",
+        "EV_HANDICAPED": "Elektryczne + niepełnosprawni",
+        "REGULAR_BOTH": "Standardowe + oba",
+        "EV_BOTH": "Elektryczne + oba"
+      }
+    }
+  },
+  "statistics": {
+    "week": {
+      "previous": "Poprzedni tydzień",
+      "next": "Następny tydzień"
+    },
+    "month": {
+      "previous": "Poprzedni miesiąc",
+      "next": "Następny miesiąc"
+    },
+    "weekPicker": {
+      "helper": "Kliknij dowolny dzień, aby wybrać cały tydzień od poniedziałku do niedzieli."
+    },
+    "weekday": {
+      "mondayShort": "PN",
+      "tuesdayShort": "WT",
+      "wednesdayShort": "ŚR",
+      "thursdayShort": "CZ",
+      "fridayShort": "PT",
+      "saturdayShort": "SB",
+      "sundayShort": "ND"
+    },
+    "entries": {
+      "title": "Wjazdy na parking",
+      "description": "Liczba wjazdów w wybranym okresie",
+      "descriptionDaily": "Liczba pojazdów wjeżdżających na parking w podziale na godziny.",
+      "descriptionWeekly": "Liczba pojazdów wjeżdżających na parking w poszczególne dni tygodnia.",
+      "descriptionMonthly": "Liczba pojazdów wjeżdżających na parking w poszczególne dni miesiąca.",
+      "descriptionYearly": "Liczba pojazdów wjeżdżających na parking w poszczególne miesiące roku.",
+      "totalLabel": "Łącznie",
+      "totalDescription": "wjazdów w wybranym okresie",
+      "totalDescriptionDaily": "Pojazdów dzisiaj",
+      "totalDescriptionWeekly": "Pojazdów w tym tygodniu",
+      "totalDescriptionMonthly": "Pojazdów w tym miesiącu",
+      "totalDescriptionYearly": "Pojazdów w tym roku",
+      "averageLabel": "Średnio",
+      "averageDescription": "wjazdów dziennie",
+      "averageDescriptionDaily": "Średnio na godzinę",
+      "averageDescriptionWeekly": "Średnio na dzień",
+      "averageDescriptionMonthly": "Średnio na dzień",
+      "averageDescriptionYearly": "Średnio na miesiąc",
+      "tileTitle": "Wjazdy na parking",
+      "tileDescription": "Liczba wjazdów w wybranym okresie",
+      "periods": {
+        "daily": "Dzienny",
+        "weekly": "Tygodniowy",
+        "monthly": "Miesięczny",
+        "yearly": "Roczny"
+      }
+    },
+    "revenue": {
+      "title": "Przychody",
+      "description": "Przychody parkingu w wybranym okresie",
+      "totalLabel": "Przychód",
+      "totalDescription": "łącznie w okresie",
+      "changeLabel": "Zmiana",
+      "changeDescription": "do poprzedniego okresu",
+      "periods": {
+        "daily": "Dzienny",
+        "weekly": "Tygodniowy",
+        "monthly": "Miesięczny",
+        "yearly": "Roczny"
+      }
+    },
+    "averageStay": {
+      "tileTitle": "Średni czas postoju",
+      "tileDescription": "Średni czas postoju w wybranym okresie",
+      "totalDescription": "Średni czas postoju w wybranym okresie",
+      "title": "Średni czas postoju",
+      "description": "Średni czas postoju z podziałem na typ miejsca",
+      "periods": {
+        "daily": "Dzienny",
+        "weekly": "Tygodniowy",
+        "monthly": "Miesięczny",
+        "yearly": "Roczny"
+      },
+      "spaceTypes": {
+        "REGULAR_ABLEBODIED": "Zwykłe miejsce parkingowe",
+        "REGULAR_HANDICAPED": "Miejsce dla niepełnosprawnych",
+        "EV_ABLEBODIED": "Miejsce z ładowarką EV",
+        "EV_HANDICAPED": "Miejsce EV dla niepełnosprawnych",
+        "REGULAR_BOTH": "Zwykłe miejsce z udogodnieniami",
+        "EV_BOTH": "Miejsce EV z udogodnieniami"
+      }
+    },
+    "spaceRanking": {
+      "tileTitle": "Ranking miejsc parkingowych",
+      "tileDescription": "Najczęściej wybierane miejsca na wybranym piętrze",
+      "title": "Ranking miejsc parkingowych",
+      "description": "Najczęściej używane miejsca na wybranym piętrze w wybranym okresie",
+      "level": "Piętro {level}",
+      "totalLabel": "Łącznie",
+      "totalDescription": "użyć miejsc na piętrze",
+      "topLabel": "Najczęściej używane",
+      "topDescription": "{value} użyć",
+      "value": "{value} użyć",
+      "floor": "Piętro {floor}"
+    },
+    "parkingSpaces": {
+      "title": "Statystyki miejsc parkingowych",
+      "description": "Wybierz miejsce parkingowe na mapie, aby sprawdzić jego historię zajętości i rezerwacji.",
+      "timelineDescription": "Historia zajętości i rezerwacji w wybranym dniu",
+      "occupied": "Zajęte",
+      "reserved": "Zarezerwowane",
+      "noSpaceSelectedTitle": "Wybierz miejsce parkingowe",
+      "noSpaceSelectedDescription": "Kliknij miejsce na mapie, aby zobaczyć historię zajętości i rezerwacji w wybranym dniu."
+    }
+  },
+  "clients": {
+    "list": {
+      "empty": "Brak klientów",
+      "vehiclesButton": "Pojazdy"
+    },
+    "vehiclesDialog": {
+      "title": "Pojazdy",
+      "loading": "Ładowanie pojazdów...",
+      "error": "Nie udało się pobrać pojazdów tego klienta.",
+      "emptyTitle": "Brak pojazdów",
+      "emptyDescription": "Ten klient nie ma jeszcze przypisanych pojazdów.",
+      "vehiclesCount": "{count, plural, one {# pojazd} few {# pojazdy} many {# pojazdów} other {# pojazdu}}",
+      "vehicleId": "ID pojazdu: {id}",
+      "closeButton": "Zamknij",
+      "carTypes": {
+        "REGULAR_ABLEBODIED": "Standardowy",
+        "REGULAR_HANDICAPED": "Standardowy / niepełnosprawni",
+        "EV_ABLEBODIED": "Elektryczny",
+        "EV_HANDICAPED": "Elektryczny / niepełnosprawni"
+      }
+    }
+  },
+  "events": {
+    "list": {
+      "empty": "Brak zdarzeń",
+      "details": "Szczegóły"
+    },
+    "entry": "Wjazd",
+    "exit": "Wyjazd",
+    "details": {
+      "title": "Szczegóły zdarzenia",
+      "plate": "Rejestracja",
+      "date": "Data",
+      "type": "Typ",
+      "id": "ID",
+      "ownerName": "Imię właściciela",
+      "ownerSurname": "Nazwisko właściciela",
+      "ownerEmail": "E-mail właściciela",
+      "barrierPhoto": "Wjazd",
+      "spotPhoto": "Miejsce"
+    }
+  },
+  "prices": {
+    "schedule": {
+      "days": {
+        "mondayShort": "Pn",
+        "tuesdayShort": "Wt",
+        "wednesdayShort": "Śr",
+        "thursdayShort": "Cz",
+        "fridayShort": "Pt",
+        "saturdayShort": "Sb",
+        "sundayShort": "Nd"
+      }
+    },
+    "tile": {
+      "priceValue": "{value} zł",
+      "firstHour": "Pierwsza godzina: {price}",
+      "nextHour": "Kolejna godzina: {price}",
+      "firstHourShort": "1h: {price}",
+      "nextHourShort": "2h+: {price}"
+    },
+    "editor": {
+      "editing": "Edytujesz: {days}, {startHour}:00 – {endHour}:00",
+      "addTitle": "Dodaj nową taryfę",
+      "editTitle": "Edytuj taryfę",
+      "dayLabel": "Dzień",
+      "startHourLabel": "Godzina rozpoczęcia",
+      "endHourLabel": "Godzina zakończenia",
+      "firstHourLabel": "Pierwsza godzina",
+      "nextHourLabel": "Kolejna godzina",
+      "dailyPriceLabel": "Cena dobowa",
+      "currencyShort": "zł",
+      "saveButton": "Zapisz",
+      "savingButton": "Zapisywanie...",
+      "addNew": "Dodaj nową taryfę",
+      "helper": "Uzupełnij taryfę i godziny obowiązywania.",
+      "unsavedChanges": "Masz niezapisane zmiany"
+    },
+    "switcher": {
+      "hourly": "Ceny\nGodzinowe",
+      "daily": "Ceny\nDobowe"
+    },
+    "errors": {
+      "fetchTariffs": "Nie udało się pobrać taryf.",
+      "invalidPrices": "Podaj poprawne ceny.",
+      "invalidHours": "Godzina zakończenia musi być późniejsza niż rozpoczęcia.",
+      "overlapError": "Wybrany termin nakłada się na istniejącą taryfę w tym widoku.",
+      "saveTariff": "Nie udało się zapisać zmian w cenniku.",
+      "deleteTariff": "Nie udało się usunąć taryfy.",
+      "calendarNotFull": "Aby zapisać, musisz pokryć cały tydzień taryfami."
+    }
+  },
+  "parkingPurchase": {
+    "title": "Kup lub zarezerwuj miejsce parkingowe",
+    "subtitle": "Wybierz samochód i czas postoju, a my dobierzemy dla Ciebie odpowiednie miejsce.",
+    "loading": "Ładowanie danych...",
+    "formModeTitle": "Rodzaj postoju",
+    "formModeDescription": "Rozpocznij postój od razu albo zaplanuj go na wybraną datę.",
+    "modePurchase": "Kup od teraz",
+    "modeIndefinite": "Bezterminowo (QR)",
+    "modeReservation": "Zarezerwuj",
+    "vehicleSectionTitle": "Samochód",
+    "vehicleSectionDescription": "Wybierz pojazd, dla którego chcesz kupić lub zarezerwować miejsce.",
+    "vehicleLabel": "Samochód",
+    "timeSectionTitle": "Czas postoju",
+    "purchaseTimeDescription": "Postój rozpocznie się natychmiast. Wybierz datę i godzinę zakończenia.",
+    "indefiniteDescription": "Zaparkuj teraz bez określonego czasu zakończenia. Opłacisz postój przy wyjeździe za pomocą kodu QR.",
+    "reservationTimeDescription": "Wybierz dokładny początek i koniec planowanego postoju.",
+    "indefiniteEndDate": "Bezterminowo",
+    "indefinitePrice": "Płatność przy wyjeździe",
+    "indefinitePriceLabel": "0.00 PLN (Płatność z dołu)",
+    "qrSuccessTitle": "Postój rozpoczęty!",
+    "qrSuccessDescription": "Zeskanuj poniższy kod QR swoim telefonem, aby móc sprawdzić aktualną opłatę i zakończyć postój przy wyjeździe.",
+    "qrButtonLabel": "Zakończ i opłać (z linku QR)",
+    "qrDownloadPng": "Zapisz jako PNG",
+    "qrCopyLink": "Kopiuj link",
+    "qrCopied": "Skopiowano!",
+    "purchaseEndDate": "Dzień zakończenia",
+    "purchaseEndTime": "Godzina zakończenia",
+    "parkingStartDate": "Dzień rozpoczęcia",
+    "parkingStartTime": "Godzina rozpoczęcia",
+    "parkingEndDate": "Dzień zakończenia",
+    "parkingEndTime": "Godzina zakończenia",
+    "invalidParkingTime": "Data i godzina zakończenia muszą być późniejsze niż rozpoczęcia.",
+    "noVehiclesTitle": "Nie masz jeszcze żadnego samochodu",
+    "noVehiclesDescription": "Dodaj samochód, aby szybko kupować miejsca parkingowe i planować rezerwacje.",
+    "addVehicle": "Dodaj samochód",
+    "balance": "Twoje saldo",
+    "summaryTitle": "Podsumowanie",
+    "summaryDescription": "Sprawdź szczegóły przed potwierdzeniem postoju.",
+    "summaryMode": "Typ",
+    "summaryVehicle": "Samochód",
+    "summaryStart": "Od",
+    "summaryEnd": "Do",
+    "summaryPrice": "Do zapłaty",
+    "summaryBalanceAfter": "Saldo po płatności",
+    "now": "Teraz",
+    "buyButton": "Kup miejsce",
+    "reserveButton": "Zarezerwuj miejsce",
+    "processingButton": "Przetwarzanie...",
+    "successTitle": "Miejsce zostało przydzielone",
+    "reservationSuccessTitle": "Rezerwacja została utworzona",
+    "successDescription": "Poniżej znajdziesz szczegóły swojego postoju.",
+    "assignedSpace": "Miejsce",
+    "level": "Poziom {level}",
+    "validTime": "Czas postoju",
+    "to": "do",
+    "paid": "Zapłacono",
+    "errors": {
+      "initialData": "Nie udało się pobrać danych potrzebnych do przygotowania postoju.",
+      "quote": "Nie udało się obliczyć ceny dla wybranego czasu.",
+      "purchase": "Nie udało się zatwierdzić postoju.",
+      "pastDate": "Nie można wybrać daty z przeszłości.",
+      "pastTime": "Wybrana godzina już minęła.",
+      "endBeforeStart": "Czas zakończenia musi być późniejszy niż rozpoczęcia."
+    },
+    "completedButton": "Postój zakupiony",
+    "backToFormButton": "Wróć do wyboru postoju"
+  },
+  "settings": {
+    "tabs_general": "Ogólne",
+    "tabs_account": "Moje konto",
+    "general_title": "Ustawienia ogólne",
+    "account_title": "Moje konto",
+    "language": "Język strony",
+    "first_name": "Imię",
+    "last_name": "Nazwisko",
+    "email": "Adres e-mail",
+    "lang_pl": "Polski",
+    "lang_en": "English",
+    "mfa": {
+      "title": "Weryfikacja 2FA",
+      "already_enabled": "2FA jest już aktywne na Twoim koncie",
+      "secret": "Sekret",
+      "next": "Dalej",
+      "enable": "Włącz 2FA",
+      "code_label": "Kod z aplikacji",
+      "confirm": "Potwierdź",
+      "cancel": "Anuluj",
+      "enabled": "2FA aktywne",
+      "setup_mfa": "Skonfiguruj aplikację uwierzytelniającą",
+      "invalid_code": "Niepoprawny kod",
+      "success": "Uwierzytelnianie dwuskładnikowe zostało pomyślnie włączone"
+    }
+  },
+  "userBalanceDialog": {
+    "title": "Doładuj saldo",
+    "subtitle": "Dodaj środki do swojego konta",
+    "enterAmount": "Wprowadź kwotę",
+    "placeholder": "0,01",
+    "topUp": "Doładuj",
+    "minAmountError": "Minimalna kwota doładowania to 0,01 PLN",
+    "invalidAmountError": "Wprowadź poprawną kwotę",
+    "genericError": "Doładowanie nie powiodło się",
+    "success": "Saldo zostało pomyślnie doładowane"
+  },
+  "myCars": {
+    "list": {
+      "empty": "Brak samochodów do wyświetlenia"
+    },
+    "addCar": "Dodaj samochód",
+    "addDialog": {
+      "title": "Dodaj pojazd",
+      "incorrectPlateFormat": "Tablica rejestracyjna powinna mieć format: 2–3 litery, spacja, 3–5 znaków (np. WA 12345)."
+    },
+    "fields": {
+      "licensePlate": "Numer rejestracyjny",
+      "carType": "Typ pojazdu",
+      "cancel": "Anuluj",
+      "update": "Aktualizuj"
+    },
+    "carTypes": {
+      "REGULAR_ABLEBODIED": "Standardowy",
+      "REGULAR_HANDICAPED": "Standardowy (dla niepełnosprawnych)",
+      "EV_ABLEBODIED": "Elektryczny",
+      "EV_HANDICAPED": "Elektryczny (dla niepełnosprawnych)"
+    },
+    "editDialog":{
+      "title": "Edytuj informacje o pojeździe",
+      "success": "Samochód został pomyślnie zaktualizowany",
+      "duplicatePlate": "Nie można zaktualizować – rejestracja jest już zajęta"
+    }
+  },
+  "myReservations": {
+    "start": "Od",
+    "end": "Do",
+    "emptyMessage": "Nie znaleziono żadnej rezerwacji",
+    "status": {
+      "PENDING": "Oczekująca",
+      "CONFIRMED": "Potwierdzona",
+      "CANCELLED": "Anulowana",
+      "COMPLETED": "Zakończona"
+    }
+  },
+  "reservationDetails": {
+    "title": "Szczegóły rezerwacji",
+    "status": "Status",
+    "createdAt": "Utworzono",
+    "startTime": "Początek",
+    "endTime": "Koniec",
+    "price": "Cena",
+    "parkingPlace": "Miejsce parkingowe",
+    "vehiclePlate": "Tablica rejestracyjna",
+    "vehicleType": "Typ pojazdu",
+    "statusValues": {
+      "PENDING": "Oczekująca",
+      "CONFIRMED": "Potwierdzona",
+      "CANCELLED": "Anulowana",
+      "COMPLETED": "Zakończona"
+    },
+    "vehicleTypeValues": {
+      "REGULAR_ABLEBODIED": "Regularny",
+      "REGULAR_HANDICAPED": "Regularny (niepełnosprawny)",
+      "EV_ABLEBODIED": "Elektryczny",
+      "EV_HANDICAPED": "Elektryczny (niepełnosprawny)"
+    }
+  },
+  "myPurchases": {
+    "start": "Od",
+    "end": "Do",
+    "emptyMessage": "Nie znaleziono żadnego zakupu",
+    "error": "Wystąpił błąd"
+  },
+  "payParking": {
+    "title": "Opłać postój",
+    "subtitle": "Zakończ parkowanie i ureguluj płatność.",
+    "labels": {
+      "vehicle": "Pojazd",
+      "entry": "Wjazd",
+      "duration": "Czas: {duration}",
+      "currentFee": "Aktualna opłata",
+      "balance": "TWOJE SALDO",
+      "insufficientFunds": "Brak środków!",
+      "topUpPrompt": "Doładuj konto w panelu głównym, aby opłacić postój."
+    },
+    "buttons": {
+      "refresh": "Odśwież",
+      "pay": "Zapłać i zakończ postój",
+      "processing": "Przetwarzanie..."
+    },
+    "success": {
+      "title": "Dziękujemy!",
+      "message": "Płatność została zrealizowana pomyślnie. Możesz teraz opuścić parking.",
+      "backButton": "Powrót do panelu"
+    }
+  }
+}
