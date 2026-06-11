@@ -1,0 +1,37 @@
+package com.parkingplus.tariffs
+
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+
+@Entity
+@Table(name = "tariffs")
+class TariffEntity(
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    val id: Long = 0,
+
+    @Column(name = "daily", nullable = false)
+    val isDaily: Boolean,
+
+    @Column(name = "day_of_week")
+    val dayOfWeek: Int,
+
+    @Column(name = "start_hour")
+    val startHour: Int,
+
+    @Column(name = "end_hour")
+    val endHour: Int,
+
+    @Column(name = "is_first_hour")
+    val isFirstHour: Boolean,
+
+    @Column(name = "price", nullable = false)
+    var price: Double
+
+)
